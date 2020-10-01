@@ -2,9 +2,10 @@
   "name": "@book-a-desk/book-a-desk-ui",
   "version": "0.0.1",
   "description": "UI code for the book a desk Broadsign office organizer",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -13,5 +14,10 @@
   "bugs": {
     "url": "https://github.com/book-a-desk/book-a-desk-ui/issues"
   },
-  "homepage": "https://github.com/book-a-desk/book-a-desk-ui#readme"
+  "homepage": "https://github.com/book-a-desk/book-a-desk-ui#readme",
+  "devDependencies": {
+    "html-webpack-plugin": "^4.5.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
+  }
 }
