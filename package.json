@@ -65,8 +65,5 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "setupFilesAfterEnv": [
-    "<rootDir>/tests/unit/setup.js"
   ]
 }
