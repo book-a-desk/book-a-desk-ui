@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import BadContainedButton from "../components/BadContainedButton";
 export default {
   name: "HelloWorld",
 
@@ -136,6 +137,14 @@ export default {
         href: "https://vuetifyjs.com/getting-started/frequently-asked-questions"
       }
     ]
-  })
+  }),
+  methods: {
+    sayHello() {
+      alert("Hello.");
+    }
+  },
+  components: {
+    BadContainedButton
+  }
 };
 </script>
