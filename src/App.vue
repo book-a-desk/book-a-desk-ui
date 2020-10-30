@@ -1,19 +1,19 @@
 <template>
   <v-app>
     <v-main>
-      <BookForm />
+      <booking-form />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import BookForm from "./components/BookForm";
+import BookingForm from "../components/BookingForm";
 
 export default {
   name: "App",
 
   components: {
-    BookForm
+    BookingForm
   },
 
   data: () => ({
