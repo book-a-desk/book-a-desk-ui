@@ -13,7 +13,7 @@
 <script>
 import BadContainedButton from "../components/BadContainedButton";
 export default {
-  name: "BookForm",
+  name: "BookingForm",
   data() { return {}; },
   methods: {
     sayHello() {
