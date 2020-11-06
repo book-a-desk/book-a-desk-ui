@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import BadContainedButton from "../components/BadContainedButton";
+import BadContainedButton from "@/components/BadContainedButton";
 export default {
   name: "BookingForm",
   data() {
