@@ -2,8 +2,16 @@
   <v-container>
     <v-row class="text-center">
       <v-col>
-        <v-text-field v-model="officeId" label="Office ID" id="officeID"></v-text-field>
-        <v-text-field v-model="bookingdate" label="Booking Date" id="bookingDate"></v-text-field>
+        <v-text-field
+          v-model="officeId"
+          label="Office ID"
+          id="officeID"
+        ></v-text-field>
+        <v-text-field
+          v-model="bookingdate"
+          label="Booking Date"
+          id="bookingDate"
+        ></v-text-field>
         <v-text-field
           v-model="emailaddress"
           label="Email Address"
