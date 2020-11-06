@@ -14,10 +14,13 @@
 import BadContainedButton from "../components/BadContainedButton";
 export default {
   name: "BookingForm",
-  data() { return {}; },
+  data() {
+    return {};
+  },
   methods: {
     sayHello() {
       alert("Hello.");
+      this.$store.dispatch("reserveOffice");
     }
   },
   components: {
