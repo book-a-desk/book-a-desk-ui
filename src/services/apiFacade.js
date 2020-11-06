@@ -12,16 +12,9 @@ export async function postAsync(url, body) {
   } catch (error) {
     handleError(error);
   }
-} 
-  
+}
+
 function handleError(error) {
-  // Todo: Extract this to a separate function that can be used elsewhere
-  if (error.response.status == 401) {
-    store.commit(
-      "ADD_ERROR_MESSAGE",
-      "Unable to authenticate on the server."
-    );
-  }
   // Unhandled exceptions return plain text
   // We want to handle it differently from caught errors
   if (error.response.headers["content-type"] == "text/plain") {
