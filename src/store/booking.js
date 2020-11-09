@@ -1,21 +1,21 @@
 import { postAsync } from "../services/apiFacade";
+import { getBaseApiUrl } from "./base-api-url";
 
 const actions = {
-  async addBooking({ commit }, body) {
-    const url = `http://localhost:5000/bookings`;
-    const Booking = await postAsync(url, body);
-    commit("SAVE_Booked_OFFICE", Booking.data);
+  async book({ commit }, body) {
+    const Booking = await postAsync(`${getBaseApiUrl()}/bookings`, body);
+    commit("SAVE_BOOKING", Booking.data);
   }
 };
 
 const mutations = {
-  SAVE_Booked_OFFICE(state, data) {
-    state.bookedOffice = data;
+  SAVE_BOOKING(state, data) {
+    state.booking = data;
   }
 };
 
 const state = {
-  bookedOffice: {}
+  booking: {}
 };
 
 export default {
