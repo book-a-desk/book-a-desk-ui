@@ -1,9 +1,8 @@
 import { postAsync } from "../services/apiFacade";
-import { getBaseApiUrl } from "./base-api-url";
 
 const actions = {
   async book({ commit }, body) {
-    const Booking = await postAsync(`${getBaseApiUrl()}/bookings`, body);
+    const Booking = await postAsync(`bookings`, body);
     commit("SAVE_BOOKING", Booking.data);
   }
 };

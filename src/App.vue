@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import BookingForm from "./components/BookingForm";
 
 export default {
@@ -15,7 +16,12 @@ export default {
   components: {
     BookingForm
   },
-
+  created: function() {
+    var url = "./env/config.json";
+    axios.get(url).then(response => {
+      axios.defaults.baseURL = `${response.data.base_api_url}/`;
+    });
+  },
   data: () => ({
     //
   })
