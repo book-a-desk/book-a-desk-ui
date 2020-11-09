@@ -20,7 +20,7 @@ export default {
   methods: {
     sayHello() {
       alert("Hello.");
-      this.$store.dispatch("addBooking", {
+      this.$store.dispatch("book", {
         officeId: "1",
         bookingdate: "04.01.2021",
         emailaddress: "email@broadsign.com"
