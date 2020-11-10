@@ -56,9 +56,6 @@ workflows:
     jobs:
       - node/test
   release:
-    #TODO uncomment before merge
-    #when:
-    #  equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - node/test
       - build-assets:
