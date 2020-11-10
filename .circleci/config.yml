@@ -1,7 +1,71 @@
 version: 2.1
+
 orbs:
   node: circleci/node@3.0.0
+  aws-cli: circleci/aws-cli@1.3.0
+  aws-s3: circleci/aws-s3@1.0.16
+
+parameters:
+  s3-bucket:
+    type: string
+    default: book-a-desk-ui
+
+jobs:
+  build-assets:
+    steps:
+      - checkout
+      - run:
+          name: NPM Build Project
+          command: |
+            npm run build
+      - persist_to_workspace:
+          root: ./dist
+          paths:
+            - ./*
+
+  deploy-infra:
+    executor: aws-cli/default
+
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws-region: AWS_REGION
+      - run:
+          name: Ensure infrastructure is up to date
+          command: |
+            aws cloudformation deploy \
+              --stack-name book-a-desk-ui \
+              --template-file ./infra/cf.yaml \
+              --capabilities
+  publish-to-s3:
+    docker:
+      - image: cimg/python:3.6
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: ls -R dist/*
+      - aws-s3/sync:
+          arguments: --acl public-read
+          from: ./dist/
+          overwrite: false
+          to: s3://<< pipeline.parameters.s3-bucket >>/${CIRCLE_SHA1}
+
 workflows:
   node-tests:
     jobs:
       - node/test
+  release:
+    when:
+      equal: ['trunk', << pipeline.git.branch >>]
+    jobs:
+      - node/test
+      - build-assets
+        requires:
+          - node/test
+      - deploy-infra
+        requires:
+          - node/test
+      - publish-to-s3
+        requires:
+          - deploy-infra
+          - build-assets
