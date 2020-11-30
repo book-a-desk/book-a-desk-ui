@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     submitBooking() {
-      this.$store.dispatch("addBooking", {
+      this.$store.dispatch("book", {
         officeId: this.officeId,
         bookingdate: this.bookingdate,
         emailaddress: this.emailaddress
