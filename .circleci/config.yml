@@ -34,7 +34,7 @@ jobs:
     steps:
       - checkout
       - aws-cli/setup:
-          aws-region: AWS_REGION
+          aws-region: AWS_DEFAULT_REGION
       - run:
           name: Ensure infrastructure is up to date
           command: |
@@ -42,8 +42,6 @@ jobs:
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
-    environment:
-      AWS_REGION: $AWS_DEFAULT_REGION
 
   publish-to-s3:
     docker:
