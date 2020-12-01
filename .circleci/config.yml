@@ -12,6 +12,8 @@ parameters:
 
 jobs:
   build-assets:
+    docker:
+      - image: circleci/node
     steps:
       - checkout
       - run:
