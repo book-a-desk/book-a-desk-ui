@@ -39,6 +39,8 @@ jobs:
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
               --capabilities
+    environment:
+      AWS_REGION: $AWS_DEFAULT_REGION
 
   publish-to-s3:
     docker:
