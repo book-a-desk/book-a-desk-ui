@@ -17,6 +17,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: NPM install
+          command: npm install
+      - run:
           name: NPM Build Project
           command: |
             npm run build
