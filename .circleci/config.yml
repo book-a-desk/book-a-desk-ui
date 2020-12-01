@@ -59,12 +59,12 @@ workflows:
     jobs:
       - node/test
       - build-assets:
-        requires:
-          - node/test
+          requires:
+            - node/test
       - deploy-infra:
-        requires:
-          - node/test
+          requires:
+            - node/test
       - publish-to-s3:
-        requires:
-          - deploy-infra
-          - build-assets
+          requires:
+            - deploy-infra
+            - build-assets
