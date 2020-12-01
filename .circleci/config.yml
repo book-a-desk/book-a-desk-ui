@@ -55,6 +55,7 @@ jobs:
           from: ./dist/
           overwrite: false
           to: s3://<< pipeline.parameters.s3-bucket >>/${CIRCLE_SHA1}
+          aws-region: AWS_DEFAULT_REGION
 
 workflows:
   node-tests:
