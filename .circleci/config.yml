@@ -41,7 +41,7 @@ jobs:
             aws cloudformation deploy \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
-              --capabilities
+              --capabilities CAPABILITY_NAMED_IAM
     environment:
       AWS_REGION: $AWS_DEFAULT_REGION
 
