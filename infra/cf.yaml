@@ -14,4 +14,4 @@ Resources:
               - '*'
       WebsiteConfiguration:
         IndexDocument: index.html
-        ErrorDocument: 404.html # how will we create this file?
+        ErrorDocument: 404.html #TODO: how will we create this file?
