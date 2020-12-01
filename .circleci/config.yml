@@ -62,6 +62,8 @@ workflows:
     jobs:
       - node/test
   release:
+    when:
+      equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - node/test
       - build-assets:
