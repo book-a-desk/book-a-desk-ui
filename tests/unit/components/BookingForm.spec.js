@@ -16,12 +16,12 @@ describe("Component BookingForm.vue", () => {
   });
 
   it("should render 3 text-fields", () => {
-    const textFields = underTest.findAllComponents({ name: "v-text-field" });
+    const textFields = underTest.findAllComponents({ name: "bad-text-input" });
     expect(textFields.length).toBe(3);
 
     expect(textFields.at(0).attributes("label")).toBe("Office ID");
     expect(textFields.at(1).attributes("label")).toBe("Booking Date");
-    expect(textFields.at(2).attributes("label")).toBe("Email Address");
+    expect(textFields.at(2).attributes("label")).toBe("Email");
   });
 
   it("should render a button", () => {

@@ -2,21 +2,27 @@
   <v-container>
     <v-row class="text-center">
       <v-col>
-        <v-text-field
-          v-model="officeId"
-          label="Office ID"
+        <bad-text-input
           id="officeID"
-        ></v-text-field>
-        <v-text-field
-          v-model="bookingDate"
-          label="Booking Date"
+          label="Office ID"
+          placeholder="Enter office ID"
+          :value="officeId"
+          :change="changeOfficeId"
+        ></bad-text-input>
+        <bad-text-input
           id="bookingDate"
-        ></v-text-field>
-        <v-text-field
-          v-model="emailAddress"
-          label="Email Address"
+          label="Booking Date"
+          placeholder="Enter booking date"
+          :value="bookingDate"
+          :change="changeBookingDate"
+        ></bad-text-input>
+        <bad-text-input
           id="email"
-        ></v-text-field>
+          label="Email"
+          placeholder="Enter your email"
+          :value="emailAddress"
+          :change="changeEmail"
+        ></bad-text-input>
       </v-col>
     </v-row>
     <v-row class="text-center">
@@ -31,6 +37,8 @@
 
 <script>
 import BadContainedButton from "@/components/BadContainedButton";
+import BadTextInput from "@/components/BadTextInput";
+
 export default {
   name: "BookingForm",
   data() {
@@ -41,6 +49,15 @@ export default {
     };
   },
   methods: {
+    changeOfficeId(value) {
+      this.officeId = value;
+    },
+    changeBookingDate(value) {
+      this.bookingDate = value;
+    },
+    changeEmail(value) {
+      this.emailAddress = value;
+    },
     submitBooking() {
       this.$store.dispatch("book", {
         OfficeId: this.officeId,
@@ -50,7 +67,8 @@ export default {
     }
   },
   components: {
-    BadContainedButton
+    BadContainedButton,
+    BadTextInput
   }
 };
 </script>
