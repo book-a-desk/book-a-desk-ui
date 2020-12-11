@@ -8,12 +8,12 @@
           id="officeID"
         ></v-text-field>
         <v-text-field
-          v-model="bookingdate"
+          v-model="bookingDate"
           label="Booking Date"
           id="bookingDate"
         ></v-text-field>
         <v-text-field
-          v-model="emailaddress"
+          v-model="emailAddress"
           label="Email Address"
           id="email"
         ></v-text-field>
@@ -36,16 +36,16 @@ export default {
   data() {
     return {
       officeId: "",
-      bookingdate: "",
-      emailaddress: ""
+      bookingDate: "",
+      emailAddress: ""
     };
   },
   methods: {
     submitBooking() {
       this.$store.dispatch("book", {
-        officeId: this.officeId,
-        bookingdate: this.bookingdate,
-        emailaddress: this.emailaddress
+        OfficeId: this.officeId,
+        BookingDate: this.bookingDate,
+        EmailAddress: this.emailAddress
       });
     }
   },
