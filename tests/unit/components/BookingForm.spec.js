@@ -32,39 +32,39 @@ describe("Component BookingForm.vue", () => {
     expect(button.text()).toBe("Book");
   });
 
-  // describe('filling and submitting the "form"', () => {
-  //   let actions;
-  //   let store;
-  //
-  //   beforeEach(() => {
-  //     actions = {
-  //       addBooking: jest.fn(),
-  //     };
-  //     store = new Vuex.Store({
-  //       actions
-  //     });
-  //     underTest = shallowMount(BookingForm, { store, localVue })
-  //
-  //   });
-  //
-  //   it("should submit values from the inputs", () => {
-  //     const officeIDInput = underTest.find("#officeID");
-  //     officeIDInput.element.value = 666;
-  //     officeIDInput.trigger("change");
-  //
-  //     const emailInput = underTest.find("#email");
-  //     emailInput.element.value = "email";
-  //     emailInput.trigger("change");
-  //
-  //     const dateInput = underTest.find("#bookingDate");
-  //     dateInput.element.value = "2020-11-04";
-  //     dateInput.trigger("change");
-  //
-  //     const button = underTest.find('#btnBook');
-  //
-  //     underTest.find("#btnBook").trigger("click");
-  //
-  //     expect(actions.addBooking).toHaveBeenCalled();
-  //   });
-  // });
+  describe('filling and submitting the "form"', () => {
+    let actions;
+    let store;
+
+    beforeEach(() => {
+      actions = {
+        book: jest.fn()
+      };
+      store = new Vuex.Store({
+        actions
+      });
+      underTest = shallowMount(BookingForm, { store, localVue });
+    });
+
+    it("should submit values from the inputs", async () => {
+      const textFields = underTest.findAllComponents({ name: "bad-text-input" });
+      const button = underTest.findComponent({ name: "bad-contained-button" });
+
+      await textFields
+        .at(0)
+        .props()
+        .change("Montreal");
+      await textFields
+        .at(1)
+        .props()
+        .change("2020-12-31");
+      await textFields
+        .at(2)
+        .props()
+        .change("x@x.com");
+      await button.props().click();
+
+      expect(actions.book).toHaveBeenCalled();
+    });
+  });
 });
