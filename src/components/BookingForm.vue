@@ -60,9 +60,9 @@ export default {
     },
     submitBooking() {
       this.$store.dispatch("book", {
-        OfficeId: this.officeId,
-        BookingDate: this.bookingDate,
-        EmailAddress: this.emailAddress
+        office: { id: this.officeId },
+        date: this.bookingDate,
+        user: { email: this.emailAddress }
       });
     }
   },
