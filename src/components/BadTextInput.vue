@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    @change="change"
+    @input="update"
     :disabled="disabled"
     :label="label"
     :placeholder="placeholder"
@@ -15,30 +15,27 @@ export default {
   data() {
     return {};
   },
+  methods: {
+    update(newValue) {
+      this.$emit("input", newValue);
+    }
+  },
   props: {
-    change: {
-      type: Function,
-      required: true
-    },
     value: {
-      type: String,
-      default: ""
+      type: String
     },
     placeholder: {
-      type: String,
-      default: ""
+      type: String
     },
     disabled: {
       type: Boolean,
       default: false
     },
     label: {
-      type: String,
-      default: ""
+      type: String
     },
     id: {
-      type: String,
-      default: ""
+      type: String
     }
   }
 };

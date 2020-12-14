@@ -45,16 +45,8 @@ describe("Component BadTextInput.vue", () => {
     expect(textField.props().id).toEqual("Input1");
   });
 
-  it("should pass id prop", () => {
+  it("should pass placeholder prop", () => {
     const textField = underTest.findComponent({ name: "v-text-field" });
     expect(textField.props().placeholder).toEqual("Type something");
-  });
-
-  it("should trigger `onChange` when value is changed", async () => {
-    const textField = underTest.findComponent({ name: "v-text-field" });
-
-    await textField.vm.$emit("change", { value: "New Value" });
-
-    expect(onChange).toHaveBeenCalledWith({ value: "New Value" });
   });
 });

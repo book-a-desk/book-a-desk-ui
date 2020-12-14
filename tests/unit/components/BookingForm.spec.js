@@ -47,21 +47,15 @@ describe("Component BookingForm.vue", () => {
     });
 
     it("should submit values from the inputs", async () => {
-      const textFields = underTest.findAllComponents({ name: "bad-text-input" });
+      const textFields = underTest.findAllComponents({
+        name: "bad-text-input"
+      });
       const button = underTest.findComponent({ name: "bad-contained-button" });
 
-      await textFields
-        .at(0)
-        .props()
-        .change("Montreal");
-      await textFields
-        .at(1)
-        .props()
-        .change("2020-12-31");
-      await textFields
-        .at(2)
-        .props()
-        .change("x@x.com");
+      textFields.at(0).vm.$emit("input", "Montreal");
+      textFields.at(1).vm.$emit("input", "2020-12-31");
+      textFields.at(2).vm.$emit("input", "me@me.com");
+
       await button.props().click();
 
       expect(actions.book).toHaveBeenCalled();

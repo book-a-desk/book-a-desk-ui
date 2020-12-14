@@ -6,22 +6,19 @@
           id="officeID"
           label="Office ID"
           placeholder="Enter office ID"
-          :value="officeId"
-          :change="changeOfficeId"
+          v-model="officeId"
         ></bad-text-input>
         <bad-text-input
           id="bookingDate"
           label="Booking Date"
           placeholder="Enter booking date"
-          :value="bookingDate"
-          :change="changeBookingDate"
+          v-model="bookingDate"
         ></bad-text-input>
         <bad-text-input
           id="email"
           label="Email"
           placeholder="Enter your email"
-          :value="emailAddress"
-          :change="changeEmail"
+          v-model="emailAddress"
         ></bad-text-input>
       </v-col>
     </v-row>
@@ -49,15 +46,6 @@ export default {
     };
   },
   methods: {
-    changeOfficeId(value) {
-      this.officeId = value;
-    },
-    changeBookingDate(value) {
-      this.bookingDate = value;
-    },
-    changeEmail(value) {
-      this.emailAddress = value;
-    },
     submitBooking() {
       this.$store.dispatch("book", {
         office: { id: this.officeId },
