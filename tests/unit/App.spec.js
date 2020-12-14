@@ -1,41 +1,22 @@
-import { shallowMount } from "@vue/test-utils";
-import { render } from "@testing-library/vue";
+import { shallowMount, createLocalVue } from "@vue/test-utils";
+import VueRouter from "vue-router";
+import { renderWithVuetify } from "./utils/testingLibraryUtils";
 
-import Vuetify from "vuetify";
+const localVue = createLocalVue();
+localVue.use(VueRouter);
 
 import App from "@/App";
-import BookingForm from "@/components/BookingForm.vue";
-
-// from https://github.com/testing-library/vue-testing-library/blob/master/src/__tests__/vuetify.js
-
-// Custom container to integrate Vuetify with Vue Testing Library.
-// Vuetify requires you to wrap your app with a v-app component that provides
-// a <div data-app="true"> node.
-const renderWithVuetify = (component, options, callback) => {
-  const root = document.createElement("div");
-  root.setAttribute("data-app", "true");
-
-  return render(
-    component,
-    {
-      container: document.body.appendChild(root),
-      // for Vuetify components that use the $vuetify instance property
-      vuetify: new Vuetify(),
-      ...options
-    },
-    callback
-  );
-};
 
 describe("Component App.vue", () => {
   it("can be tested using @vue/test-util", () => {
-    const wrapper = shallowMount(App);
-    expect(wrapper.findComponent(BookingForm).exists()).toBe(true);
+    const wrapper = shallowMount(App, { localVue });
+    const links = wrapper.findAllComponents({ name: "router-link" });
+    expect(links.at(0).text()).toEqual("Book a desk");
   });
 
   it("can be tested using @testing-library/vue", () => {
     const { getByText } = renderWithVuetify(App);
-    const buttonEl = getByText(/^Book$/);
-    expect(buttonEl).not.toBe(undefined);
+    const linkElt = getByText(/^Book a desk$/);
+    expect(linkElt).not.toBe(undefined);
   });
 });
