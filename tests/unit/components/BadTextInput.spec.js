@@ -10,13 +10,10 @@ localVue.use(Vuex);
 
 describe("Component BadTextInput.vue", () => {
   let underTest;
-  let onChange;
 
   beforeEach(() => {
-    onChange = jest.fn();
     underTest = shallowMount(BadTextInput, {
       propsData: {
-        change: onChange,
         label: "I am input",
         placeholder: "Type something",
         id: "Input1",
@@ -30,22 +27,22 @@ describe("Component BadTextInput.vue", () => {
     expect(textField.exists()).toBe(true);
   });
 
-  it("should pass value prop", () => {
+  it("should pass [value] prop", () => {
     const textField = underTest.findComponent({ name: "v-text-field" });
     expect(textField.props().value).toEqual("Initial value");
   });
 
-  it("should pass label prop", () => {
+  it("should pass [label] prop", () => {
     const textField = underTest.findComponent({ name: "v-text-field" });
     expect(textField.props().label).toEqual("I am input");
   });
 
-  it("should pass id prop", () => {
+  it("should pass [id] prop", () => {
     const textField = underTest.findComponent({ name: "v-text-field" });
     expect(textField.props().id).toEqual("Input1");
   });
 
-  it("should pass placeholder prop", () => {
+  it("should pass [placeholder] prop", () => {
     const textField = underTest.findComponent({ name: "v-text-field" });
     expect(textField.props().placeholder).toEqual("Type something");
   });

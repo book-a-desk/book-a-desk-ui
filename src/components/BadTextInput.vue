@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    @input="update"
+    @input="handleUpdate"
     :disabled="disabled"
     :label="label"
     :placeholder="placeholder"
@@ -16,7 +16,7 @@ export default {
     return {};
   },
   methods: {
-    update(newValue) {
+    handleUpdate(newValue) {
       this.$emit("input", newValue);
     }
   },
