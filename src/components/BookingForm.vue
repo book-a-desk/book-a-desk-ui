@@ -2,21 +2,24 @@
   <v-container>
     <v-row class="text-center">
       <v-col>
-        <v-text-field
-          v-model="officeId"
-          label="Office ID"
+        <bad-text-input
           id="officeID"
-        ></v-text-field>
-        <v-text-field
-          v-model="bookingdate"
-          label="Booking Date"
+          label="Office ID"
+          placeholder="Enter office ID"
+          v-model="officeId"
+        ></bad-text-input>
+        <bad-text-input
           id="bookingDate"
-        ></v-text-field>
-        <v-text-field
-          v-model="emailaddress"
-          label="Email Address"
+          label="Booking Date"
+          placeholder="Enter booking date"
+          v-model="bookingDate"
+        ></bad-text-input>
+        <bad-text-input
           id="email"
-        ></v-text-field>
+          label="Email"
+          placeholder="Enter your email"
+          v-model="emailAddress"
+        ></bad-text-input>
       </v-col>
     </v-row>
     <v-row class="text-center">
@@ -31,26 +34,29 @@
 
 <script>
 import BadContainedButton from "@/components/BadContainedButton";
+import BadTextInput from "@/components/BadTextInput";
+
 export default {
   name: "BookingForm",
   data() {
     return {
       officeId: "",
-      bookingdate: "",
-      emailaddress: ""
+      bookingDate: "",
+      emailAddress: ""
     };
   },
   methods: {
     submitBooking() {
       this.$store.dispatch("book", {
-        officeId: this.officeId,
-        bookingdate: this.bookingdate,
-        emailaddress: this.emailaddress
+        office: { id: this.officeId },
+        date: this.bookingDate,
+        user: { email: this.emailAddress }
       });
     }
   },
   components: {
-    BadContainedButton
+    BadContainedButton,
+    BadTextInput
   }
 };
 </script>

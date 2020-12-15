@@ -16,12 +16,12 @@ describe("Component BookingForm.vue", () => {
   });
 
   it("should render 3 text-fields", () => {
-    const textFields = underTest.findAllComponents({ name: "v-text-field" });
+    const textFields = underTest.findAllComponents({ name: "bad-text-input" });
     expect(textFields.length).toBe(3);
 
     expect(textFields.at(0).attributes("label")).toBe("Office ID");
     expect(textFields.at(1).attributes("label")).toBe("Booking Date");
-    expect(textFields.at(2).attributes("label")).toBe("Email Address");
+    expect(textFields.at(2).attributes("label")).toBe("Email");
   });
 
   it("should render a button", () => {
@@ -32,39 +32,33 @@ describe("Component BookingForm.vue", () => {
     expect(button.text()).toBe("Book");
   });
 
-  // describe('filling and submitting the "form"', () => {
-  //   let actions;
-  //   let store;
-  //
-  //   beforeEach(() => {
-  //     actions = {
-  //       addBooking: jest.fn(),
-  //     };
-  //     store = new Vuex.Store({
-  //       actions
-  //     });
-  //     underTest = shallowMount(BookingForm, { store, localVue })
-  //
-  //   });
-  //
-  //   it("should submit values from the inputs", () => {
-  //     const officeIDInput = underTest.find("#officeID");
-  //     officeIDInput.element.value = 666;
-  //     officeIDInput.trigger("change");
-  //
-  //     const emailInput = underTest.find("#email");
-  //     emailInput.element.value = "email";
-  //     emailInput.trigger("change");
-  //
-  //     const dateInput = underTest.find("#bookingDate");
-  //     dateInput.element.value = "2020-11-04";
-  //     dateInput.trigger("change");
-  //
-  //     const button = underTest.find('#btnBook');
-  //
-  //     underTest.find("#btnBook").trigger("click");
-  //
-  //     expect(actions.addBooking).toHaveBeenCalled();
-  //   });
-  // });
+  describe('filling and submitting the "form"', () => {
+    let actions;
+    let store;
+
+    beforeEach(() => {
+      actions = {
+        book: jest.fn()
+      };
+      store = new Vuex.Store({
+        actions
+      });
+      underTest = shallowMount(BookingForm, { store, localVue });
+    });
+
+    it("should submit values from the inputs", async () => {
+      const textFields = underTest.findAllComponents({
+        name: "bad-text-input"
+      });
+      const button = underTest.findComponent({ name: "bad-contained-button" });
+
+      textFields.at(0).vm.$emit("input", "Montreal");
+      textFields.at(1).vm.$emit("input", "2020-12-31");
+      textFields.at(2).vm.$emit("input", "me@me.com");
+
+      await button.props().click();
+
+      expect(actions.book).toHaveBeenCalled();
+    });
+  });
 });
