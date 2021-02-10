@@ -15,13 +15,24 @@ describe("Component BookingForm.vue", () => {
     underTest = shallowMount(BookingForm);
   });
 
-  it("should render 3 text-fields", () => {
+  it("should render 2 text-fields", () => {
     const textFields = underTest.findAllComponents({ name: "bad-text-input" });
-    expect(textFields.length).toBe(3);
+    expect(textFields.length).toBe(2);
 
     expect(textFields.at(0).attributes("label")).toBe("Office ID");
-    expect(textFields.at(1).attributes("label")).toBe("Booking Date");
-    expect(textFields.at(2).attributes("label")).toBe("Email");
+    expect(textFields.at(1).attributes("label")).toBe("Email");
+  });
+
+  it("should render `DatePicker` component", () => {
+    expect(underTest.findComponent({ name: "v-date-picker" }).exists()).toBe(
+      true
+    );
+  });
+
+  it("should set the minimum date to today", () => {
+    expect(
+      underTest.findComponent({ name: "v-date-picker" }).props().min
+    ).toEqual(new Date().toISOString().split("T")[0]);
   });
 
   it("should render a button", () => {
@@ -53,8 +64,11 @@ describe("Component BookingForm.vue", () => {
       const button = underTest.findComponent({ name: "bad-contained-button" });
 
       textFields.at(0).vm.$emit("input", "Montreal");
-      textFields.at(1).vm.$emit("input", "2020-12-31");
-      textFields.at(2).vm.$emit("input", "me@me.com");
+      textFields.at(1).vm.$emit("input", "me@me.com");
+
+      underTest
+        .findComponent({ name: "v-date-picker" })
+        .vm.$emit("click", "2020-12-31");
 
       await button.props().click();
 

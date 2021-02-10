@@ -8,12 +8,10 @@
           placeholder="Enter office ID"
           v-model="officeId"
         ></bad-text-input>
-        <bad-text-input
-          id="bookingDate"
-          label="Booking Date"
-          placeholder="Enter booking date"
+        <v-date-picker
           v-model="bookingDate"
-        ></bad-text-input>
+          :min="new Date().toISOString().split('T')[0]"
+        ></v-date-picker>
         <bad-text-input
           id="email"
           label="Email"
