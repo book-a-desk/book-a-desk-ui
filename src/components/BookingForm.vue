@@ -2,12 +2,13 @@
   <v-container>
     <v-row class="text-center">
       <v-col>
-        <bad-text-input
-          id="officeID"
-          label="Office ID"
-          placeholder="Enter office ID"
-          v-model="officeId"
-        ></bad-text-input>
+        <bad-combo-box
+          id = "offices"
+          :items = "offices"
+          itemText = "name"
+          itemValue = "id"
+          v-model = "selectedOffice"
+        ></bad-combo-box>
         <bad-text-input
           id="bookingDate"
           label="Booking Date"
@@ -35,6 +36,7 @@
 <script>
 import BadContainedButton from "@/components/BadContainedButton";
 import BadTextInput from "@/components/BadTextInput";
+import BadComboBox from "@/components/BadComboBox";
 
 export default {
   name: "BookingForm",
@@ -42,7 +44,9 @@ export default {
     return {
       officeId: "",
       bookingDate: "",
-      emailAddress: ""
+      emailAddress: "",
+      offices: [{id: 'id-1', name: 'name-1'}, {id: 'id-2', name: 'name-2'}],
+      selectedOffice: {id: 'id-1', name: 'name-1'}
     };
   },
   methods: {
@@ -56,7 +60,8 @@ export default {
   },
   components: {
     BadContainedButton,
-    BadTextInput
+    BadTextInput,
+    BadComboBox
   }
 };
 </script>
