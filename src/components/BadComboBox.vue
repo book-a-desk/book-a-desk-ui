@@ -1,11 +1,12 @@
 <template>
-	<v-combobox>
+	<v-combobox
 		:id = "`combobox-${id}`"
 		:items = "items"
 		:itemText = "itemText"
 		:item-value = "itemValue"
 		@change = "change"
 		v-model = "valueCopy"
+		>
 	</v-combobox>
 </template>
 <script>
