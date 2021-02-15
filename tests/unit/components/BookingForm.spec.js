@@ -30,15 +30,9 @@ describe("Component BookingForm.vue", () => {
   });
 
   it("should render `DatePicker` component", () => {
-    expect(underTest.findComponent({ name: "v-date-picker" }).exists()).toBe(
+    expect(underTest.findComponent({ name: "bad-date-picker" }).exists()).toBe(
       true
     );
-  });
-
-  it("should set the minimum date to today", () => {
-    expect(
-      underTest.findComponent({ name: "v-date-picker" }).props().min
-    ).toEqual(new Date().toISOString().split("T")[0]);
   });
 
   it("should render a button", () => {
@@ -73,7 +67,7 @@ describe("Component BookingForm.vue", () => {
       textFields.at(1).vm.$emit("input", "me@me.com");
 
       underTest
-        .findComponent({ name: "v-date-picker" })
+        .findComponent({ name: "bad-date-picker" })
         .vm.$emit("click", "2020-12-31");
 
       await button.props().click();

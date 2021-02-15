@@ -19,10 +19,8 @@
     <v-row>
       <v-col>
         <p>Select a booking date</p>
-        <v-date-picker
-          v-model="bookingDate"
-          :min="new Date().toISOString().split('T')[0]"
-        ></v-date-picker>
+        <bad-date-picker v-model="bookingDate">
+        </bad-date-picker>
       </v-col>
     </v-row>
     <v-row class="text-center">
@@ -36,8 +34,10 @@
 </template>
 
 <script>
+import BadDatePicker from './BadDatePicker.vue';
 
 export default {
+  components: { BadDatePicker },
   name: "BookingForm",
   data() {
     return {
