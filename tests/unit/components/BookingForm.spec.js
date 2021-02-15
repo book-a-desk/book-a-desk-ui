@@ -1,8 +1,13 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-
+import Vue from "vue";
 import BookingForm from "@/components/BookingForm.vue";
+import BadTextInput from "@/components/BadTextInput.vue";
+import BadContainedButton from "@/components/BadContainedButton.vue";
 
 import Vuex from "vuex";
+
+Vue.component('BadTextInput', BadTextInput)
+Vue.component('BadContainedButton', BadContainedButton)
 
 const localVue = createLocalVue();
 
@@ -13,10 +18,11 @@ describe("Component BookingForm.vue", () => {
 
   beforeEach(() => {
     underTest = shallowMount(BookingForm);
+
   });
 
   it("should render 2 text-fields", () => {
-    const textFields = underTest.findAllComponents({ name: "bad-text-input" });
+    const textFields = underTest.findAllComponents(BadTextInput);
     expect(textFields.length).toBe(2);
 
     expect(textFields.at(0).attributes("label")).toBe("Office ID");
@@ -36,7 +42,7 @@ describe("Component BookingForm.vue", () => {
   });
 
   it("should render a button", () => {
-    const button = underTest.findComponent({ name: "bad-contained-button" });
+    const button = underTest.findComponent(BadContainedButton);
     expect(button.exists()).toBe(true);
 
     expect(button.attributes("id")).toBe("btnBook");
@@ -61,7 +67,7 @@ describe("Component BookingForm.vue", () => {
       const textFields = underTest.findAllComponents({
         name: "bad-text-input"
       });
-      const button = underTest.findComponent({ name: "bad-contained-button" });
+      const button = underTest.findComponent(BadContainedButton);
 
       textFields.at(0).vm.$emit("input", "Montreal");
       textFields.at(1).vm.$emit("input", "me@me.com");

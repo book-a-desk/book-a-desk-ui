@@ -4,6 +4,7 @@ import vuetify from "./plugins/vuetify";
 import store from "./store";
 import VueRouter from "vue-router";
 import BookingForm from "./components/BookingForm";
+import "@/plugins/register-components";
 
 const routes = [{ path: "/", component: BookingForm }];
 

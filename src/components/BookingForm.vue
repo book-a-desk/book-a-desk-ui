@@ -36,8 +36,6 @@
 </template>
 
 <script>
-import BadContainedButton from "@/components/BadContainedButton";
-import BadTextInput from "@/components/BadTextInput";
 
 export default {
   name: "BookingForm",
@@ -56,10 +54,6 @@ export default {
         user: { email: this.emailAddress }
       });
     }
-  },
-  components: {
-    BadContainedButton,
-    BadTextInput
   }
 };
 </script>
