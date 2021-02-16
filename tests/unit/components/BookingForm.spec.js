@@ -34,14 +34,14 @@ describe("Component BookingForm.vue", () => {
   });
 
   it("should render `DatePicker` component", () => {
-    expect(underTest.findComponent({ name: "bad-date-picker" }).exists()).toBe(
+    expect(underTest.findComponent(BadDatePicker).exists()).toBe(
       true
     );
   });
     
   it("should set the minimum date of the date picker to tomorrow", () => {
     expect(
-      underTest.findComponent({ name: "bad-date-picker" }).props().min
+      underTest.findComponent(BadDatePicker).props().min
     ).toEqual(moment().add(1, 'days').format('YYYY-MM-DD'));
   });
 
