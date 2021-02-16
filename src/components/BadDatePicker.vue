@@ -2,12 +2,11 @@
     <v-date-picker
         @input="handleUpdate"
         :value="value"
-        :min="tomorrow()"
+        :min="min"
     ></v-date-picker>
 </template>
 <script>
 
-import moment from 'moment'
 export default {
   name: "BadDatePicker",
   data() {
@@ -16,14 +15,14 @@ export default {
   methods: {
     handleUpdate(newValue) {
       this.$emit("input", newValue);
-    },
-    tomorrow() {
-        return moment().add(1, 'days').format('YYYY-MM-DD')
     }
   },
   props: {
     value: {
       type: String
+    },
+    min: {
+        type: String
     }
   }
 };

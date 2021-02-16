@@ -19,7 +19,9 @@
     <v-row>
       <v-col>
         <p>Select a booking date</p>
-        <bad-date-picker v-model="bookingDate">
+        <bad-date-picker 
+        v-model="bookingDate"
+        :min="tomorrow()">
         </bad-date-picker>
       </v-col>
     </v-row>
@@ -34,10 +36,9 @@
 </template>
 
 <script>
-import BadDatePicker from './BadDatePicker.vue';
 
+import moment from 'moment'
 export default {
-  components: { BadDatePicker },
   name: "BookingForm",
   data() {
     return {
@@ -53,6 +54,9 @@ export default {
         date: this.bookingDate,
         user: { email: this.emailAddress }
       });
+    },    
+    tomorrow() {
+        return moment().add(1, 'days').format('YYYY-MM-DD')
     }
   }
 };

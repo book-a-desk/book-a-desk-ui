@@ -3,11 +3,15 @@ import Vue from "vue";
 import BookingForm from "@/components/BookingForm.vue";
 import BadTextInput from "@/components/BadTextInput.vue";
 import BadContainedButton from "@/components/BadContainedButton.vue";
+import BadDatePicker from "@/components/BadDatePicker.vue";
 
 import Vuex from "vuex";
 
+import moment from 'moment'
+
 Vue.component('BadTextInput', BadTextInput)
 Vue.component('BadContainedButton', BadContainedButton)
+Vue.component('BadDatePicker', BadDatePicker)
 
 const localVue = createLocalVue();
 
@@ -33,6 +37,12 @@ describe("Component BookingForm.vue", () => {
     expect(underTest.findComponent({ name: "bad-date-picker" }).exists()).toBe(
       true
     );
+  });
+    
+  it("should set the minimum date of the date picker to tomorrow", () => {
+    expect(
+      underTest.findComponent({ name: "bad-date-picker" }).props().min
+    ).toEqual(moment().add(1, 'days').format('YYYY-MM-DD'));
   });
 
   it("should render a button", () => {

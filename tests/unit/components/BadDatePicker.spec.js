@@ -31,11 +31,4 @@ describe("Component BadDatePicker.vue", () => {
     const datePicker = underTest.findComponent({ name: "v-date-picker" });
     expect(datePicker.props().value).toEqual(initialValue);
   });  
-
-  it("should set the minimum date to tomorrow", () => {
-    expect(
-      underTest.findComponent({ name: "v-date-picker" }).props().min
-    ).toEqual(moment().add(1, 'days').format('YYYY-MM-DD'));
-  });
-
 });
