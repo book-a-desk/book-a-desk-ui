@@ -19,10 +19,10 @@
     <v-row>
       <v-col>
         <p>Select a booking date</p>
-        <v-date-picker
-          v-model="bookingDate"
-          :min="new Date().toISOString().split('T')[0]"
-        ></v-date-picker>
+        <bad-date-picker 
+        v-model="bookingDate"
+        :min="tomorrow()">
+        </bad-date-picker>
       </v-col>
     </v-row>
     <v-row class="text-center">
@@ -37,6 +37,7 @@
 
 <script>
 
+import moment from 'moment'
 export default {
   name: "BookingForm",
   data() {
@@ -53,6 +54,9 @@ export default {
         date: this.bookingDate,
         user: { email: this.emailAddress }
       });
+    },    
+    tomorrow() {
+        return moment().add(1, 'days').format('YYYY-MM-DD')
     }
   }
 };

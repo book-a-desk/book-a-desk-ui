@@ -3,11 +3,15 @@ import Vue from "vue";
 import BookingForm from "@/components/BookingForm.vue";
 import BadTextInput from "@/components/BadTextInput.vue";
 import BadContainedButton from "@/components/BadContainedButton.vue";
+import BadDatePicker from "@/components/BadDatePicker.vue";
 
 import Vuex from "vuex";
 
+import moment from 'moment'
+
 Vue.component('BadTextInput', BadTextInput)
 Vue.component('BadContainedButton', BadContainedButton)
+Vue.component('BadDatePicker', BadDatePicker)
 
 const localVue = createLocalVue();
 
@@ -30,15 +34,15 @@ describe("Component BookingForm.vue", () => {
   });
 
   it("should render `DatePicker` component", () => {
-    expect(underTest.findComponent({ name: "v-date-picker" }).exists()).toBe(
+    expect(underTest.findComponent(BadDatePicker).exists()).toBe(
       true
     );
   });
-
-  it("should set the minimum date to today", () => {
+    
+  it("should set the minimum date of the date picker to tomorrow", () => {
     expect(
-      underTest.findComponent({ name: "v-date-picker" }).props().min
-    ).toEqual(new Date().toISOString().split("T")[0]);
+      underTest.findComponent(BadDatePicker).props().min
+    ).toEqual(moment().add(1, 'days').format('YYYY-MM-DD'));
   });
 
   it("should render a button", () => {
@@ -73,7 +77,7 @@ describe("Component BookingForm.vue", () => {
       textFields.at(1).vm.$emit("input", "me@me.com");
 
       underTest
-        .findComponent({ name: "v-date-picker" })
+        .findComponent({ name: "bad-date-picker" })
         .vm.$emit("click", "2020-12-31");
 
       await button.props().click();
