@@ -4,8 +4,6 @@ import BadDatePicker from "@/components/BadDatePicker.vue";
 
 import Vuex from "vuex";
 
-import moment from 'moment'
-
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
