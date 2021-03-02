@@ -1,13 +1,15 @@
+const { debug } = require("console");
 const CopyPlugin = require("copy-webpack-plugin");
 
 const path = require("path");
 
 module.exports = {
-  proxy: {
-    "/api/*": {
-        target: "http://localhost:5000",
-        secure: false
-      }
+  devServer: {
+    proxy: {
+      '^/api': {
+        target: 'http://localhost:5000',
+      },
+    }
   },
   transpileDependencies: ["vuetify"],
   publicPath: `/${process.env.VUE_APP_SHA1 || ''}`,
