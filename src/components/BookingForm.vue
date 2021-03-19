@@ -10,17 +10,20 @@
           v-model = "selectedOffice"
         ></bad-combo-box>
         <bad-text-input
-          id="bookingDate"
-          label="Booking Date"
-          placeholder="Enter booking date"
-          v-model="bookingDate"
-        ></bad-text-input>
-        <bad-text-input
           id="email"
           label="Email"
           placeholder="Enter your email"
           v-model="emailAddress"
         ></bad-text-input>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <p>Select a booking date</p>
+        <bad-date-picker 
+        v-model="bookingDate"
+        :min="tomorrow()">
+        </bad-date-picker>
       </v-col>
     </v-row>
     <v-row class="text-center">
@@ -34,10 +37,8 @@
 </template>
 
 <script>
-import BadContainedButton from "@/components/BadContainedButton";
-import BadTextInput from "@/components/BadTextInput";
-import BadComboBox from "@/components/BadComboBox";
 
+import moment from 'moment'
 export default {
   name: "BookingForm",
   data() {
@@ -56,12 +57,10 @@ export default {
         date: this.bookingDate,
         user: { email: this.emailAddress }
       });
+    },    
+    tomorrow() {
+        return moment().add(1, 'days').format('YYYY-MM-DD')
     }
-  },
-  components: {
-    BadContainedButton,
-    BadTextInput,
-    BadComboBox
   }
 };
 </script>

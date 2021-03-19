@@ -1,8 +1,17 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-
+import Vue from "vue";
 import BookingForm from "@/components/BookingForm.vue";
+import BadTextInput from "@/components/BadTextInput.vue";
+import BadContainedButton from "@/components/BadContainedButton.vue";
+import BadDatePicker from "@/components/BadDatePicker.vue";
 
 import Vuex from "vuex";
+
+import moment from 'moment'
+
+Vue.component('BadTextInput', BadTextInput)
+Vue.component('BadContainedButton', BadContainedButton)
+Vue.component('BadDatePicker', BadDatePicker)
 
 const localVue = createLocalVue();
 
@@ -13,19 +22,31 @@ describe("Component BookingForm.vue", () => {
 
   beforeEach(() => {
     underTest = shallowMount(BookingForm);
+
   });
 
-  it("should render 3 text-fields", () => {
-    const textFields = underTest.findAllComponents({ name: "bad-text-input" });
-    expect(textFields.length).toBe(3);
+  it("should render 2 text-fields", () => {
+    const textFields = underTest.findAllComponents(BadTextInput);
+    expect(textFields.length).toBe(2);
 
     expect(textFields.at(0).attributes("label")).toBe("Office ID");
-    expect(textFields.at(1).attributes("label")).toBe("Booking Date");
-    expect(textFields.at(2).attributes("label")).toBe("Email");
+    expect(textFields.at(1).attributes("label")).toBe("Email");
+  });
+
+  it("should render `DatePicker` component", () => {
+    expect(underTest.findComponent(BadDatePicker).exists()).toBe(
+      true
+    );
+  });
+    
+  it("should set the minimum date of the date picker to tomorrow", () => {
+    expect(
+      underTest.findComponent(BadDatePicker).props().min
+    ).toEqual(moment().add(1, 'days').format('YYYY-MM-DD'));
   });
 
   it("should render a button", () => {
-    const button = underTest.findComponent({ name: "bad-contained-button" });
+    const button = underTest.findComponent(BadContainedButton);
     expect(button.exists()).toBe(true);
 
     expect(button.attributes("id")).toBe("btnBook");
@@ -50,11 +71,14 @@ describe("Component BookingForm.vue", () => {
       const textFields = underTest.findAllComponents({
         name: "bad-text-input"
       });
-      const button = underTest.findComponent({ name: "bad-contained-button" });
+      const button = underTest.findComponent(BadContainedButton);
 
       textFields.at(0).vm.$emit("input", "Montreal");
-      textFields.at(1).vm.$emit("input", "2020-12-31");
-      textFields.at(2).vm.$emit("input", "me@me.com");
+      textFields.at(1).vm.$emit("input", "me@me.com");
+
+      underTest
+        .findComponent({ name: "bad-date-picker" })
+        .vm.$emit("click", "2020-12-31");
 
       await button.props().click();
 
