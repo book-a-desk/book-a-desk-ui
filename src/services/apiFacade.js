@@ -7,10 +7,17 @@ import store from "../store";
 
 export async function postAsync(url, body) {
   try {
-    console.log("postAsync");
     return await axios.post(url, body);
   } catch (error) {
     handleError(error);
+  }
+}
+
+export async function getAsync(url) {
+  try {
+    return await axios.get(url);
+  } catch (error) {
+    { handleError(error); }
   }
 }
 

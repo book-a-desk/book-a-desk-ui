@@ -39,21 +39,32 @@
 <script>
 
 import moment from 'moment'
+import { getAsync } from "@/services/apiFacade";
+
 export default {
   name: "BookingForm",
   data() {
     return {
-      officeId: "",
       bookingDate: "",
       emailAddress: "",
-      offices: [{id: 'id-1', name: 'name-1'}, {id: 'id-2', name: 'name-2'}],
-      selectedOffice: {id: 'id-1', name: 'name-1'}
+      offices: [],
+      selectedOffice: {}
     };
   },
+  async mounted() {
+    await this.fetchOffices();
+    this.selectedOffice = this.offices[0];
+  },
   methods: {
+    async fetchOffices() {
+      const url = `offices`;
+      const offices = await getAsync(url);
+      this.offices = offices.data;
+    },
+
     submitBooking() {
       this.$store.dispatch("book", {
-        office: { id: this.officeId },
+        office: { id: this.selectedOffice.id },
         date: this.bookingDate,
         user: { email: this.emailAddress }
       });

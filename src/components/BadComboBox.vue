@@ -2,7 +2,7 @@
 	<v-combobox
 		:id = "`combobox-${id}`"
 		:items = "items"
-		:itemText = "itemText"
+		:item-text = "itemText"
 		:item-value = "itemValue"
 		@change = "change"
 		v-model = "valueCopy"
@@ -28,7 +28,12 @@ export default {
 	  change() {
 		  this.$emit("change", this.valueCopy);
 	  }
-  }
+  },
+   watch: {
+    value() {
+      this.valueCopy = this.value;
+    }
+  },
 };
 </script>
 <style scoped>
