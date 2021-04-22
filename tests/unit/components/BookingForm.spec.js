@@ -4,85 +4,94 @@ import BookingForm from "@/components/BookingForm.vue";
 import BadTextInput from "@/components/BadTextInput.vue";
 import BadContainedButton from "@/components/BadContainedButton.vue";
 import BadDatePicker from "@/components/BadDatePicker.vue";
-
+import BadComboBox from "@/components/BadComboBox.vue"
+import flushPromises from "flush-promises"
+import MockAxios from 'axios' 
 import Vuex from "vuex";
-
 import moment from 'moment'
 
 Vue.component('BadTextInput', BadTextInput)
 Vue.component('BadContainedButton', BadContainedButton)
 Vue.component('BadDatePicker', BadDatePicker)
+Vue.component('BadComboBox', BadComboBox)
 
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
 
 describe("Component BookingForm.vue", () => {
-  let underTest;
+
+  let wrapper;
+  let mockStore;
 
   beforeEach(() => {
-    underTest = shallowMount(BookingForm);
+    MockAxios.get.mockResolvedValue({ data: [{id: "1", name: "office1"}, {id: "2", name: "office2"}] });
 
+    mockStore = { dispatch: jest.fn() }
+
+    wrapper = shallowMount(BookingForm, {
+    mocks: {
+      $store: mockStore 
+    }
+  });
   });
 
-  it("should render 2 text-fields", () => {
-    const textFields = underTest.findAllComponents(BadTextInput);
-    expect(textFields.length).toBe(2);
+  afterEach(() => {
+    jest.resetAllMocks()
+  });
 
-    expect(textFields.at(0).attributes("label")).toBe("Office ID");
-    expect(textFields.at(1).attributes("label")).toBe("Email");
+  it("should render `TextInput` component", () => {
+    expect(wrapper.findComponent(BadTextInput).exists()).toBe(true);
+  });
+
+  it("should render `ComboBox` component", async() => {
+    expect(wrapper.findComponent(BadComboBox).exists()).toBe(true);
   });
 
   it("should render `DatePicker` component", () => {
-    expect(underTest.findComponent(BadDatePicker).exists()).toBe(
-      true
-    );
+    expect(wrapper.findComponent(BadDatePicker).exists()).toBe(true);
   });
     
   it("should set the minimum date of the date picker to tomorrow", () => {
     expect(
-      underTest.findComponent(BadDatePicker).props().min
+      wrapper.findComponent(BadDatePicker).props().min
     ).toEqual(moment().add(1, 'days').format('YYYY-MM-DD'));
   });
 
   it("should render a button", () => {
-    const button = underTest.findComponent(BadContainedButton);
+    const button = wrapper.findComponent(BadContainedButton);
     expect(button.exists()).toBe(true);
 
     expect(button.attributes("id")).toBe("btnBook");
     expect(button.text()).toBe("Book");
   });
 
-  describe('filling and submitting the "form"', () => {
-    let actions;
-    let store;
+  it("should submit values from the inputs", async () => {
 
-    beforeEach(() => {
-      actions = {
-        book: jest.fn()
-      };
-      store = new Vuex.Store({
-        actions
-      });
-      underTest = shallowMount(BookingForm, { store, localVue });
-    });
+    wrapper
+     .findComponent(BadTextInput)
+     .vm.$emit("input", "me@me.com");  
 
-    it("should submit values from the inputs", async () => {
-      const textFields = underTest.findAllComponents({
-        name: "bad-text-input"
-      });
-      const button = underTest.findComponent(BadContainedButton);
+    wrapper
+     .findComponent(BadDatePicker)
+     .vm.$emit("input", "2020-12-31");
 
-      textFields.at(0).vm.$emit("input", "Montreal");
-      textFields.at(1).vm.$emit("input", "me@me.com");
+     await flushPromises();
 
-      underTest
-        .findComponent({ name: "bad-date-picker" })
-        .vm.$emit("click", "2020-12-31");
+     await wrapper.findComponent(BadContainedButton).props().click();
 
-      await button.props().click();
-
-      expect(actions.book).toHaveBeenCalled();
-    });
-  });
+     expect(MockAxios.get).toHaveBeenCalledTimes(1);
+     expect(MockAxios.get).toHaveBeenCalledWith("offices");
+     expect(mockStore.dispatch).toHaveBeenCalledWith(
+       "book" , 
+       { 
+         office: { 
+             id: "1" 
+           },
+         date: "2020-12-31",
+         user: { 
+             email: "me@me.com" 
+         } 
+       });
+   })
 });

@@ -15,6 +15,7 @@
     "@testing-library/vue": "^5.1.0",
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
+    "flush-promises": "^1.0.2",
     "moment": "^2.29.1",
     "vue": "^2.6.12",
     "vue-router": "^3.4.8",
