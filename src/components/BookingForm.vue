@@ -2,12 +2,13 @@
   <v-container>
     <v-row class="text-center">
       <v-col>
-        <bad-text-input
-          id="officeID"
-          label="Office ID"
-          placeholder="Enter office ID"
-          v-model="officeId"
-        ></bad-text-input>
+        <bad-combo-box
+          id = "offices"
+          :items = "offices"
+          itemText = "name"
+          itemValue = "id"
+          v-model = "selectedOffice"
+        ></bad-combo-box>
         <bad-text-input
           id="email"
           label="Email"
@@ -38,19 +39,32 @@
 <script>
 
 import moment from 'moment'
+import { getAsync } from "@/services/apiFacade";
+
 export default {
   name: "BookingForm",
   data() {
     return {
-      officeId: "",
       bookingDate: "",
-      emailAddress: ""
+      emailAddress: "",
+      offices: [],
+      selectedOffice: {}
     };
   },
+  async mounted() {
+    await this.fetchOffices();
+    this.selectedOffice = this.offices[0];
+  },
   methods: {
+    async fetchOffices() {
+      const url = `offices`;
+      const offices = await getAsync(url);
+      this.offices = offices.data;
+    },
+
     submitBooking() {
       this.$store.dispatch("book", {
-        office: { id: this.officeId },
+        office: { id: this.selectedOffice.id },
         date: this.bookingDate,
         user: { email: this.emailAddress }
       });
