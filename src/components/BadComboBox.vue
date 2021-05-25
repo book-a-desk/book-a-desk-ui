@@ -6,7 +6,12 @@
 		:item-value = "itemValue"
 		@change = "change"
 		v-model = "valueCopy"
+		solo
+		class="rounded-lg"
 		>
+		<template v-slot:prepend-inner> 
+			<v-icon :color='"primary"'> {{prependInnerIcon}} </v-icon> 
+		</template>
 	</v-combobox>
 </template>
 <script>
@@ -22,7 +27,11 @@ export default {
 	  items: Array,
 	  itemText: String,
 	  itemValue: String,
-	  value: Object
+	  value: Object,
+	  prependInnerIcon: { 
+		  type: String, 
+		  default: ""
+		  }
   },
   methods: {
 	  change() {
