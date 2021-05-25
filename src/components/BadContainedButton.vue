@@ -1,5 +1,10 @@
 <template>
-  <v-btn @click="click" elevation="1" color="primary" :disabled="disabled">
+  <v-btn @click="click" 
+        elevation="1" 
+        color="primary" 
+        :disabled="disabled"
+        class="rounded-lg"
+        :block="block">
     <slot></slot>
   </v-btn>
 </template>
@@ -15,6 +20,10 @@ export default {
       required: true
     },
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    block: {
       type: Boolean,
       default: false
     }

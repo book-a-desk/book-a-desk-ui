@@ -6,6 +6,8 @@
     :placeholder="placeholder"
     :id="id"
     :value="value"
+    solo
+		class="rounded-lg"
   >
   </v-text-field>
 </template>

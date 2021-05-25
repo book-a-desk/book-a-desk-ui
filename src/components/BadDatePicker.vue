@@ -3,6 +3,12 @@
         @input="handleUpdate"
         :value="value"
         :min="min"
+        no-title
+        next-icon="mdi-menu-right"
+        prev-icon="mdi-menu-left"
+        color="primary"
+        elevation="1"
+        :full-width="fullWidth"
     ></v-date-picker>
 </template>
 <script>
@@ -18,11 +24,11 @@ export default {
     }
   },
   props: {
-    value: {
-      type: String
-    },
-    min: {
-        type: String
+    value:  String,
+    min: String,
+    fullWidth: {
+      type: Boolean,
+      default: false
     }
   }
 };
