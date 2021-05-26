@@ -8,7 +8,7 @@ orbs:
 parameters:
   s3-bucket:
     type: string
-    default: book-a-desk-ui
+    default: book-a-desk-ui-2
 
 jobs:
   build-assets:
