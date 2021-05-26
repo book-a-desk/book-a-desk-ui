@@ -69,7 +69,7 @@ export default {
     async fetchOffices() {
       const url = `offices`;
       const offices = await getAsync(url);
-      this.offices = offices.data;
+      this.offices = offices.data.items;
     },
 
     submitBooking() {
