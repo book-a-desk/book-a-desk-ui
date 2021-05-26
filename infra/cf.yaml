@@ -5,7 +5,7 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: PublicRead
-      BucketName: book-a-desk-ui
+      BucketName: book-a-desk-ui-2
       CorsConfiguration:
         CorsRules:
           - AllowedMethods:
