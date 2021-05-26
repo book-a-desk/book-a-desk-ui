@@ -40,7 +40,7 @@ jobs:
           name: Ensure infrastructure is up to date
           command: |
             aws cloudformation deploy \
-              --stack-name book-a-desk-ui \
+              --stack-name book-a-desk-ui-2 \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
 
