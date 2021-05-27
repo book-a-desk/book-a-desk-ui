@@ -81,7 +81,7 @@ jobs:
             aws cloudformation deploy \
               --stack-name book-a-desk-ui-dev \
               --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM
+              --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides s3bucketname=book-a-desk-ui-dev
 
   deploy-infra-test:
@@ -97,7 +97,7 @@ jobs:
             aws cloudformation deploy \
               --stack-name book-a-desk-ui-test \
               --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM
+              --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides s3bucketname=book-a-desk-ui-test
 
   deploy-infra-prod:
@@ -113,7 +113,7 @@ jobs:
             aws cloudformation deploy \
               --stack-name book-a-desk-ui-prod \
               --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM
+              --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides s3bucketname=book-a-desk-ui-prod
 
   publish-to-s3-dev:
