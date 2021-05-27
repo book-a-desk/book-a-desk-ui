@@ -82,7 +82,7 @@ jobs:
               --stack-name book-a-desk-ui-dev \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides Env=dev
+              --parameter-overrides s3bucketname=book-a-desk-ui-dev
 
   deploy-infra-test:
     executor: aws-cli/default
@@ -98,7 +98,7 @@ jobs:
               --stack-name book-a-desk-ui-test \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides Env=test
+              --parameter-overrides s3bucketname=book-a-desk-ui-test
 
   deploy-infra-prod:
     executor: aws-cli/default
@@ -114,7 +114,7 @@ jobs:
               --stack-name book-a-desk-ui-prod \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides Env=prod
+              --parameter-overrides s3bucketname=book-a-desk-ui-prod
 
   publish-to-s3-dev:
     docker:
