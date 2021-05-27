@@ -1,12 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
+Parameters:
+  Env:
+    Type: String
+    Description: The environment you're deploying to.
+
 Resources:
   BookADeskUiS3Bucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
       AccessControl: PublicRead
-      BucketName: book-a-desk-ui-2
+      BucketName: book-a-desk-ui-${Env}
       CorsConfiguration:
         CorsRules:
           - AllowedMethods:
