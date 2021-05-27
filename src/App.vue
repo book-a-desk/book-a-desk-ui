@@ -12,7 +12,7 @@ import axios from "axios";
 export default {
   name: "App",
   created() {
-    axios.defaults.baseURL = process.env.BASE_API_URL;
+    axios.defaults.baseURL = process.env.VUE_APP_BASE_API_URL;
     this.configLoaded = true;
   }
 };

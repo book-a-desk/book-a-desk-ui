@@ -23,7 +23,7 @@ jobs:
           name: NPM Build Project
           command: |
             export VUE_APP_SHA1=${CIRCLE_SHA1};
-            export BASE_API_URL=${BOOK_A_DESK_BASE_API_URL_DEV}
+            export VUE_APP_BASE_API_URL=${BOOK_A_DESK_BASE_API_URL_DEV}
             npm run build
       - persist_to_workspace:
           root: ./
@@ -42,7 +42,7 @@ jobs:
           name: NPM Build Project
           command: |
             export VUE_APP_SHA1=${CIRCLE_SHA1};
-            export BASE_API_URL=${BOOK_A_DESK_BASE_API_URL_TEST}
+            export VUE_APP_BASE_API_URL=${BOOK_A_DESK_BASE_API_URL_TEST}
             npm run build
       - persist_to_workspace:
           root: ./
@@ -61,7 +61,7 @@ jobs:
           name: NPM Build Project
           command: |
             export VUE_APP_SHA1=${CIRCLE_SHA1};
-            export BASE_API_URL=${BOOK_A_DESK_BASE_API_URL_PROD}
+            export VUE_APP_BASE_API_URL=${BOOK_A_DESK_BASE_API_URL_PROD}
             npm run build
       - persist_to_workspace:
           root: ./
