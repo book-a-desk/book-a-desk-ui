@@ -8,7 +8,7 @@ orbs:
 parameters:
   s3-bucket:
     type: string
-    default: book-a-desk-ui-2
+    default: book-a-desk-ui
 
 jobs:
   build-assets-dev:
@@ -127,7 +127,7 @@ jobs:
           arguments: --acl public-read
           from: ./dist/
           overwrite: false
-          to: s3://<< pipeline.parameters.s3-bucket >>-Dev/${CIRCLE_SHA1}
+          to: s3://<< pipeline.parameters.s3-bucket >>-dev/${CIRCLE_SHA1}
           aws-region: AWS_DEFAULT_REGION
 
   publish-to-s3-test:
@@ -141,7 +141,7 @@ jobs:
           arguments: --acl public-read
           from: ./dist/
           overwrite: false
-          to: s3://<< pipeline.parameters.s3-bucket >>-Test/${CIRCLE_SHA1}
+          to: s3://<< pipeline.parameters.s3-bucket >>-test/${CIRCLE_SHA1}
           aws-region: AWS_DEFAULT_REGION
 
   publish-to-s3-prod:
@@ -155,7 +155,7 @@ jobs:
           arguments: --acl public-read
           from: ./dist/
           overwrite: false
-          to: s3://<< pipeline.parameters.s3-bucket >>-Prod/${CIRCLE_SHA1}
+          to: s3://<< pipeline.parameters.s3-bucket >>-prod/${CIRCLE_SHA1}
           aws-region: AWS_DEFAULT_REGION
 
 workflows:
