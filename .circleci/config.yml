@@ -8,7 +8,7 @@ orbs:
 parameters:
   s3-bucket:
     type: string
-    default: book-a-desk-ui
+    default: book-a-desk-ui-2
 
 jobs:
   build-assets-dev:
@@ -82,7 +82,7 @@ jobs:
               --stack-name book-a-desk-ui-dev \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides Env=Dev
+              --parameter-overrides Env=dev
 
   deploy-infra-test:
     executor: aws-cli/default
@@ -98,7 +98,7 @@ jobs:
               --stack-name book-a-desk-ui-test \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides Env=Test
+              --parameter-overrides Env=test
 
   deploy-infra-prod:
     executor: aws-cli/default
@@ -114,7 +114,7 @@ jobs:
               --stack-name book-a-desk-ui-prod \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides Env=Prod
+              --parameter-overrides Env=prod
 
   publish-to-s3-dev:
     docker:
@@ -160,6 +160,8 @@ jobs:
 
 workflows:
   node-tests:
+    unless:
+      equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - node/test
   release:

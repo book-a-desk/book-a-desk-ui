@@ -25,7 +25,7 @@ describe("Component BookingForm.vue", () => {
   let mockStore;
 
   beforeEach(() => {
-    MockAxios.get.mockResolvedValue({ data: [{id: "1", name: "office1"}, {id: "2", name: "office2"}] });
+    MockAxios.get.mockResolvedValue({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
 
     mockStore = { dispatch: jest.fn() }
 
@@ -63,7 +63,7 @@ describe("Component BookingForm.vue", () => {
     expect(button.exists()).toBe(true);
 
     expect(button.attributes("id")).toBe("btnBook");
-    expect(button.text()).toBe("Book");
+    expect(button.text()).toBe("Book a desk");
   });
 
   it("should submit values from the inputs", async () => {
