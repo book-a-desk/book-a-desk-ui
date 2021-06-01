@@ -20,6 +20,8 @@ npm run build
 npm install -g serve
 export VUE_APP_BASE_API_URL=<api-url>
 serve -s <build-directory> -l <port-to-deploy-on>
+example:
+serve -s dist -l 8080
 ```
 
 ### Lints and fixes files
