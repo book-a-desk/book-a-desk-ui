@@ -155,12 +155,12 @@ jobs:
 
 workflows:
   node-tests:
-    unless:
+    when:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - node/test
   release:
-    when:
+    unless:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - node/test
