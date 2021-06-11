@@ -14,6 +14,11 @@ export default {
   created() {
     axios.defaults.baseURL = process.env.VUE_APP_BASE_API_URL;
     this.configLoaded = true;
+  },
+  data() {
+    return {
+      configLoaded: false,
+    };
   }
 };
 </script>
