@@ -76,7 +76,7 @@ jobs:
             aws cloudformation deploy \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM
+              --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides s3bucketname=dev.book-a-desk.broadsign.net
 
   deploy-infra-test:
