@@ -5,11 +5,6 @@ orbs:
   aws-cli: circleci/aws-cli@1.3.0
   aws-s3: circleci/aws-s3@1.0.16
 
-parameters:
-  s3-bucket:
-    type: string
-    default: book-a-desk-ui-2
-
 jobs:
   build-assets-dev:
     docker:
@@ -82,7 +77,7 @@ jobs:
               --stack-name book-a-desk-ui-dev \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides Env=dev
+              --parameter-overrides s3bucketname=dev.book-a-desk.broadsign.net
 
   deploy-infra-test:
     executor: aws-cli/default
@@ -127,7 +122,7 @@ jobs:
           arguments: --acl public-read
           from: ./dist/
           overwrite: false
-          to: s3://<< pipeline.parameters.s3-bucket >>-Dev/${CIRCLE_SHA1}
+          to: s3://dev.book-a-desk.broadsign.net/${CIRCLE_SHA1}
           aws-region: AWS_DEFAULT_REGION
 
   publish-to-s3-test:
@@ -179,23 +174,23 @@ workflows:
           requires:
             - deploy-infra-dev
             - build-assets-dev
-      - build-assets-test:
-          requires:
-            - publish-to-s3-dev
-      - deploy-infra-test:
-          requires:
-            - node/test
-      - publish-to-s3-test:
-          requires:
-            - deploy-infra-test
-            - build-assets-test
-      - build-assets-prod:
-          requires:
-            - publish-to-s3-test
-      - deploy-infra-prod:
-          requires:
-            - node/test
-      - publish-to-s3-prod:
-          requires:
-            - deploy-infra-prod
-            - build-assets-prod
+#      - build-assets-test:
+#          requires:
+#            - publish-to-s3-dev
+#      - deploy-infra-test:
+#          requires:
+#            - node/test
+#      - publish-to-s3-test:
+#          requires:
+#            - deploy-infra-test
+#            - build-assets-test
+#      - build-assets-prod:
+#          requires:
+#            - publish-to-s3-test
+#      - deploy-infra-prod:
+#          requires:
+#            - node/test
+#      - publish-to-s3-prod:
+#          requires:
+#            - deploy-infra-prod
+#            - build-assets-prod
