@@ -32,7 +32,7 @@ Resources:
         Origins:
           - CustomOriginConfig:
               OriginProtocolPolicy: https-only
-            DomainName: !Sub "${S3Bucket}.s3.${AWS::Region}.amazonaws.com"
+            DomainName: !Sub "book-a-desk-ui-2.s3.ca-central-1.amazonaws.com"
             Id: book-a-desk-ui-s3
             OriginPath: !Sub "/${SHA1}"
         DefaultCacheBehavior:
