@@ -128,8 +128,7 @@ jobs:
       s3-bucket-name:
         type: string
     steps:
-      - attach_workspace:
-          at: ./
+      - checkout
       - steps: << parameters.authenticate-aws >>
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
