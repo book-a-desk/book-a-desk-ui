@@ -33,7 +33,7 @@ Resources:
           - CustomOriginConfig:
               OriginProtocolPolicy: https-only
             DomainName: !Sub "${s3bucketname}.s3.${AWS::Region}.amazonaws.com"
-            Id: broadsign-platform-shell-s3
+            Id: book-a-desk-ui-s3
             OriginPath: !Sub "/${SHA1}"
         DefaultCacheBehavior:
           MinTTL: 0

@@ -4,6 +4,43 @@ orbs:
   node: circleci/node@3.0.0
   aws-cli: circleci/aws-cli@1.3.0
   aws-s3: circleci/aws-s3@1.0.16
+  
+parameters:
+  s3-bucket-dev:
+      type: string
+      default: book-a-desk-ui-2
+      
+commands:
+  authenticate-aws-book-a-desk-dev:
+    description: "Configure AWS credentials for Book A Desk Dev"
+    steps:
+      - run:
+          name: "Initialize BASH_ENV variables"
+          command: |
+            echo "export AWS_ACCESS_KEY_ID=${AWS_DEV_ACCESS_KEY_ID}" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=${AWS_DEV_SECRET_ACCESS_KEY}" >> $BASH_ENV
+            
+  aws-cloudformation-deploy:
+    parameters:
+      update-cdn:
+        type: boolean
+        default: false
+      authenticate-aws:
+        type: steps
+      s3-bucket-name:
+        type: string
+    steps:
+      - steps: << parameters.authenticate-aws >>
+      - log-aws-identity
+      - run:
+          name: Ensure infrastructure is up to date <<# parameters.update-cdn >>and update the CDN origin<</ parameters.update-cdn >>
+          command: |
+            aws cloudformation deploy \
+              --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
+              --stack-name book-a-desk-ui \
+              --template-file ./infra/cf.yaml \
+              --capabilities CAPABILITY_NAMED_IAM
+  
 
 jobs:
   build-assets-dev:
@@ -63,54 +100,47 @@ jobs:
           paths:
             - ./dist/*
 
-  deploy-infra-dev:
+  deploy-cloudformation:
     executor: aws-cli/default
-
+    parameters:
+      update-cdn:
+        type: boolean
+        default: false
+      authenticate-aws:
+        type: steps
+      s3-bucket-name:
+        type: string
     steps:
       - checkout
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
-      - run:
-          name: Ensure infrastructure is up to date
-          command: |
-            aws cloudformation deploy \
-              --stack-name book-a-desk-ui \
-              --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM \
-              --parameter-overrides s3bucketname=book-a-desk-ui-2 SHA1=${CIRCLE_SHA1}
-            
-
-  deploy-infra-test:
+      - aws-cloudformation-deploy:
+          update-cdn: << parameters.update-cdn >>
+          authenticate-aws: << parameters.authenticate-aws >>
+          s3-bucket-name: << parameters.s3-bucket-name >>
+          
+  publish-to-s3:
     executor: aws-cli/default
-
+    parameters:
+      destination-path:
+        type: string
+      authenticate-aws:
+        type: steps
+      s3-bucket-name:
+        type: string
     steps:
-      - checkout
+      - attach_workspace:
+          at: ./
+      - steps: << parameters.authenticate-aws >>
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
-      - run:
-          name: Ensure infrastructure is up to date
-          command: |
-            aws cloudformation deploy \
-              --stack-name book-a-desk-ui-test \
-              --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides Env=test
-
-  deploy-infra-prod:
-    executor: aws-cli/default
-
-    steps:
-      - checkout
-      - aws-cli/setup:
-          aws-region: AWS_DEFAULT_REGION
-      - run:
-          name: Ensure infrastructure is up to date
-          command: |
-            aws cloudformation deploy \
-              --stack-name book-a-desk-ui-prod \
-              --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM
-              --parameter-overrides Env=prod
+      - log-aws-identity
+      - run: ls -R
+      - aws-s3/sync:
+          arguments: --acl public-read --cache-control "public, must-revalidate, max-age=0"
+          from: ./
+          overwrite: false
+          to: s3://<< parameters.s3-bucket-name >>/<< parameters.destination-path >>
 
   publish-to-s3-dev:
     docker:
@@ -168,30 +198,34 @@ workflows:
       - build-assets-dev:
           requires:
             - node/test
-      - deploy-infra-dev:
+      - deploy-cloudformation:
+          name: deploy-cloudformation-dev
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           requires:
             - node/test
-      - publish-to-s3-dev:
+      - publish-to-s3:
+          name: publish-to-dev
+          destination-path: ${CIRCLE_SHA1}
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           requires:
-            - deploy-infra-dev
             - build-assets-dev
+            - deploy-cloudformation-dev
+      - deploy-cloudformation:
+          name: update-cloudfront-dev
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          update-cdn: true
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          requires:
+            - publish-to-dev
 #      - build-assets-test:
 #          requires:
 #            - publish-to-s3-dev
-#      - deploy-infra-test:
-#          requires:
-#            - node/test
-#      - publish-to-s3-test:
-#          requires:
-#            - deploy-infra-test
-#            - build-assets-test
 #      - build-assets-prod:
 #          requires:
-#            - publish-to-s3-test
-#      - deploy-infra-prod:
-#          requires:
-#            - node/test
-#      - publish-to-s3-prod:
-#          requires:
-#            - deploy-infra-prod
-#            - build-assets-prod
+#            - publish-to-s3-tes
