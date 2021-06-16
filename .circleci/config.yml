@@ -67,7 +67,7 @@ jobs:
       - persist_to_workspace:
           root: ./dist
           paths:
-            - ./*
+            - ./dist/*
 
   deploy-cloudformation:
     executor: aws-cli/default
@@ -89,7 +89,7 @@ jobs:
           s3-bucket-name: << parameters.s3-bucket-name >>
           
   publish-to-s3:
-    executor: aws-cli/default
+    executor: cimg/python:3.6
     parameters:
       destination-path:
         type: string
@@ -103,12 +103,13 @@ jobs:
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
       - steps: << parameters.authenticate-aws >>
-      - run: ls -R
+      - run: ls -R dist/*
       - aws-s3/sync:
-          arguments: --acl public-read --cache-control "public, must-revalidate, max-age=0"
-          from: ./
+          arguments: --acl public-read
+          from: ./dist/
           overwrite: false
           to: s3://<< parameters.s3-bucket-name >>/<< parameters.destination-path >>
+          aws-region: AWS_DEFAULT_REGION
 
 workflows:
   pull-request:
