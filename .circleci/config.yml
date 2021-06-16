@@ -67,7 +67,7 @@ jobs:
       - persist_to_workspace:
           root: ./dist
           paths:
-            - ./dist/*
+            - ./*
 
   deploy-cloudformation:
     executor: aws-cli/default
@@ -104,10 +104,10 @@ jobs:
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
       - steps: << parameters.authenticate-aws >>
-      - run: ls -R dist/*
+      - run: ls -R
       - aws-s3/sync:
           arguments: --acl public-read
-          from: ./dist/
+          from: ./
           overwrite: false
           to: s3://<< parameters.s3-bucket-name >>/<< parameters.destination-path >>
           aws-region: AWS_DEFAULT_REGION
