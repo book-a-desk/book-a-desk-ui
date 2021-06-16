@@ -158,7 +158,7 @@ workflows:
             - authenticate-aws-book-a-desk-dev
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           requires:
-            - build-assets-dev
+            - build-and-unit-test
             - deploy-cloudformation-dev
       - deploy-cloudformation:
           name: update-cloudfront-dev
