@@ -140,9 +140,6 @@ workflows:
     jobs:
       - build-and-unit-test:
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
-      - build-assets-dev:
-          requires:
-            - node/test
       - deploy-cloudformation:
           name: deploy-cloudformation-dev
           authenticate-aws:
