@@ -31,7 +31,6 @@ commands:
         type: string
     steps:
       - steps: << parameters.authenticate-aws >>
-      - log-aws-identity
       - run:
           name: Ensure infrastructure is up to date <<# parameters.update-cdn >>and update the CDN origin<</ parameters.update-cdn >>
           command: |
@@ -134,7 +133,6 @@ jobs:
       - steps: << parameters.authenticate-aws >>
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
-      - log-aws-identity
       - run: ls -R
       - aws-s3/sync:
           arguments: --acl public-read --cache-control "public, must-revalidate, max-age=0"
