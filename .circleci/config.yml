@@ -54,9 +54,6 @@ jobs:
           name: Install npm packages
           command: npm install
       - run:
-          name: Linting
-          command: npm run lint
-      - run:
           name: Unit test
           command: npm run test
       - run:
