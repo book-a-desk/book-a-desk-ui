@@ -89,7 +89,8 @@ jobs:
           s3-bucket-name: << parameters.s3-bucket-name >>
           
   publish-to-s3:
-    executor: cimg/python:3.6
+    docker:
+      - image: cimg/python:3.6
     parameters:
       destination-path:
         type: string
