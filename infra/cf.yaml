@@ -3,7 +3,8 @@ AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   SHA1:
     Type: String
-  s3bucketname:
+    Default: "852b4282477288b9ef6436a4b1b146c0f7693e65"
+  S3Bucket:
     Type: String
     Description: The s3 bucket to deploy to.
 
@@ -14,7 +15,7 @@ Resources:
     Properties:
       AccessControl: PublicRead
       BucketName:
-        Ref: s3bucketname
+        Ref: S3Bucket
       CorsConfiguration:
         CorsRules:
           - AllowedMethods:
@@ -32,7 +33,7 @@ Resources:
         Origins:
           - CustomOriginConfig:
               OriginProtocolPolicy: https-only
-            DomainName: !Sub "${s3bucketname}.s3.${AWS::Region}.amazonaws.com"
+            DomainName: !Sub "${S3Bucket}.s3.${AWS::Region}.amazonaws.com"
             Id: book-a-desk-ui-s3
             OriginPath: !Sub "/${SHA1}"
         DefaultCacheBehavior:
