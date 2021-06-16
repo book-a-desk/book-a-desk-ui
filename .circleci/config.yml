@@ -100,29 +100,15 @@ jobs:
     steps:
       - attach_workspace:
             at: ./
-      - steps: << parameters.authenticate-aws >>
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
+      - steps: << parameters.authenticate-aws >>
       - run: ls -R
       - aws-s3/sync:
           arguments: --acl public-read --cache-control "public, must-revalidate, max-age=0"
           from: ./
           overwrite: false
           to: s3://<< parameters.s3-bucket-name >>/<< parameters.destination-path >>
-          
-  publish-to-s3-dev:
-    docker:
-      - image: cimg/python:3.6
-    steps:
-      - attach_workspace:
-          at: ./
-      - run: ls -R dist/*
-      - aws-s3/sync:
-          arguments: --acl public-read
-          from: ./dist/
-          overwrite: false
-          to: s3://dev.book-a-desk.broadsign.net/${CIRCLE_SHA1}
-          aws-region: AWS_DEFAULT_REGION
 
 workflows:
   pull-request:
