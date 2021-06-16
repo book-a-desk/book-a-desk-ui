@@ -34,7 +34,7 @@ commands:
       - run:
           name: Ensure infrastructure is up to date <<# parameters.update-cdn >>and update the CDN origin<</ parameters.update-cdn >>
           command: |
-            aws cloudformation deploy \
+            aws cloudformation update-stack \
               --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \

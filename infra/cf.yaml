@@ -24,21 +24,3 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html #TODO: how will we create this file?
-  CDN:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Enabled: true
-        Origins:
-          - CustomOriginConfig:
-              OriginProtocolPolicy: https-only
-            DomainName: !Sub "${S3Bucket}.s3.${AWS::Region}.amazonaws.com"
-            Id: book-a-desk-ui-s3
-            OriginPath: !Sub "/"
-        DefaultCacheBehavior:
-          MinTTL: 0
-          Compress: true
-          TargetOriginId: book-a-desk-ui
-          ViewerProtocolPolicy: redirect-to-https
-          ForwardedValues:
-            QueryString: false
