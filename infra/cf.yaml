@@ -14,8 +14,7 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       AccessControl: PublicRead
-      BucketName:
-        Ref: S3Bucket
+      BucketName: !Ref S3Bucket
       CorsConfiguration:
         CorsRules:
           - AllowedMethods:
@@ -35,7 +34,7 @@ Resources:
               OriginProtocolPolicy: https-only
             DomainName: !Sub "${S3Bucket}.s3.${AWS::Region}.amazonaws.com"
             Id: book-a-desk-ui-s3
-            OriginPath: !Sub "/${SHA1}"
+            OriginPath: !Sub "/"
         DefaultCacheBehavior:
           MinTTL: 0
           Compress: true
