@@ -77,7 +77,8 @@ jobs:
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM \
-              --parameter-overrides s3bucketname=book-a-desk-ui-2
+              --parameter-overrides s3bucketname=book-a-desk-ui-2 SHA1=${CIRCLE_SHA1}
+            
 
   deploy-infra-test:
     executor: aws-cli/default

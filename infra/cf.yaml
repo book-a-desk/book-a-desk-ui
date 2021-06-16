@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
+  SHA1:
+    Type: String
   s3bucketname:
     Type: String
     Description: The s3 bucket to deploy to.
