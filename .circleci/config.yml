@@ -77,7 +77,7 @@ jobs:
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM \
-              --parameter-overrides s3bucketname=dev.book-a-desk.broadsign.net
+              --parameter-overrides s3bucketname=book-a-desk-ui-dev
 
   deploy-infra-test:
     executor: aws-cli/default
