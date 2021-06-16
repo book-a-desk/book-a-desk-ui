@@ -38,7 +38,7 @@ Resources:
         DefaultCacheBehavior:
           MinTTL: 0
           Compress: true
-          TargetOriginId: book-a-desk-ui
+          TargetOriginId: book-a-desk-ui-s3
           ViewerProtocolPolicy: redirect-to-https
           ForwardedValues:
             QueryString: false
