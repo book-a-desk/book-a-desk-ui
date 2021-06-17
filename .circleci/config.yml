@@ -59,7 +59,6 @@ jobs:
       - run:
           name: Build
           command: |
-            export VUE_APP_SHA1=${CIRCLE_SHA1};
             export VUE_APP_BASE_API_URL=<< parameters.api-url >>
             npm run build
       - store_test_results:
