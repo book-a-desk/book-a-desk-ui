@@ -93,8 +93,6 @@ jobs:
     parameters:
       destination-path:
         type: string
-#      authenticate-aws:
-#        type: steps
       s3-bucket-name:
         type: string
     steps:
@@ -102,7 +100,6 @@ jobs:
             at: ./
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
-#      - steps: << parameters.authenticate-aws >>
       - run: ls -R
       - aws-s3/sync:
           arguments: --acl public-read
@@ -135,8 +132,6 @@ workflows:
       - publish-to-s3:
           name: publish-to-dev
           destination-path: ${CIRCLE_SHA1}
-#          authenticate-aws:
-#            - authenticate-aws-book-a-desk-dev
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           requires:
             - build-and-unit-test
