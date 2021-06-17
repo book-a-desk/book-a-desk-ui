@@ -29,6 +29,7 @@ Resources:
     Properties:
       DistributionConfig:
         Enabled: true
+        DefaultRootObject: index.html
         Origins:
           - CustomOriginConfig:
               OriginProtocolPolicy: https-only
