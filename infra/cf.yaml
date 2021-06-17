@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   SHA1:
     Type: String
-    Default: "b5646db52fb837907ff1c18c79265df4cdcf4807"
+    Default: "b6218d35b915bad1d2826c6880e893be4054631f"
   S3Bucket:
     Type: String
     Description: The s3 bucket to deploy to.
@@ -24,21 +24,21 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html #TODO: how will we create this file?
-#  CDN:
-#    Type: AWS::CloudFront::Distribution
-#    Properties:
-#      DistributionConfig:
-#        Enabled: true
-#        Origins:
-#          - CustomOriginConfig:
-#              OriginProtocolPolicy: https-only
-#            DomainName: !Sub "${S3Bucket}.s3.${AWS::Region}.amazonaws.com"
-#            Id: book-a-desk-ui-s3
-#            OriginPath: !Sub "/${SHA1}"
-#        DefaultCacheBehavior:
-#          MinTTL: 0
-#          Compress: true
-#          TargetOriginId: book-a-desk-ui-s3
-#          ViewerProtocolPolicy: redirect-to-https
-#          ForwardedValues:
-#            QueryString: false
+  CDN:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+            DomainName: !Sub "${S3Bucket}.s3.${AWS::Region}.amazonaws.com"
+            Id: book-a-desk-ui-s3
+            OriginPath: !Sub "/${SHA1}"
+        DefaultCacheBehavior:
+          MinTTL: 0
+          Compress: true
+          TargetOriginId: book-a-desk-ui-s3
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: false
