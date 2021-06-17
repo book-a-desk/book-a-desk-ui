@@ -9,6 +9,9 @@ parameters:
   s3-bucket-dev:
       type: string
       default: book-a-desk-ui-2
+  acm-certificate-id-dev:
+      type: string
+      default: 50d2e84d-f1f3-47e0-af7a-82724b817877
       
 commands:
   authenticate-aws-book-a-desk-dev:
@@ -29,13 +32,17 @@ commands:
         type: steps
       s3-bucket-name:
         type: string
+      certificate-id:
+        type: string
+      environment:
+        type: string
     steps:
       - steps: << parameters.authenticate-aws >>
       - run:
           name: Ensure infrastructure is up to date <<# parameters.update-cdn >>and update the CDN origin<</ parameters.update-cdn >>
           command: |
             aws cloudformation deploy \
-              --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
+              --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Environment=<< parameters.environment >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM
@@ -78,6 +85,10 @@ jobs:
         type: steps
       s3-bucket-name:
         type: string
+      certificate-id:
+        type: string
+      environment:
+        type: string
     steps:
       - checkout
       - aws-cli/setup:
@@ -86,6 +97,8 @@ jobs:
           update-cdn: << parameters.update-cdn >>
           authenticate-aws: << parameters.authenticate-aws >>
           s3-bucket-name: << parameters.s3-bucket-name >>
+          certificate-id: << parameters.certificate-id >>
+          environment: << parameters.environment >>
           
   publish-to-s3:
     docker:
@@ -110,13 +123,13 @@ jobs:
 
 workflows:
   pull-request:
-    unless:
+    when:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
   release:
-    when:
+    unless:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
@@ -127,6 +140,8 @@ workflows:
             - authenticate-aws-book-a-desk-dev
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
+          environment: dev.
           requires:
             - build-and-unit-test
       - publish-to-s3:
@@ -142,6 +157,8 @@ workflows:
             - authenticate-aws-book-a-desk-dev
           update-cdn: true
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
+          environment: dev.
           requires:
             - publish-to-dev
 #      - build-assets-test:

@@ -7,6 +7,12 @@ Parameters:
   S3Bucket:
     Type: String
     Description: The s3 bucket to deploy to.
+  CertificateID:
+    Type: String
+    Description: AWS Certificate Id
+  Environment:
+    Type: String
+    Description: environment
 
 Resources:
   BookADeskUiS3Bucket:
@@ -43,3 +49,9 @@ Resources:
           ViewerProtocolPolicy: redirect-to-https
           ForwardedValues:
             QueryString: false
+        Aliases:
+          - !Sub "${Environment}book-a-desk.broadsign.net"
+        ViewerCertificate:
+          AcmCertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/${CertificateID}"
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2018
