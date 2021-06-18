@@ -1,0 +1,7 @@
+user name: book-a-desk
+
+exception: book-a-desk-dev in dev account
+
+permissions:
+- AmazonDynamoDBFullAccess
+- AWSCertificateManagerReadOnly
