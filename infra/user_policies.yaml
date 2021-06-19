@@ -5,6 +5,8 @@ exception: book-a-desk-dev in dev account
 permissions:
 - AmazonDynamoDBFullAccess
 - AWSCertificateManagerReadOnly
+- AWSCloudFormationFullAccess
+- CloudFrontFullAccess
 - GetParametersByPath
   {
     "Version": "2012-10-17",
