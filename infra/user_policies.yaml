@@ -5,3 +5,16 @@ exception: book-a-desk-dev in dev account
 permissions:
 - AmazonDynamoDBFullAccess
 - AWSCertificateManagerReadOnly
+- GetParametersByPath
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+            "ssm:GetParametersByPath"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
