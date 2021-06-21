@@ -1,9 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
-  s3bucketname:
+  SHA1:
+    Type: String
+    Default: "b6218d35b915bad1d2826c6880e893be4054631f"
+  S3Bucket:
     Type: String
     Description: The s3 bucket to deploy to.
+  CertificateID:
+    Type: String
+    Description: AWS Certificate Id
+  Environment:
+    Type: String
+    Description: environment
 
 Resources:
   BookADeskUiS3Bucket:
@@ -11,8 +20,7 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       AccessControl: PublicRead
-      BucketName:
-        Ref: s3bucketname
+      BucketName: !Ref S3Bucket
       CorsConfiguration:
         CorsRules:
           - AllowedMethods:
@@ -22,3 +30,28 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html #TODO: how will we create this file?
+  CDN:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+            DomainName: !Sub "${S3Bucket}.s3.${AWS::Region}.amazonaws.com"
+            Id: book-a-desk-ui-s3
+            OriginPath: !Sub "/${SHA1}"
+        DefaultCacheBehavior:
+          MinTTL: 0
+          Compress: true
+          TargetOriginId: book-a-desk-ui-s3
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: false
+        Aliases:
+          - !Sub "${Environment}book-a-desk.broadsign.net"
+        ViewerCertificate:
+          AcmCertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/${CertificateID}"
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2018
