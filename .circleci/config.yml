@@ -62,7 +62,9 @@ jobs:
           command: npm install
       - run:
           name: Unit test
-          command: npm run test
+          command: npm run test:unit:ci
+          environment:
+            JEST_JUNIT_OUTPUT_NAME: ./reports/unit-tests.xml
       - run:
           name: Build
           command: |
