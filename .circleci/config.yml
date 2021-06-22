@@ -12,6 +12,12 @@ parameters:
   acm-certificate-id-dev:
       type: string
       default: 50d2e84d-f1f3-47e0-af7a-82724b817877
+  s3-bucket-test:
+      type: string
+      default: book-a-desk-ui-test
+  acm-certificate-id-test:
+      type: string
+      default: 34a7387f-bb56-42d0-8523-e56ee56a0522
       
 commands:
   authenticate-aws-book-a-desk-dev:
@@ -167,9 +173,37 @@ workflows:
             - aws-credentials
           requires:
             - publish-to-dev
-#      - build-assets-test:
-#          requires:
-#            - publish-to-s3-dev
+      - deploy-cloudformation:
+          name: deploy-cloudformation-test
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
+          environment: dev.
+          context:
+            - aws-credentials
+          requires:
+            - update-cloudfron-dev
+      - publish-to-s3:
+          name: publish-to-test
+          destination-path: ${CIRCLE_SHA1}
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          requires:
+            - build-and-unit-test
+            - deploy-cloudformation-test
+      - deploy-cloudformation:
+          name: update-cloudfront-test
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          update-cdn: true
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
+          environment: test.
+          context:
+            - aws-credentials
+          requires:
+            - publish-to-test
 #      - build-assets-prod:
 #          requires:
 #            - publish-to-s3-tes
