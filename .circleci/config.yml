@@ -78,7 +78,8 @@ commands:
               --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Environment=<< parameters.environment >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM
+              --capabilities CAPABILITY_NAMED_IAM \
+              --role-arn << parameters.cloudformation-role >>
   
 
 jobs:
