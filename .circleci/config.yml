@@ -12,6 +12,9 @@ parameters:
   acm-certificate-id-dev:
       type: string
       default: 50d2e84d-f1f3-47e0-af7a-82724b817877
+  cloudformation-role-dev:
+    type: string
+    default: arn:aws:iam::${AWS_ACCOUNT_DEV}:/cloudformationstack
   s3-bucket-test:
       type: string
       default: book-a-desk-ui-test
@@ -20,7 +23,7 @@ parameters:
       default: 34a7387f-bb56-42d0-8523-e56ee56a0522
   cloudformation-role-test:
       type: string
-      default: arn:aws:iam::282127166619:role/cloudformationstack
+      default: arn:aws:iam::${AWS_ACCOUNT_TEST}:role/cloudformationstack
       
 commands:
   authenticate-aws-book-a-desk-dev:
@@ -111,6 +114,8 @@ jobs:
         type: string
       environment:
         type: string
+      cloudformation-role:
+        type: string
     steps:
       - checkout
       - aws-cli/setup:
@@ -121,6 +126,7 @@ jobs:
           s3-bucket-name: << parameters.s3-bucket-name >>
           certificate-id: << parameters.certificate-id >>
           environment: << parameters.environment >>
+          cloudformation-role: << parameters.cloudformation-role >>
           
   publish-to-s3:
     docker:
@@ -158,7 +164,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
           environment: test.
-          certificate-role: << pipeline.parameters.cloudformation-role-test >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
           requires:
@@ -178,7 +184,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
           environment: test.
-          certificate-role: << pipeline.parameters.cloudformation-role-test >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
           requires:
@@ -197,6 +203,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
           environment: dev.
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
           requires:
@@ -216,6 +223,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
           environment: dev.
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
           requires:
@@ -228,7 +236,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
           environment: test.
-          certificate-role: << pipeline.parameters.cloudformation-role-test >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
           requires:
@@ -248,7 +256,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
           environment: test.
-          certificate-role: << pipeline.parameters.cloudformation-role-test >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
           requires:
