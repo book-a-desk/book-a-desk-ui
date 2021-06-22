@@ -141,7 +141,7 @@ jobs:
             at: ./
       - aws-cli/setup:
           aws-region: AWS_REGION
-      - run: echo ${AWS_ACCESS_KEY_ID}
+      - run: echo $AWS_ACCESS_KEY_ID
       - run: ls -R
       - aws-s3/sync:
           arguments: --acl public-read
