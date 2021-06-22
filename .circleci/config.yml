@@ -136,9 +136,12 @@ jobs:
         type: string
       s3-bucket-name:
         type: string
+      authenticate-aws:
+        type: steps
     steps:
       - attach_workspace:
             at: ./
+      - steps: << parameters.authenticate-aws >>
       - aws-cli/setup:
           aws-region: AWS_REGION
       - run: ls -R
@@ -173,6 +176,8 @@ workflows:
           name: publish-to-test
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
           requires:
             - build-and-unit-test
             - deploy-cloudformation-test
@@ -212,6 +217,8 @@ workflows:
           name: publish-to-dev
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
           requires:
             - build-and-unit-test
             - deploy-cloudformation-dev
@@ -245,6 +252,8 @@ workflows:
           name: publish-to-test
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
           requires:
             - build-and-unit-test
             - deploy-cloudformation-test
