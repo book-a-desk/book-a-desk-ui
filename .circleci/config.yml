@@ -14,7 +14,7 @@ parameters:
       default: 50d2e84d-f1f3-47e0-af7a-82724b817877
   cloudformation-role-dev:
       type: string
-      default: arn:aws:iam::${AWS_ACCOUNT_DEV}:/cloudformationstack
+      default: arn:aws:iam::${AWS_ACCOUNT_DEV}:/cloudformationstackdev
   s3-bucket-test:
       type: string
       default: book-a-desk-ui-test
