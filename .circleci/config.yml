@@ -67,8 +67,7 @@ commands:
               --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Environment=<< parameters.environment >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM \
-              --role-arn << parameters.cloudformation-role >>
+              --capabilities CAPABILITY_NAMED_IAM
   
 
 jobs:
@@ -156,25 +155,25 @@ workflows:
     jobs:
       - build-and-unit-test:
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
-      - deploy-cloudformation:
-          name: deploy-cloudformation-dev
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-dev
-          update-cdn: false
-          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
-          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-          environment: dev.
-          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
-          context:
-            - aws-credentials
-          requires:
-            - build-and-unit-test
+#      - deploy-cloudformation:
+#          name: deploy-cloudformation-dev
+#          authenticate-aws:
+#            - authenticate-aws-book-a-desk-dev
+#          update-cdn: false
+#          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+#          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
+#          environment: dev.
+#          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
+#          context:
+#            - aws-credentials
+#          requires:
+#            - build-and-unit-test
       - publish-to-s3:
           name: publish-to-dev
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           requires:
-            - deploy-cloudformation-dev
+            - build-and-unit-test
       - deploy-cloudformation:
           name: update-cloudfront-dev
           authenticate-aws:
