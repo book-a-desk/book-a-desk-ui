@@ -162,7 +162,6 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           requires:
             - build-and-unit-test
-            - deploy-cloudformation-dev
       - deploy-cloudformation:
           name: update-cloudfront-dev
           authenticate-aws:
@@ -189,6 +188,7 @@ workflows:
             - aws-credentials
           requires:
             - build-and-unit-test
+            - update-cloudfront-dev
       - publish-to-s3:
           name: publish-to-test
           destination-path: ${CIRCLE_SHA1}
