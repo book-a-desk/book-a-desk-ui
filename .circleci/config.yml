@@ -142,7 +142,7 @@ jobs:
             at: ./
       - aws-cli/setup:
           aws-region: AWS_REGION
-      - authenticate-aws: << parameters.authenticate-aws >>
+      - steps: << parameters.authenticate-aws >>
       - run: ls -R
       - aws-s3/sync:
           arguments: --acl public-read
