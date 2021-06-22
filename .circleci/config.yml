@@ -169,87 +169,7 @@ workflows:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
-          name: build-dev
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
-      - deploy-cloudformation:
-          name: deploy-cloudformation-dev
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-dev
-          update-cdn: false
-          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
-          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-          environment: dev.
-          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
-          context:
-            - aws-credentials
-          requires:
-            - build-dev
-      - publish-to-s3:
-          name: publish-to-dev
-          destination-path: ${CIRCLE_SHA1}
-          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-dev
-          context:
-            - aws-credentials
-          requires:
-            - build-dev
-            - deploy-cloudformation-dev
-      - deploy-cloudformation:
-          name: update-cloudfront-dev
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-dev
-          update-cdn: true
-          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
-          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-          environment: dev.
-          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
-          context:
-            - aws-credentials
-          requires:
-            - publish-to-dev
-      - build-and-unit-test:
-          name: build-test
-          api-url: ${BOOK_A_DESK_BASE_API_URL_TEST}
-          requires:
-            - update-cloudfront-dev
-      - deploy-cloudformation:
-          name: deploy-cloudformation-test
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-test
-          update-cdn: false
-          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
-          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-          environment: test.
-          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
-          context:
-            - aws-credentials
-          requires:
-            - build-test
-      - publish-to-s3:
-          name: publish-to-test
-          destination-path: ${CIRCLE_SHA1}
-          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-test
-          context:
-            - aws-credentials
-          requires:
-            - build-test
-            - deploy-cloudformation-test
-      - deploy-cloudformation:
-          name: update-cloudfront-test
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-test
-          update-cdn: true
-          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
-          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-          environment: test.
-          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
-          context:
-            - aws-credentials
-          requires:
-            - publish-to-test
   release:
     when:
       equal: ['trunk', << pipeline.git.branch >>]
@@ -297,6 +217,8 @@ workflows:
       - build-and-unit-test:
           name: build-test
           api-url: ${BOOK_A_DESK_BASE_API_URL_TEST}
+          requires:
+            - update-cloudfront-dev
       - deploy-cloudformation:
           name: deploy-cloudformation-test
           authenticate-aws:
@@ -309,7 +231,7 @@ workflows:
           context:
             - aws-credentials
           requires:
-            - update-cloudfront-dev
+            - build-test
       - publish-to-s3:
           name: publish-to-test
           destination-path: ${CIRCLE_SHA1}
