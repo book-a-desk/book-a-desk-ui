@@ -14,7 +14,7 @@ parameters:
       default: 50d2e84d-f1f3-47e0-af7a-82724b817877
   cloudformation-role-dev:
       type: string
-      default: arn:aws:iam::${AWS_ACCOUNT_DEV}:/cloudformationstackdev
+      default: arn:aws:iam::${AWS_ACCOUNT_DEV}:role/cloudformationstackdev
   s3-bucket-test:
       type: string
       default: book-a-desk-ui-test
@@ -156,12 +156,25 @@ workflows:
     jobs:
       - build-and-unit-test:
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
+      - deploy-cloudformation:
+          name: deploy-cloudformation-dev
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
+          environment: dev.
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
+          context:
+            - aws-credentials
+          requires:
+            - build-and-unit-test
       - publish-to-s3:
           name: publish-to-dev
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           requires:
-            - build-and-unit-test
+            - deploy-cloudformation-dev
       - deploy-cloudformation:
           name: update-cloudfront-dev
           authenticate-aws:
