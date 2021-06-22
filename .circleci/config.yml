@@ -129,8 +129,7 @@ jobs:
           cloudformation-role: << parameters.cloudformation-role >>
           
   publish-to-s3:
-    docker:
-      - image: cimg/python:3.6
+    executor: aws-cli/default
     parameters:
       destination-path:
         type: string
@@ -141,9 +140,9 @@ jobs:
     steps:
       - attach_workspace:
             at: ./
+      - steps: << parameters.authenticate-aws >>
       - aws-cli/setup:
           aws-region: AWS_REGION
-      - steps: << parameters.authenticate-aws >>
       - run: ls -R
       - aws-s3/sync:
           arguments: --acl public-read
@@ -159,19 +158,19 @@ workflows:
     jobs:
       - build-and-unit-test:
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
-#      - deploy-cloudformation:
-#          name: deploy-cloudformation-dev
-#          authenticate-aws:
-#            - authenticate-aws-book-a-desk-dev
-#          update-cdn: false
-#          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
-#          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-#          environment: dev.
-#          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
-#          context:
-#            - aws-credentials
-#          requires:
-#            - build-and-unit-test
+      - deploy-cloudformation:
+          name: deploy-cloudformation-dev
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
+          environment: dev.
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
+          context:
+            - aws-credentials
+          requires:
+            - build-and-unit-test
       - publish-to-s3:
           name: publish-to-dev
           destination-path: ${CIRCLE_SHA1}
@@ -182,6 +181,7 @@ workflows:
             - aws-credentials
           requires:
             - build-and-unit-test
+            - deploy-cloudformation-dev
       - deploy-cloudformation:
           name: update-cloudfront-dev
           authenticate-aws:
@@ -195,20 +195,19 @@ workflows:
             - aws-credentials
           requires:
             - publish-to-dev
-#      - deploy-cloudformation:
-#          name: deploy-cloudformation-test
-#          authenticate-aws:
-#            - authenticate-aws-book-a-desk-test
-#          update-cdn: false
-#          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
-#          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-#          environment: test.
-#          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
-#          context:
-#            - aws-credentials
-#          requires:
-#            - build-and-unit-test
-#            - update-cloudfront-dev
+      - deploy-cloudformation:
+          name: deploy-cloudformation-test
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
+          environment: test.
+          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
+          context:
+            - aws-credentials
+          requires:
+            - update-cloudfront-dev
       - publish-to-s3:
           name: publish-to-test
           destination-path: ${CIRCLE_SHA1}
@@ -219,7 +218,7 @@ workflows:
             - aws-credentials
           requires:
             - build-and-unit-test
-            - update-cloudfront-dev
+            - deploy-cloudformation-test
       - deploy-cloudformation:
           name: update-cloudfront-test
           authenticate-aws:
