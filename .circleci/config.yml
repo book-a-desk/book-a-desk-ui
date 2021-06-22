@@ -255,6 +255,10 @@ workflows:
           name: publish-to-dev
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          context:
+            - aws-credentials
           requires:
             - build-and-unit-test
             - deploy-cloudformation-dev
@@ -288,6 +292,10 @@ workflows:
           name: publish-to-test
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          context:
+            - aws-credentials
           requires:
             - build-and-unit-test
             - deploy-cloudformation-test
