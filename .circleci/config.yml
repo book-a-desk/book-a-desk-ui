@@ -15,12 +15,6 @@ parameters:
   cloudformation-role-dev:
       type: string
       default: arn:aws:iam::${AWS_ACCOUNT_DEV}:/cloudformationstack
-  aws-access-key-id-dev:
-      type: string
-      default: ${AWS_ACCESS_KEY_ID_DEV}
-  aws-secret-access-key-dev:
-      type: string
-      default: ${AWS_SECRET_ACCESS_KEY_DEV}
   s3-bucket-test:
       type: string
       default: book-a-desk-ui-test
@@ -30,12 +24,6 @@ parameters:
   cloudformation-role-test:
       type: string
       default: arn:aws:iam::${AWS_ACCOUNT_TEST}:role/cloudformationstack
-  aws-access-key-id-test:
-      type: string
-      default: ${AWS_ACCESS_KEY_ID_TEST}
-  aws-secret-access-key-test:
-      type: string
-      default: ${AWS_SECRET_ACCESS_KEY_TEST}
       
 commands:
   authenticate-aws-book-a-desk-dev:
@@ -148,11 +136,6 @@ jobs:
         type: string
       s3-bucket-name:
         type: string
-      aws-access-key-id:
-        type: string
-      aws-secret-access-key:
-        type: string
-      
     steps:
       - attach_workspace:
             at: ./
@@ -165,8 +148,6 @@ jobs:
           overwrite: false
           to: s3://<< parameters.s3-bucket-name >>/<< parameters.destination-path >>
           aws-region: AWS_REGION
-          aws-access-key-id: << parameters.aws-access-key-id >>
-          aws-secret-access-key: << parameters.aws-secret-access-key >>
 
 workflows:
   pull-request:
@@ -192,8 +173,6 @@ workflows:
           name: publish-to-test
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
-          aws-access-key-id: ${AWS_ACCESS_KEY_ID_TEST}
-          aws-secret-access-key: ${AWS_SECRET_ACCESS_KEY_TEST}
           requires:
             - build-and-unit-test
             - deploy-cloudformation-test
@@ -233,8 +212,6 @@ workflows:
           name: publish-to-dev
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
-          aws-access-key-id: << pipeline.parameters.aws-access-key-id-dev >>
-          aws-secret-access-key: << pipeline.parameters.aws-secret-access-key-dev >>
           requires:
             - build-and-unit-test
             - deploy-cloudformation-dev
@@ -268,8 +245,6 @@ workflows:
           name: publish-to-test
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
-          aws-access-key-id: << pipeline.parameters.aws-access-key-id-test >>
-          aws-secret-access-key: << pipeline.parameters.aws-secret-access-key-test >>
           requires:
             - build-and-unit-test
             - deploy-cloudformation-test
