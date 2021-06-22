@@ -188,7 +188,7 @@ workflows:
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-          environment: dev.
+          environment: test.
           context:
             - aws-credentials
           requires:
