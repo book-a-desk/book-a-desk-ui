@@ -151,9 +151,9 @@ jobs:
       - attach_workspace:
             at: ./
       - steps: << parameters.authenticate-aws >>
-      - log-aws-identity
       - aws-cli/setup:
           aws-region: AWS_REGION
+      - log-aws-identity
       - run: ls -R
       - aws-s3/sync:
           arguments: --acl public-read
