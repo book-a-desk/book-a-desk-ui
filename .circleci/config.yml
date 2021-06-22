@@ -23,7 +23,7 @@ parameters:
       default: 34a7387f-bb56-42d0-8523-e56ee56a0522
   cloudformation-role-test:
       type: string
-      default: arn:aws:iam::${AWS_ACCOUNT_TEST}:role/cloudformationstack
+      default: arn:aws:iam::${AWS_ACCOUNT_TEST}:role/cloudformationstacktest
       
 commands:
   log-aws-identity:
