@@ -26,6 +26,15 @@ parameters:
       default: arn:aws:iam::${AWS_ACCOUNT_TEST}:role/cloudformationstack
       
 commands:
+  log-aws-identity:
+    parameters:
+      profile:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Log AWS identity <<# parameters.profile >>(profile=<< parameters.profile >>)<</ parameters.profile >>
+          command: aws sts get-caller-identity <<# parameters.profile >> --profile << parameters.profile >> <</ parameters.profile >> --region $AWS_REGION || true
   authenticate-aws-book-a-desk-dev:
     description: "Configure AWS credentials for Book A Desk Dev"
     steps:
@@ -61,6 +70,7 @@ commands:
         type: string
     steps:
       - steps: << parameters.authenticate-aws >>
+      - log-aws-identity
       - run:
           name: Ensure infrastructure is up to date <<# parameters.update-cdn >>and update the CDN origin<</ parameters.update-cdn >>
           command: |
@@ -141,6 +151,7 @@ jobs:
       - attach_workspace:
             at: ./
       - steps: << parameters.authenticate-aws >>
+      - log-aws-identity
       - aws-cli/setup:
           aws-region: AWS_REGION
       - run: ls -R
