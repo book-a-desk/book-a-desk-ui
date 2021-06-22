@@ -210,6 +210,8 @@ workflows:
       - build-and-unit-test:
           name: build-test
           api-url: ${BOOK_A_DESK_BASE_API_URL_TEST}
+          requires:
+            - update-cloudfront-dev
       - deploy-cloudformation:
           name: deploy-cloudformation-test
           authenticate-aws:
