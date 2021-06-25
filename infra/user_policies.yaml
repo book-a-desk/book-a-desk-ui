@@ -7,6 +7,7 @@ permissions:
 - AWSCertificateManagerReadOnly
 - AWSCloudFormationFullAccess
 - CloudFrontFullAccess
+- AmazonEC2ContainerRegistryFullAccess
 - GetParametersByPath
   {
     "Version": "2012-10-17",
@@ -28,7 +29,10 @@ permissions:
         "Sid": "VisualEditor0",
         "Effect": "Allow",
         "Action": "iam:PassRole",
-        "Resource": "<arn-of-cloudformation-role>"
+        "Resource": [
+          "<arn-of-cloudformation-role>",
+          "<arn-of-cloudformation-role>"
+        ]
       }
     ]
   }
@@ -36,3 +40,11 @@ permissions:
 Cloudformationrole:
   - AmazonS3FullAccess
   - CloudFrontFullAccess
+    
+Cloudformationbackendrole:
+  - IAMFullAccess
+  - CloudWatchFullAccess
+  - AmazonECS_FullAccess
+  - AWSCertificateManagerReadOnly
+  - AmazonRoute53FullAccess
+  - AmazonEC2FullAccess
