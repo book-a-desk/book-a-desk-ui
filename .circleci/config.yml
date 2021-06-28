@@ -12,8 +12,29 @@ parameters:
   acm-certificate-id-dev:
       type: string
       default: 50d2e84d-f1f3-47e0-af7a-82724b817877
+  cloudformation-role-dev:
+      type: string
+      default: arn:aws:iam::${AWS_ACCOUNT_DEV}:role/cloudformationstackdev
+  s3-bucket-test:
+      type: string
+      default: book-a-desk-ui-test
+  acm-certificate-id-test:
+      type: string
+      default: 34a7387f-bb56-42d0-8523-e56ee56a0522
+  cloudformation-role-test:
+      type: string
+      default: arn:aws:iam::${AWS_ACCOUNT_TEST}:role/cloudformationstacktest
       
 commands:
+  log-aws-identity:
+    parameters:
+      profile:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Log AWS identity <<# parameters.profile >>(profile=<< parameters.profile >>)<</ parameters.profile >>
+          command: aws sts get-caller-identity <<# parameters.profile >> --profile << parameters.profile >> <</ parameters.profile >> --region $AWS_REGION || true
   authenticate-aws-book-a-desk-dev:
     description: "Configure AWS credentials for Book A Desk Dev"
     steps:
@@ -22,6 +43,15 @@ commands:
           command: |
             echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_DEV}" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY_DEV}" >> $BASH_ENV
+            echo $AWS_SECRET_ACCESS_KEY_ID
+  authenticate-aws-book-a-desk-test:
+    description: "Configure AWS credentials for Book A Desk Test"
+    steps:
+      - run:
+          name: "Initialize BASH_ENV variables"
+          command: |
+            echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_TEST}" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY_TEST}" >> $BASH_ENV
             
   aws-cloudformation-deploy:
     parameters:
@@ -36,8 +66,11 @@ commands:
         type: string
       environment:
         type: string
+      cloudformation-role:
+        type: string
     steps:
       - steps: << parameters.authenticate-aws >>
+      - log-aws-identity
       - run:
           name: Ensure infrastructure is up to date <<# parameters.update-cdn >>and update the CDN origin<</ parameters.update-cdn >>
           command: |
@@ -45,7 +78,8 @@ commands:
               --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Environment=<< parameters.environment >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
-              --capabilities CAPABILITY_NAMED_IAM
+              --capabilities CAPABILITY_NAMED_IAM \
+              --role-arn << parameters.cloudformation-role >>
   
 
 jobs:
@@ -91,37 +125,43 @@ jobs:
         type: string
       environment:
         type: string
+      cloudformation-role:
+        type: string
     steps:
       - checkout
       - aws-cli/setup:
-          aws-region: AWS_DEFAULT_REGION
+          aws-region: AWS_REGION
       - aws-cloudformation-deploy:
           update-cdn: << parameters.update-cdn >>
           authenticate-aws: << parameters.authenticate-aws >>
           s3-bucket-name: << parameters.s3-bucket-name >>
           certificate-id: << parameters.certificate-id >>
           environment: << parameters.environment >>
+          cloudformation-role: << parameters.cloudformation-role >>
           
   publish-to-s3:
-    docker:
-      - image: cimg/python:3.6
+    executor: aws-cli/default
     parameters:
       destination-path:
         type: string
       s3-bucket-name:
         type: string
+      authenticate-aws:
+        type: steps
     steps:
       - attach_workspace:
             at: ./
+      - steps: << parameters.authenticate-aws >>
       - aws-cli/setup:
-          aws-region: AWS_DEFAULT_REGION
+          aws-region: AWS_REGION
+      - log-aws-identity
       - run: ls -R
       - aws-s3/sync:
           arguments: --acl public-read
           from: ./
           overwrite: false
           to: s3://<< parameters.s3-bucket-name >>/<< parameters.destination-path >>
-          aws-region: AWS_DEFAULT_REGION
+          aws-region: AWS_REGION
 
 workflows:
   pull-request:
@@ -135,6 +175,7 @@ workflows:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
+          name: build-dev
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
       - deploy-cloudformation:
           name: deploy-cloudformation-dev
@@ -144,16 +185,21 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
           environment: dev.
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
           requires:
-            - build-and-unit-test
+            - build-dev
       - publish-to-s3:
           name: publish-to-dev
           destination-path: ${CIRCLE_SHA1}
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          context:
+            - aws-credentials
           requires:
-            - build-and-unit-test
+            - build-dev
             - deploy-cloudformation-dev
       - deploy-cloudformation:
           name: update-cloudfront-dev
@@ -163,13 +209,50 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
           environment: dev.
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
           requires:
             - publish-to-dev
-#      - build-assets-test:
-#          requires:
-#            - publish-to-s3-dev
-#      - build-assets-prod:
-#          requires:
-#            - publish-to-s3-tes
+      - build-and-unit-test:
+          name: build-test
+          api-url: ${BOOK_A_DESK_BASE_API_URL_TEST}
+          requires:
+            - update-cloudfront-dev
+      - deploy-cloudformation:
+          name: deploy-cloudformation-test
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
+          environment: test.
+          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
+          context:
+            - aws-credentials
+          requires:
+            - build-test
+      - publish-to-s3:
+          name: publish-to-test
+          destination-path: ${CIRCLE_SHA1}
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          context:
+            - aws-credentials
+          requires:
+            - build-test
+            - deploy-cloudformation-test
+      - deploy-cloudformation:
+          name: update-cloudfront-test
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          update-cdn: true
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
+          environment: test.
+          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
+          context:
+            - aws-credentials
+          requires:
+            - publish-to-test
