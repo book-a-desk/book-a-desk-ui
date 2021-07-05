@@ -72,12 +72,13 @@ export default {
       this.offices = offices.data.items;
     },
 
-    submitBooking() {
-      this.$store.dispatch("book", {
+    async submitBooking() {
+      await this.$store.dispatch("book", {
         office: { id: this.selectedOffice.id },
         date: this.bookingDate,
         user: { email: this.emailAddress }
       });
+      alert("Check your emails");
     },    
     tomorrow() {
         return moment().add(1, 'days').format('YYYY-MM-DD')
