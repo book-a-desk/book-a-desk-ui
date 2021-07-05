@@ -1,11 +1,11 @@
 <template>
 	<v-combobox
 		:id = "`combobox-${id}`"
-		:items = "items"
-		:item-text = "itemText"
-		:item-value = "itemValue"
-		@change = "change"
-		v-model = "valueCopy"
+		:items="items"
+		:item-text="itemText"
+		:item-value="itemValue"
+		@change="change"
+		v-model="valueCopy"
 		solo
 		class="rounded-lg"
 		>
@@ -35,12 +35,14 @@ export default {
   },
   methods: {
 	  change() {
-		  this.$emit("change", this.valueCopy);
+		  this.$emit("input", this.valueCopy);
 	  }
   },
    watch: {
     value() {
       this.valueCopy = this.value;
+	  this.$emit("change");
+
     }
   },
 };

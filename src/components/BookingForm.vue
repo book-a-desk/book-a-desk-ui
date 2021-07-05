@@ -2,8 +2,8 @@
   <v-container>
      <v-row>
       <v-col>
-          <div class="text-h6">Today’s schedule</div>
-          <div class="text-subtitle-1 primary--text">{{today()}}</div>
+          <div class="text-h6">Book a desk</div>
+          <div class="text-subtitle-1 primary--text">{{bookingDateFormatted}}</div>
       </v-col>
      </v-row>
     <v-row class="text-center" no-gutters>
@@ -21,17 +21,26 @@
           itemValue = "id"
           v-model = "selectedOffice"
           prependInnerIcon="mdi-office-building"
+          @change="officeChange"
         ></bad-combo-box>
       </v-col>
     </v-row>
-    <v-row no-gutters>
+    <v-row>
       <v-col>
-        <bad-date-picker 
+       <bad-date-picker 
         v-model="bookingDate"
         :min="tomorrow()"
-        :fullWidth="true">
+        :fullWidth="true"
+        @handle-change="bookingDateChanged">
         </bad-date-picker>
       </v-col>
+    </v-row>
+    <v-row>
+      <availabilities
+        :total="totalDesks"
+        :available="availableDesks"
+        :reserved="reservedDesks"
+      ></availabilities> 
     </v-row>
     <v-row>
       <v-col>
@@ -50,20 +59,40 @@
 
 import moment from 'moment'
 import { getAsync } from "@/services/apiFacade";
+import Availabilities from "@/components/Availabilities.vue"
 
 export default {
   name: "BookingForm",
+  components: {
+  Availabilities
+},
   data() {
     return {
-      bookingDate: "",
+      bookingDate: this.tomorrow(),
       emailAddress: "",
       offices: [],
-      selectedOffice: {}
+      selectedOffice: null,
+      availabilities: null
     };
   },
   async mounted() {
     await this.fetchOffices();
     this.selectedOffice = this.offices[0];
+    await this.fetchAvailabilities();
+  },
+  computed:{
+    totalDesks(){
+      return this.availabilities?.totalDesks;
+    },
+    availableDesks(){
+      return this.availabilities?.availableDesks;
+    },
+    reservedDesks(){
+      return this.availabilities?.reservedDesks;
+    },
+    bookingDateFormatted() {
+      return moment(this.bookingDate).format("dddd, MMMM Do");
+    }
   },
   methods: {
     async fetchOffices() {
@@ -71,19 +100,27 @@ export default {
       const offices = await getAsync(url);
       this.offices = offices.data.items;
     },
-
-    submitBooking() {
-      this.$store.dispatch("book", {
+    async fetchAvailabilities() {
+        let url = `/offices/${this.selectedOffice.id}/availabilities?date=${this.bookingDate}`;
+        const availabilities = await getAsync(url);
+        this.availabilities = availabilities.data;
+      },
+    bookingDateChanged(){
+      this.fetchAvailabilities();
+    },
+    officeChange(){
+      this.fetchAvailabilities();
+    },
+    async submitBooking() {
+      await this.$store.dispatch("book", {
         office: { id: this.selectedOffice.id },
         date: this.bookingDate,
         user: { email: this.emailAddress }
       });
+      this.fetchAvailabilities();
     },    
     tomorrow() {
         return moment().add(1, 'days').format('YYYY-MM-DD')
-    },
-    today() {
-        return moment().format("dddd, MMMM Do")
     }
   }
 };
