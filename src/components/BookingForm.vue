@@ -43,6 +43,7 @@
         </bad-contained-button>
       </v-col>
     </v-row>
+    <span>{{feedback}}</span>
   </v-container>
 </template>
 
@@ -57,6 +58,7 @@ export default {
     return {
       bookingDate: "",
       emailAddress: "",
+      feedback: "",
       offices: [],
       selectedOffice: {}
     };
@@ -73,12 +75,16 @@ export default {
     },
 
     async submitBooking() {
-      await this.$store.dispatch("book", {
-        office: { id: this.selectedOffice.id },
-        date: this.bookingDate,
-        user: { email: this.emailAddress }
-      });
-      alert("Check your emails");
+      try{
+        await this.$store.dispatch("book", {
+          office: { id: this.selectedOffice.id },
+          date: this.bookingDate,
+          user: { email: this.emailAddress }
+        });
+        this.feedback = "Please check your emails";
+      }
+      catch(e){
+        this.feedback = `Something went wrong with the booking: ${e.message}`      }
     },    
     tomorrow() {
         return moment().add(1, 'days').format('YYYY-MM-DD')
