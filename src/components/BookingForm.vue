@@ -50,6 +50,11 @@
             :block="true">
           Book a desk
         </bad-contained-button>
+        <v-snackbar
+            color="orange"
+            v-model="isWarningShownOnBooking">
+          Please verify the office schedule to make sure that the office is open on that day
+        </v-snackbar>
       </v-col>
     </v-row>
   </v-container>
@@ -72,7 +77,8 @@ export default {
       emailAddress: "",
       offices: [],
       selectedOffice: null,
-      availabilities: null
+      availabilities: null,
+      isWarningShownOnBooking: false
     };
   },
   async mounted() {
@@ -112,6 +118,7 @@ export default {
       this.fetchAvailabilities();
     },
     async submitBooking() {
+      this.isWarningShownOnBooking = true;
       await this.$store.dispatch("book", {
         office: { id: this.selectedOffice.id },
         date: this.bookingDate,
