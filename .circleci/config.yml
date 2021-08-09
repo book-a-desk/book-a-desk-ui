@@ -99,12 +99,12 @@ jobs:
           command: npm run test:unit:ci
           environment:
             JEST_JUNIT_OUTPUT_NAME: ./reports/unit-tests.xml
-            VUE_APP_DOMAIN_NAME: ${BOOK_A_DESK_DOMAIN_NAME}
+            VUE_APP_DOMAIN_NAME: $BOOK_A_DESK_DOMAIN_NAME
       - run:
           name: Build
           command: |
             export VUE_APP_BASE_API_URL=<< parameters.api-url >>
-            export VUE_APP_DOMAIN_NAME=${BOOK_A_DESK_DOMAIN_NAME}
+            export VUE_APP_DOMAIN_NAME=$BOOK_A_DESK_DOMAIN_NAME
             npm run build
       - store_test_results:
           path: ./reports/
