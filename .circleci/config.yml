@@ -15,6 +15,9 @@ parameters:
   cloudformation-role-dev:
       type: string
       default: arn:aws:iam::${AWS_ACCOUNT_DEV}:role/cloudformationstackdev
+  domain-name-alias-dev:
+      type: string
+      default: ${DOMAIN_NAME_ALIAS_DEV}
   s3-bucket-test:
       type: string
       default: book-a-desk-ui-test
@@ -24,6 +27,9 @@ parameters:
   cloudformation-role-test:
       type: string
       default: arn:aws:iam::${AWS_ACCOUNT_TEST}:role/cloudformationstacktest
+  domain-name-alias-test:
+    type: string
+    default: ${DOMAIN_NAME_ALIAS_TEST}
   s3-bucket-prod:
     type: string
     default: book-a-desk-ui-prod
@@ -33,6 +39,9 @@ parameters:
   cloudformation-role-prod:
     type: string
     default: arn:aws:iam::${AWS_ACCOUNT_PROD}:role/cloudformationstackprod
+  domain-name-alias-prod:
+    type: string
+    default: ${DOMAIN_NAME_ALIAS_PROD}
       
 commands:
   log-aws-identity:
@@ -204,7 +213,7 @@ workflows:
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-          alias: dev.book-a-desk.broadsign.net
+          alias: << pipeline.parameters.domain-name-alias-dev >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
@@ -228,7 +237,7 @@ workflows:
           update-cdn: true
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-          alias: dev.book-a-desk.broadsign.net
+          alias: << pipeline.parameters.domain-name-alias-dev >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
@@ -246,7 +255,7 @@ workflows:
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-          alias: test.book-a-desk.broadsign.net
+          alias: << pipeline.parameters.domain-name-alias-test >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
@@ -270,7 +279,7 @@ workflows:
           update-cdn: true
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-          alias: test.book-a-desk.broadsign.net
+          alias: << pipeline.parameters.domain-name-alias-test >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
@@ -288,7 +297,7 @@ workflows:
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
           certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
-          alias: book-a-desk.broadsign.com
+          alias: << pipeline.parameters.domain-name-alias-prod >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
           context:
             - aws-credentials
@@ -312,7 +321,7 @@ workflows:
           update-cdn: true
           s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
           certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
-          alias: book-a-desk.broadsign.com
+          alias: << pipeline.parameters.domain-name-alias-prod >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
           context:
             - aws-credentials
