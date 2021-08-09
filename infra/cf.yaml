@@ -10,9 +10,9 @@ Parameters:
   CertificateID:
     Type: String
     Description: AWS Certificate Id
-  Environment:
+  Alias:
     Type: String
-    Description: environment
+    Description: domain name alias
 
 Resources:
   BookADeskUiS3Bucket:
@@ -50,7 +50,7 @@ Resources:
           ForwardedValues:
             QueryString: false
         Aliases:
-          - !Sub "${Environment}book-a-desk.broadsign.net"
+          - !Sub "${Alias}"
         ViewerCertificate:
           AcmCertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/${CertificateID}"
           SslSupportMethod: sni-only

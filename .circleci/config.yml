@@ -81,7 +81,7 @@ commands:
         type: string
       certificate-id:
         type: string
-      environment:
+      alias:
         type: string
       cloudformation-role:
         type: string
@@ -92,7 +92,7 @@ commands:
           name: Ensure infrastructure is up to date <<# parameters.update-cdn >>and update the CDN origin<</ parameters.update-cdn >>
           command: |
             aws cloudformation deploy \
-              --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Environment=<< parameters.environment >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
+              --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Alias=<< parameters.alias >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM \
@@ -204,7 +204,7 @@ workflows:
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-          environment: dev.
+          alias: dev.book-a-desk.broadsign.net
           cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
@@ -228,7 +228,7 @@ workflows:
           update-cdn: true
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-          environment: dev.
+          alias: dev.book-a-desk.broadsign.net
           cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
@@ -246,7 +246,7 @@ workflows:
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-          environment: test.
+          alias: test.book-a-desk.broadsign.net
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
@@ -270,7 +270,7 @@ workflows:
           update-cdn: true
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-          environment: test.
+          alias: test.book-a-desk.broadsign.net
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
@@ -288,7 +288,7 @@ workflows:
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
           certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
-          environment: dev.
+          alias: book-a-desk.broadsign.com
           cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
           context:
             - aws-credentials
@@ -312,7 +312,7 @@ workflows:
           update-cdn: true
           s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
           certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
-          environment: dev.
+          alias: book-a-desk.broadsign.com
           cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
           context:
             - aws-credentials

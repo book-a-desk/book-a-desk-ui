@@ -1,3 +1,2 @@
 AWS Certificates
-- backend certificate used in load balancer (main region)
 - ui certificate used in cloudfront distribution (us-east-1 region)
