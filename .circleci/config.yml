@@ -89,8 +89,6 @@ jobs:
     parameters:
       api-url:
         type: string
-      domain-name:
-        type: string
     steps:
       - checkout
       - run:
@@ -101,12 +99,12 @@ jobs:
           command: npm run test:unit:ci
           environment:
             JEST_JUNIT_OUTPUT_NAME: ./reports/unit-tests.xml
-            VUE_APP_DOMAIN_NAME: << parameters.domain-name >>
+            VUE_APP_DOMAIN_NAME: ${BOOK_A_DESK_DOMAIN_NAME}
       - run:
           name: Build
           command: |
             export VUE_APP_BASE_API_URL=<< parameters.api-url >>
-            export VUE_APP_DOMAIN_NAME=<< parameters.domain-name >>
+            export VUE_APP_DOMAIN_NAME=${BOOK_A_DESK_DOMAIN_NAME}
             npm run build
       - store_test_results:
           path: ./reports/
@@ -174,7 +172,6 @@ workflows:
     jobs:
       - build-and-unit-test:
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
-          domain-name: ${BOOK_A_DESK_DOMAIN_NAME}
   release:
     when:
       equal: ['trunk', << pipeline.git.branch >>]
@@ -182,7 +179,6 @@ workflows:
       - build-and-unit-test:
           name: build-dev
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
-          domain-name: ${BOOK_A_DESK_DOMAIN_NAME}
       - deploy-cloudformation:
           name: deploy-cloudformation-dev
           authenticate-aws:
@@ -223,7 +219,6 @@ workflows:
       - build-and-unit-test:
           name: build-test
           api-url: ${BOOK_A_DESK_BASE_API_URL_TEST}
-          domain-name: ${BOOK_A_DESK_DOMAIN_NAME}
           requires:
             - update-cloudfront-dev
       - deploy-cloudformation:
