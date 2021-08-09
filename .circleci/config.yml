@@ -89,6 +89,8 @@ jobs:
     parameters:
       api-url:
         type: string
+      domain-name:
+          type: string
     steps:
       - checkout
       - run:
