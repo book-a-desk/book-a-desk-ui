@@ -103,6 +103,7 @@ jobs:
           name: Build
           command: |
             export VUE_APP_BASE_API_URL=<< parameters.api-url >>
+            export VUE_APP_DOMAIN_NAME=<< parameters.domain-name >>
             npm run build
       - store_test_results:
           path: ./reports/
