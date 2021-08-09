@@ -293,7 +293,7 @@ workflows:
           context:
             - aws-credentials
           requires:
-            - build-dev
+            - build-prod
       - publish-to-s3:
           name: publish-to-prod
           destination-path: ${CIRCLE_SHA1}
