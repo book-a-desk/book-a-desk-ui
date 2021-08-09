@@ -11,7 +11,7 @@ parameters:
       default: book-a-desk-ui-2
   acm-certificate-id-dev:
       type: string
-      default: 50d2e84d-f1f3-47e0-af7a-82724b817877
+      default: ${ACM_CERTIFICATE_ID_DEV}
   cloudformation-role-dev:
       type: string
       default: arn:aws:iam::${AWS_ACCOUNT_DEV}:role/cloudformationstackdev
@@ -20,7 +20,7 @@ parameters:
       default: book-a-desk-ui-test
   acm-certificate-id-test:
       type: string
-      default: 34a7387f-bb56-42d0-8523-e56ee56a0522
+      default: ${ACM_CERTIFICATE_ID_TEST}
   cloudformation-role-test:
       type: string
       default: arn:aws:iam::${AWS_ACCOUNT_TEST}:role/cloudformationstacktest
@@ -29,7 +29,7 @@ parameters:
     default: book-a-desk-ui-prod
   acm-certificate-id-prod:
     type: string
-    default: ce923996-4fdb-4da3-a8f8-af314b761207
+    default: ${ACM_CERTIFICATE_ID_PROD}
   cloudformation-role-prod:
     type: string
     default: arn:aws:iam::${AWS_ACCOUNT_PROD}:role/cloudformationstackprod
@@ -185,51 +185,13 @@ jobs:
 
 workflows:
   pull-request:
-    unless:
+    when:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
-          name: build-prod
-          api-url: ${BOOK_A_DESK_BASE_API_URL_PROD}
-      - deploy-cloudformation:
-          name: deploy-cloudformation-prod
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-prod
-          update-cdn: false
-          s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
-          certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
-          alias: book-a-desk.broadsign.com
-          cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
-          context:
-            - aws-credentials
-          requires:
-            - build-prod
-      - publish-to-s3:
-          name: publish-to-prod
-          destination-path: ${CIRCLE_SHA1}
-          s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-prod
-          context:
-            - aws-credentials
-          requires:
-            - build-prod
-            - deploy-cloudformation-prod
-      - deploy-cloudformation:
-          name: update-cloudfront-prod
-          authenticate-aws:
-            - authenticate-aws-book-a-desk-prod
-          update-cdn: true
-          s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
-          certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
-          alias: book-a-desk.broadsign.com
-          cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
-          context:
-            - aws-credentials
-          requires:
-            - publish-to-prod
+          api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
   release:
-    when:
+    unless:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
