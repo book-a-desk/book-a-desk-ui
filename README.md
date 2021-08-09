@@ -24,6 +24,7 @@ npm run serve
 ```
 PORT=<front-end port>
 VUE_APP_BASE_API_URL=<api-url>
+VUE_APP_DOMAIN_NAME=domain.com
 ```
 
 
