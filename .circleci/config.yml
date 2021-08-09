@@ -143,7 +143,7 @@ jobs:
         type: string
       certificate-id:
         type: string
-      environment:
+      alias:
         type: string
       cloudformation-role:
         type: string
@@ -156,7 +156,7 @@ jobs:
           authenticate-aws: << parameters.authenticate-aws >>
           s3-bucket-name: << parameters.s3-bucket-name >>
           certificate-id: << parameters.certificate-id >>
-          environment: << parameters.environment >>
+          alias: << parameters.alias >>
           cloudformation-role: << parameters.cloudformation-role >>
           
   publish-to-s3:
