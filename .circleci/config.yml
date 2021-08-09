@@ -99,7 +99,7 @@ jobs:
           command: npm run test:unit:ci
           environment:
             JEST_JUNIT_OUTPUT_NAME: ./reports/unit-tests.xml
-            VUE_APP_DOMAIN_NAME: $BOOK_A_DESK_DOMAIN_NAME
+            VUE_APP_DOMAIN_NAME: broadsign.com
       - run:
           name: Build
           command: |
