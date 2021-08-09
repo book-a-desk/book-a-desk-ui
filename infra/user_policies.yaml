@@ -1,12 +1,17 @@
-user name: book-a-desk
-
 exception: book-a-desk-dev in dev account
+
+user: book-a-desk-ui
+
+permissions:
+- AWSCloudFormationFullAccess
+- AmazonS3FullAccess
+- AmazonEC2ContainerRegistryFullAccess
+  
+user: book-a-desk-backend
 
 permissions:
 - AmazonDynamoDBFullAccess
-- AWSCertificateManagerReadOnly
 - AWSCloudFormationFullAccess
-- CloudFrontFullAccess
 - AmazonEC2ContainerRegistryFullAccess
 - GetParametersByPath
   {
@@ -37,11 +42,11 @@ permissions:
     ]
   }
     
-Cloudformationrole:
+cloudformationstack<env>:
   - AmazonS3FullAccess
   - CloudFrontFullAccess
     
-Cloudformationbackendrole:
+cloudformationstackbackend<env>:
   - IAMFullAccess
   - CloudWatchFullAccess
   - AmazonECS_FullAccess
