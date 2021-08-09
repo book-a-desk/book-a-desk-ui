@@ -49,7 +49,7 @@ describe("Component BadTextInput.vue", () => {
     expect(textField.props().placeholder).toEqual("Type something");
   });
 
-  it("should rules validation be successful with a correct corporate email", () => {
+  it("validation should be successful with a correct corporate email", () => {
     let validEmail = `valid@${domainName}`
     
     let isRequired = underTest.vm.rules.isEmpty(validEmail);
@@ -63,22 +63,22 @@ describe("Component BadTextInput.vue", () => {
     expect(isCorporateEmail).toBe(true)
   });
 
-  it("should validation rules fails when email is empty", () => {
+  it("validation should fail when email is empty", () => {
     let invalidRule = underTest.vm.rules.isEmpty('');
     expect(invalidRule).toBe("Email cannot be empty")
   });
 
-  it("should validation rules fails when email has a whitespace", () => {
+  it("validation should fail when email has a whitespace", () => {
     let invalidRule = underTest.vm.rules.hasWhitespaces('test @ domain.com');
-    expect(invalidRule).toBe("Email cannot contains spaces")
+    expect(invalidRule).toBe("Email cannot contain spaces")
   });
 
-  it("should validation rules fails when email domain is not corporate", () => {
+  it("validation should fail when the email's domain is not corporate", () => {
     let invalidRule = underTest.vm.rules.isCorporateDomain('test@domain.com');
-    expect(invalidRule).toBe(`Email should ends with @${domainName}`);
+    expect(invalidRule).toBe(`Email should end with @${domainName}`);
   });
 
-  it("should validation rules fails when email has no correct email format", () => {
+  it("validation should fail when the email does not have the correct format", () => {
     let invalidRule = underTest.vm.rules.hasEmailFormat('test@domain');
     expect(invalidRule).toBe(`Email must be in format: user@${domainName}`);
   });

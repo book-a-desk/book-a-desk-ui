@@ -20,8 +20,8 @@ export default {
     return {
       rules: {
         isEmpty: value => !!value || value !== "" || 'Email cannot be empty',
-        hasWhitespaces: value => value.indexOf(' ') <= 0 || 'Email cannot contains spaces',
-        isCorporateDomain: value => (value.endsWith(`@${domainName}`)) || (`Email should ends with @${domainName}`),
+        hasWhitespaces: value => value.indexOf(' ') <= 0 || 'Email cannot contain spaces',
+        isCorporateDomain: value => (value.endsWith(`@${domainName}`)) || (`Email should end with @${domainName}`),
         hasEmailFormat: value => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || `Email must be in format: user@${domainName}`
       },
     };
