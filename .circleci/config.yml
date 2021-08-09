@@ -101,6 +101,7 @@ jobs:
           command: npm run test:unit:ci
           environment:
             JEST_JUNIT_OUTPUT_NAME: ./reports/unit-tests.xml
+            VUE_APP_DOMAIN_NAME: << parameters.domain-name >>
       - run:
           name: Build
           command: |
