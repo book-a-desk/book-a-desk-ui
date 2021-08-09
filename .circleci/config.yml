@@ -29,7 +29,7 @@ parameters:
     default: book-a-desk-ui-prod
   acm-certificate-id-prod:
     type: string
-    default: 111938af-d627-41e0-a60c-7cc745bd84e1
+    default: ce923996-4fdb-4da3-a8f8-af314b761207
   cloudformation-role-prod:
     type: string
     default: arn:aws:iam::${AWS_ACCOUNT_PROD}:role/cloudformationstackprod
