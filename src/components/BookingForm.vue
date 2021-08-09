@@ -12,7 +12,7 @@
           id="email"
           label="Email"
           placeholder="Enter your email"
-          v-model="emailAddress"
+          v-model.trim="emailAddress"
         ></bad-text-input>
         <bad-combo-box
           id = "offices"

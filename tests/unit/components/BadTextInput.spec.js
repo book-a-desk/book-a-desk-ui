@@ -52,7 +52,7 @@ describe("Component BadTextInput.vue", () => {
   it("validation should be successful with a correct corporate email", () => {
     let validEmail = `valid@${domainName}`
     
-    let isRequired = underTest.vm.rules.isEmpty(validEmail);
+    let isRequired = underTest.vm.rules.isNotEmpty(validEmail);
     let hasWhitespaces = underTest.vm.rules.hasWhitespaces(validEmail);
     let hasEmailFormat = underTest.vm.rules.hasEmailFormat(validEmail);
     let isCorporateEmail = underTest.vm.rules.isCorporateDomain(validEmail);
@@ -64,7 +64,7 @@ describe("Component BadTextInput.vue", () => {
   });
 
   it("validation should fail when email is empty", () => {
-    let invalidRule = underTest.vm.rules.isEmpty('');
+    let invalidRule = underTest.vm.rules.isNotEmpty('');
     expect(invalidRule).toBe("Email cannot be empty")
   });
 
