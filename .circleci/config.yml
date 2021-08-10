@@ -194,13 +194,13 @@ jobs:
 
 workflows:
   pull-request:
-    unless:
+    when:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
   release:
-    when:
+    unless:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
@@ -283,6 +283,8 @@ workflows:
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
+          type:
+            approval
           requires:
             - publish-to-test
       - build-and-unit-test:
