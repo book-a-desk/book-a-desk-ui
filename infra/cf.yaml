@@ -63,7 +63,8 @@ Resources:
     Properties:
       HostedZoneName: !Sub "${Alias}."
       Name: !Sub "${Alias}"
+      Region: us-east-1
       Type: A
       AliasTarget:
-        DNSName: !GetAtt BookADeskUiS3Bucket.WebsiteURL
+        DNSName: !GetAtt BookADeskUiS3Bucket.DomainName
         HostedZoneId: !Sub "${HostedZoneID}"
