@@ -288,6 +288,8 @@ workflows:
       - production-gate:
           type:
             approval
+          requires:
+            - update-cloudfront-test
       - build-and-unit-test:
           name: build-prod
           api-url: ${BOOK_A_DESK_BASE_API_URL_PROD}
