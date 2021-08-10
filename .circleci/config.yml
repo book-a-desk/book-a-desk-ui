@@ -18,6 +18,9 @@ parameters:
   domain-name-alias-dev:
       type: string
       default: ${DOMAIN_NAME_ALIAS_DEV}
+  hosted-zone-id-dev:
+    type: string
+    default: ${HOSTED_ZONE_ID_DEV}
   s3-bucket-test:
       type: string
       default: book-a-desk-ui-test
@@ -30,6 +33,9 @@ parameters:
   domain-name-alias-test:
     type: string
     default: ${DOMAIN_NAME_ALIAS_TEST}
+  hosted-zone-id-test:
+    type: string
+    default: ${HOSTED_ZONE_ID_TEST}
   s3-bucket-prod:
     type: string
     default: book-a-desk-ui-prod
@@ -42,6 +48,9 @@ parameters:
   domain-name-alias-prod:
     type: string
     default: ${DOMAIN_NAME_ALIAS_PROD}
+  hosted-zone-id-prod:
+    type: string
+    default: ${HOSTED_ZONE_ID_PROD}
       
 commands:
   log-aws-identity:
@@ -92,6 +101,8 @@ commands:
         type: string
       alias:
         type: string
+      hosted-zone-id:
+        type: string
       cloudformation-role:
         type: string
     steps:
@@ -101,7 +112,7 @@ commands:
           name: Ensure infrastructure is up to date <<# parameters.update-cdn >>and update the CDN origin<</ parameters.update-cdn >>
           command: |
             aws cloudformation deploy \
-              --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Alias=<< parameters.alias >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
+              --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Alias=<< parameters.alias >>" "HostedZoneID=<< parameters.hosted-zone-id >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM \
@@ -154,6 +165,8 @@ jobs:
         type: string
       alias:
         type: string
+      hosted-zone-id:
+        type: string
       cloudformation-role:
         type: string
     steps:
@@ -166,6 +179,7 @@ jobs:
           s3-bucket-name: << parameters.s3-bucket-name >>
           certificate-id: << parameters.certificate-id >>
           alias: << parameters.alias >>
+          hosted-zone-id: << parameters.hosted-zone-id >>
           cloudformation-role: << parameters.cloudformation-role >>
           
   publish-to-s3:
@@ -198,12 +212,6 @@ workflows:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
-          api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
-  release:
-    when:
-      equal: ['trunk', << pipeline.git.branch >>]
-    jobs:
-      - build-and-unit-test:
           name: build-dev
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
       - deploy-cloudformation:
@@ -214,6 +222,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
           alias: << pipeline.parameters.domain-name-alias-dev >>
+          hosted-zone-id: <<pipeline.parameters.hosted-zone-id-dev >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
@@ -238,6 +247,53 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
           alias: << pipeline.parameters.domain-name-alias-dev >>
+          hosted-zone-id: <<pipeline.parameters.hosted-zone-id-dev >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
+          context:
+            - aws-credentials
+          requires:
+            - publish-to-dev
+  release:
+    when:
+      equal: ['trunk', << pipeline.git.branch >>]
+    jobs:
+      - build-and-unit-test:
+          name: build-dev
+          api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
+      - deploy-cloudformation:
+          name: deploy-cloudformation-dev
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
+          alias: << pipeline.parameters.domain-name-alias-dev >>
+          hosted-zone-id: <<pipeline.parameters.hosted-zone-id-dev >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
+          context:
+            - aws-credentials
+          requires:
+            - build-dev
+      - publish-to-s3:
+          name: publish-to-dev
+          destination-path: ${CIRCLE_SHA1}
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          context:
+            - aws-credentials
+          requires:
+            - build-dev
+            - deploy-cloudformation-dev
+      - deploy-cloudformation:
+          name: update-cloudfront-dev
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          update-cdn: true
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
+          alias: << pipeline.parameters.domain-name-alias-dev >>
+          hosted-zone-id: <<pipeline.parameters.hosted-zone-id-dev >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
@@ -256,6 +312,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
           alias: << pipeline.parameters.domain-name-alias-test >>
+          hosted-zone-id: <<pipeline.parameters.hosted-zone-id-test >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
@@ -280,6 +337,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
           alias: << pipeline.parameters.domain-name-alias-test >>
+          hosted-zone-id: <<pipeline.parameters.hosted-zone-id-test >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
@@ -298,6 +356,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
           certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
           alias: << pipeline.parameters.domain-name-alias-prod >>
+          hosted-zone-id: <<pipeline.parameters.hosted-zone-id-prod >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
           context:
             - aws-credentials
@@ -322,6 +381,7 @@ workflows:
           s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
           certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
           alias: << pipeline.parameters.domain-name-alias-prod >>
+          hosted-zone-id: <<pipeline.parameters.hosted-zone-id-prod >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
           context:
             - aws-credentials

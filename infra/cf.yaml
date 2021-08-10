@@ -13,6 +13,9 @@ Parameters:
   Alias:
     Type: String
     Description: domain name alias
+  HostedZoneID:
+    Type: String
+    Description: Id of DNS hosted zone
 
 Resources:
   BookADeskUiS3Bucket:
@@ -55,3 +58,12 @@ Resources:
           AcmCertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/${CertificateID}"
           SslSupportMethod: sni-only
           MinimumProtocolVersion: TLSv1.2_2018
+  DNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: !Sub "${Alias}"
+      Name: !Sub "${Alias}"
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt CDN.DomainName
+        HostedZoneId: !Sub "${HostedZoneID}"
