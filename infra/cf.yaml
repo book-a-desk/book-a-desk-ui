@@ -61,7 +61,7 @@ Resources:
   DNSRecord:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName: !Join [ !Ref Alias, . ]
+      HostedZoneName: !Sub "${Alias}."
       Name: !Sub "${Alias}"
       Type: A
       AliasTarget:

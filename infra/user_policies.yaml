@@ -45,6 +45,7 @@ permissions:
 cloudformationstack<env>:
   - AmazonS3FullAccess
   - CloudFrontFullAccess
+  - AmazonRoute53FullAccess
     
 cloudformationstackbackend<env>:
   - IAMFullAccess
