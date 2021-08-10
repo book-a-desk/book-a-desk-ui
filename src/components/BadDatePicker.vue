@@ -1,7 +1,6 @@
 <template>
     <v-date-picker
-        @input="handleUpdate"
-        :value="value"
+        @input="handleChange"
         :min="min"
         no-title
         next-icon="mdi-menu-right"
@@ -9,6 +8,8 @@
         color="primary"
         elevation="1"
         :full-width="fullWidth"
+        :value="value"
+        v-model="value"
     ></v-date-picker>
 </template>
 <script>
@@ -18,13 +19,19 @@ export default {
   data() {
     return {};
   },
-  methods: {
-    handleUpdate(newValue) {
-      this.$emit("input", newValue);
+  watch: {
+   value () {   
+      this.$emit("handle-change");
+   }
+  }, 
+  methods:{
+    handleChange(){
+            this.$emit("input", this.value);
+
     }
   },
   props: {
-    value:  String,
+    value: String,
     min: String,
     fullWidth: {
       type: Boolean,

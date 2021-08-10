@@ -5,6 +5,7 @@ import BadTextInput from "@/components/BadTextInput.vue";
 import BadContainedButton from "@/components/BadContainedButton.vue";
 import BadDatePicker from "@/components/BadDatePicker.vue";
 import BadComboBox from "@/components/BadComboBox.vue"
+import Availabilities from "@/components/Availabilities.vue"
 import flushPromises from "flush-promises"
 import MockAxios from 'axios' 
 import Vuex from "vuex";
@@ -14,6 +15,8 @@ Vue.component('BadTextInput', BadTextInput)
 Vue.component('BadContainedButton', BadContainedButton)
 Vue.component('BadDatePicker', BadDatePicker)
 Vue.component('BadComboBox', BadComboBox)
+Vue.component('Availabilities', Availabilities)
+
 
 const localVue = createLocalVue();
 
@@ -52,6 +55,10 @@ describe("Component BookingForm.vue", () => {
     expect(wrapper.findComponent(BadDatePicker).exists()).toBe(true);
   });
     
+  it("should render `Availabilities` component", () => {
+    expect(wrapper.findComponent(Availabilities).exists()).toBe(true);
+  });
+
   it("should set the minimum date of the date picker to tomorrow", () => {
     expect(
       wrapper.findComponent(BadDatePicker).props().min
@@ -80,7 +87,6 @@ describe("Component BookingForm.vue", () => {
 
      await wrapper.findComponent(BadContainedButton).props().click();
 
-     expect(MockAxios.get).toHaveBeenCalledTimes(1);
      expect(MockAxios.get).toHaveBeenCalledWith("offices");
      expect(mockStore.dispatch).toHaveBeenCalledWith(
        "book" , 
@@ -94,4 +100,13 @@ describe("Component BookingForm.vue", () => {
          } 
        });
    })
+
+    it("should show a warning message on booking", async () => {
+
+        await flushPromises();
+
+        await wrapper.findComponent(BadContainedButton).props().click();
+
+        expect(wrapper.vm.isWarningShownOnBooking).toBe(true);
+    })
 });
