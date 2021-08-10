@@ -11,19 +11,37 @@ parameters:
       default: book-a-desk-ui-2
   acm-certificate-id-dev:
       type: string
-      default: 50d2e84d-f1f3-47e0-af7a-82724b817877
+      default: ${ACM_CERTIFICATE_ID_DEV}
   cloudformation-role-dev:
       type: string
       default: arn:aws:iam::${AWS_ACCOUNT_DEV}:role/cloudformationstackdev
+  domain-name-alias-dev:
+      type: string
+      default: ${DOMAIN_NAME_ALIAS_DEV}
   s3-bucket-test:
       type: string
       default: book-a-desk-ui-test
   acm-certificate-id-test:
       type: string
-      default: 34a7387f-bb56-42d0-8523-e56ee56a0522
+      default: ${ACM_CERTIFICATE_ID_TEST}
   cloudformation-role-test:
       type: string
       default: arn:aws:iam::${AWS_ACCOUNT_TEST}:role/cloudformationstacktest
+  domain-name-alias-test:
+    type: string
+    default: ${DOMAIN_NAME_ALIAS_TEST}
+  s3-bucket-prod:
+    type: string
+    default: book-a-desk-ui-prod
+  acm-certificate-id-prod:
+    type: string
+    default: ${ACM_CERTIFICATE_ID_PROD}
+  cloudformation-role-prod:
+    type: string
+    default: arn:aws:iam::${AWS_ACCOUNT_PROD}:role/cloudformationstackprod
+  domain-name-alias-prod:
+    type: string
+    default: ${DOMAIN_NAME_ALIAS_PROD}
       
 commands:
   log-aws-identity:
@@ -52,6 +70,14 @@ commands:
           command: |
             echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_TEST}" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY_TEST}" >> $BASH_ENV
+  authenticate-aws-book-a-desk-prod:
+    description: "Configure AWS credentials for Book A Desk Prod"
+    steps:
+      - run:
+          name: "Initialize BASH_ENV variables"
+          command: |
+            echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_PROD}" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY_PROD}" >> $BASH_ENV
             
   aws-cloudformation-deploy:
     parameters:
@@ -64,7 +90,7 @@ commands:
         type: string
       certificate-id:
         type: string
-      environment:
+      alias:
         type: string
       cloudformation-role:
         type: string
@@ -75,7 +101,7 @@ commands:
           name: Ensure infrastructure is up to date <<# parameters.update-cdn >>and update the CDN origin<</ parameters.update-cdn >>
           command: |
             aws cloudformation deploy \
-              --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Environment=<< parameters.environment >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
+              --parameter-overrides "S3Bucket=<< parameters.s3-bucket-name >>" "CertificateID=<< parameters.certificate-id >>" "Alias=<< parameters.alias >>" <<# parameters.update-cdn >>"SHA1=${CIRCLE_SHA1}"<</ parameters.update-cdn >> \
               --stack-name book-a-desk-ui \
               --template-file ./infra/cf.yaml \
               --capabilities CAPABILITY_NAMED_IAM \
@@ -126,7 +152,7 @@ jobs:
         type: string
       certificate-id:
         type: string
-      environment:
+      alias:
         type: string
       cloudformation-role:
         type: string
@@ -139,7 +165,7 @@ jobs:
           authenticate-aws: << parameters.authenticate-aws >>
           s3-bucket-name: << parameters.s3-bucket-name >>
           certificate-id: << parameters.certificate-id >>
-          environment: << parameters.environment >>
+          alias: << parameters.alias >>
           cloudformation-role: << parameters.cloudformation-role >>
           
   publish-to-s3:
@@ -187,7 +213,7 @@ workflows:
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-          environment: dev.
+          alias: << pipeline.parameters.domain-name-alias-dev >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
@@ -211,7 +237,7 @@ workflows:
           update-cdn: true
           s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
           certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
-          environment: dev.
+          alias: << pipeline.parameters.domain-name-alias-dev >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
           context:
             - aws-credentials
@@ -229,7 +255,7 @@ workflows:
           update-cdn: false
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-          environment: test.
+          alias: << pipeline.parameters.domain-name-alias-test >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
@@ -253,9 +279,51 @@ workflows:
           update-cdn: true
           s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
           certificate-id: << pipeline.parameters.acm-certificate-id-test >>
-          environment: test.
+          alias: << pipeline.parameters.domain-name-alias-test >>
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
           requires:
             - publish-to-test
+      - build-and-unit-test:
+          name: build-prod
+          api-url: ${BOOK_A_DESK_BASE_API_URL_PROD}
+          requires:
+            - update-cloudfront-test
+      - deploy-cloudformation:
+          name: deploy-cloudformation-prod
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-prod
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
+          alias: << pipeline.parameters.domain-name-alias-prod >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
+          context:
+            - aws-credentials
+          requires:
+            - build-prod
+      - publish-to-s3:
+          name: publish-to-prod
+          destination-path: ${CIRCLE_SHA1}
+          s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-prod
+          context:
+            - aws-credentials
+          requires:
+            - build-prod
+            - deploy-cloudformation-prod
+      - deploy-cloudformation:
+          name: update-cloudfront-prod
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-prod
+          update-cdn: true
+          s3-bucket-name: << pipeline.parameters.s3-bucket-prod >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-prod >>
+          alias: << pipeline.parameters.domain-name-alias-prod >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-prod >>
+          context:
+            - aws-credentials
+          requires:
+            - publish-to-prod
