@@ -292,7 +292,7 @@ workflows:
           name: build-prod
           api-url: ${BOOK_A_DESK_BASE_API_URL_PROD}
           requires:
-            - update-cloudfront-test
+            - production-gate
       - deploy-cloudformation:
           name: deploy-cloudformation-prod
           authenticate-aws:
