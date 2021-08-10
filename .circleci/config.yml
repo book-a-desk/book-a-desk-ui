@@ -283,10 +283,11 @@ workflows:
           cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
           context:
             - aws-credentials
-          type:
-            approval
           requires:
             - publish-to-test
+      - production-gate:
+          type:
+            approval
       - build-and-unit-test:
           name: build-prod
           api-url: ${BOOK_A_DESK_BASE_API_URL_PROD}
