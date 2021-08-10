@@ -43,7 +43,7 @@
         </bad-contained-button>
       </v-col>
     </v-row>
-    <span>{{feedback}}</span>
+    <bad-message :message="feedback"></bad-message>
   </v-container>
 </template>
 
@@ -81,7 +81,7 @@ export default {
           date: this.bookingDate,
           user: { email: this.emailAddress }
         });
-        this.feedback = "Please check your emails";
+        this.feedback = "Please check your emails for your booking confirmation";
       }
       catch(e){
         this.feedback = `Something went wrong with the booking: ${e.message}`      }
