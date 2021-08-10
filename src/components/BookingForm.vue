@@ -57,6 +57,7 @@
         </v-snackbar>
       </v-col>
     </v-row>
+    <bad-message :message="feedback"></bad-message>
   </v-container>
 </template>
 
@@ -75,6 +76,7 @@ export default {
     return {
       bookingDate: this.tomorrow(),
       emailAddress: "",
+      feedback: "",
       offices: [],
       selectedOffice: null,
       availabilities: null,
@@ -119,11 +121,17 @@ export default {
     },
     async submitBooking() {
       this.isWarningShownOnBooking = true;
-      await this.$store.dispatch("book", {
-        office: { id: this.selectedOffice.id },
-        date: this.bookingDate,
-        user: { email: this.emailAddress }
-      });
+      try{
+        await this.$store.dispatch("book", {
+          office: { id: this.selectedOffice.id },
+          date: this.bookingDate,
+          user: { email: this.emailAddress }
+        });
+        this.feedback = "Please check your emails for your booking confirmation";
+      }
+      catch(e){
+        this.feedback = `Something went wrong with the booking: ${e.message}`      
+      }
       this.fetchAvailabilities();
     },    
     tomorrow() {
