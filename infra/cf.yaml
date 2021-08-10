@@ -58,13 +58,3 @@ Resources:
           AcmCertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/${CertificateID}"
           SslSupportMethod: sni-only
           MinimumProtocolVersion: TLSv1.2_2018
-  DNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneName: !Sub "${Alias}."
-      Name: !Sub "${Alias}"
-      Region: us-east-1
-      Type: A
-      AliasTarget:
-        DNSName: !GetAtt BookADeskUiS3Bucket.DomainName
-        HostedZoneId: !Sub "${HostedZoneID}"
