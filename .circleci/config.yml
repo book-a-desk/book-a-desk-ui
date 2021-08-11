@@ -285,11 +285,16 @@ workflows:
             - aws-credentials
           requires:
             - publish-to-test
+      - production-gate:
+          type:
+            approval
+          requires:
+            - update-cloudfront-test
       - build-and-unit-test:
           name: build-prod
           api-url: ${BOOK_A_DESK_BASE_API_URL_PROD}
           requires:
-            - update-cloudfront-test
+            - production-gate
       - deploy-cloudformation:
           name: deploy-cloudformation-prod
           authenticate-aws:
