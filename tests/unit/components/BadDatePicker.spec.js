@@ -10,14 +10,9 @@ localVue.use(Vuex);
 
 describe("Component BadDatePicker.vue", () => {
   let underTest;
-  let initialValue = "Initial value"
 
   beforeEach(() => {
-    underTest = shallowMount(BadDatePicker, {
-      propsData: {
-        value: initialValue
-      }
-    });
+    underTest = shallowMount(BadDatePicker, {});
   });
 
   it("should render v-date-picker", () => {
@@ -25,8 +20,9 @@ describe("Component BadDatePicker.vue", () => {
     expect(datePicker.exists()).toBe(true);
   });
 
-  it("should pass [value] prop", () => {
+  it("should update [selectedBookingDate] when a date is selected", () => {
     const datePicker = underTest.findComponent({ name: "v-date-picker" });
-    expect(datePicker.props().value).toEqual(initialValue);
-  });  
+    datePicker.vm.$emit("input", "2021-07-31");
+    expect(underTest.vm.selectedBookingDate).toEqual("2021-07-31");
+  });
 });
