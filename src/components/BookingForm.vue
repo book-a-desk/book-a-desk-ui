@@ -57,7 +57,11 @@
         </v-snackbar>
       </v-col>
     </v-row>
-    <bad-message :message="feedback"></bad-message>
+    <bad-message
+        :message="feedback"
+        :messageType="messageType"
+        :enabled="isFeedbackShownOnBooking">
+    </bad-message>
   </v-container>
 </template>
 
@@ -77,10 +81,12 @@ export default {
       bookingDate: this.tomorrow(),
       emailAddress: "",
       feedback: "",
+      messageType: "",
       offices: [],
       selectedOffice: null,
       availabilities: null,
-      isWarningShownOnBooking: false
+      isWarningShownOnBooking: false,
+      isFeedbackShownOnBooking: false
     };
   },
   async mounted() {
@@ -119,18 +125,27 @@ export default {
     officeChange(){
       this.fetchAvailabilities();
     },
+    displayConfirmationMessage(){
+      this.messageType = "success";
+      this.feedback = "Please check your emails for your booking confirmation";
+    },
+    displayWarningMessage(e){
+      this.messageType = "warning"
+      this.feedback = `Something went wrong with the booking: ${e.message}`;
+    },
     async submitBooking() {
-      this.isWarningShownOnBooking = true;
+      this.isWarningShownOnBooking = true;  
+      this.isFeedbackShownOnBooking = true;
       try{
         await this.$store.dispatch("book", {
           office: { id: this.selectedOffice.id },
           date: this.bookingDate,
           user: { email: this.emailAddress }
         });
-        this.feedback = "Please check your emails for your booking confirmation";
+        this.displayConfirmationMessage()
       }
       catch(e){
-        this.feedback = `Something went wrong with the booking: ${e.message}`      
+        this.displayWarningMessage(e)
       }
       this.fetchAvailabilities();
     },    
