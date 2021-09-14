@@ -58,9 +58,9 @@
       </v-col>
     </v-row>
     <bad-message
-        :message="feedback"
+        :message="bookingResultMessage"
         :messageType="messageType"
-        :enabled="isFeedbackShownOnBooking">
+        :enabled="isMessageShownOnBooking">
     </bad-message>
   </v-container>
 </template>
@@ -80,13 +80,13 @@ export default {
     return {
       bookingDate: this.tomorrow(),
       emailAddress: "",
-      feedback: "",
+      bookingResultMessage: "",
       messageType: "",
       offices: [],
       selectedOffice: null,
       availabilities: null,
       isWarningShownOnBooking: false,
-      isFeedbackShownOnBooking: false
+      isMessageShownOnBooking: false
     };
   },
   async mounted() {
@@ -127,15 +127,15 @@ export default {
     },
     displayConfirmationMessage(){
       this.messageType = "success";
-      this.feedback = "Please check your emails for your booking confirmation";
+      this.bookingResultMessage = "Please check your emails for your booking confirmation";
     },
     displayWarningMessage(e){
       this.messageType = "warning"
-      this.feedback = `Something went wrong with the booking: ${e.message}`;
+      this.bookingResultMessage = `Something went wrong with the booking: ${e.message}`;
     },
     async submitBooking() {
       this.isWarningShownOnBooking = true;  
-      this.isFeedbackShownOnBooking = true;
+      this.isMessageShownOnBooking = true;
       try{
         await this.$store.dispatch("book", {
           office: { id: this.selectedOffice.id },
