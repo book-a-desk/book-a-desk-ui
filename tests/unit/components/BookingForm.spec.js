@@ -109,4 +109,13 @@ describe("Component BookingForm.vue", () => {
 
         expect(wrapper.vm.isWarningShownOnBooking).toBe(true);
     })
+
+    it("should show a result message on booking", async () => {
+
+        await flushPromises();
+
+        await wrapper.findComponent(BadContainedButton).props().click();
+
+        expect(wrapper.vm.isMessageShownOnBooking).toBe(true);
+    })
 });
