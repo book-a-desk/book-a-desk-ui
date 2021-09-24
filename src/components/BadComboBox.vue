@@ -8,6 +8,8 @@
 		v-model="valueCopy"
 		solo
 		class="rounded-lg"
+		:hint="hint"
+		:persistent-hint="persistentHint"
 		>
 		<template v-slot:prepend-inner> 
 			<v-icon :color='"primary"'> {{prependInnerIcon}} </v-icon> 
@@ -23,15 +25,17 @@ export default {
 	};
   },
   props: {
-	  id: String,
-	  items: Array,
-	  itemText: String,
-	  itemValue: String,
-	  value: Object,
-	  prependInnerIcon: { 
-		  type: String, 
-		  default: ""
-		  }
+	id: String,
+	items: Array,
+	itemText: String,
+	itemValue: String,
+	value: Object,
+	prependInnerIcon: { 
+		type: String, 
+		default: ""
+	},
+	hint: String,
+	persistentHint: Boolean
   },
   methods: {
 	  change() {
