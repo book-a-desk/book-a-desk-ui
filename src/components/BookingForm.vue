@@ -22,6 +22,8 @@
           v-model = "selectedOffice"
           prependInnerIcon="mdi-office-building"
           @change="officeChange"
+          :hint="officeOpeningHours"
+          :persistentHint="true"
         ></bad-combo-box>
       </v-col>
     </v-row>
@@ -106,6 +108,9 @@ export default {
     },
     bookingDateFormatted() {
       return moment(this.bookingDate).format("dddd, MMMM Do");
+    },
+    officeOpeningHours(){
+      return "Opening hours: " + this.selectedOffice?.openingHours.text;
     }
   },
   methods: {
