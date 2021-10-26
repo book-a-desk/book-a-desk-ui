@@ -4,6 +4,7 @@
       outlined
       dismissible
       light
+      :title="title"
       :value="enabled"
       :type="messageType">
     {{message}}
@@ -13,6 +14,9 @@
 export default {
   name: "BadMessage",
   props: {
+    title: {
+      type: String
+    },
     message: {
       type: String
     },

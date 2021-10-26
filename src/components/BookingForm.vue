@@ -60,6 +60,7 @@
       </v-col>
     </v-row>
     <bad-message
+        :title="bookingResultTitle"
         :message="bookingResultMessage"
         :messageType="messageType"
         :enabled="isMessageShownOnBooking">
@@ -82,13 +83,15 @@ export default {
     return {
       bookingDate: this.tomorrow(),
       emailAddress: "",
+      bookingResultTitle: "",
       bookingResultMessage: "",
       messageType: "",
       offices: [],
       selectedOffice: null,
       availabilities: null,
       isWarningShownOnBooking: false,
-      isMessageShownOnBooking: false
+      isMessageShownOnBooking: false,
+      problemDetails: {}
     };
   },
   async mounted() {
@@ -135,8 +138,10 @@ export default {
       this.bookingResultMessage = "Please check your emails for your booking confirmation";
     },
     displayWarningMessage(e){
-      this.messageType = "warning"
-      this.bookingResultMessage = `Something went wrong with the booking: ${e.message}`;
+      this.problemDetails = JSON.parse(e);
+      this.messageType = "warning";
+      this.bookingResultTitle = problemDetails.Title;
+      this.bookingResultMessage = `Something went wrong with the booking: ${problemDetails.Details}`;
     },
     async submitBooking() {
       this.isWarningShownOnBooking = true;  
