@@ -8,6 +8,7 @@ const authClient = new OktaAuth({
 
 export default {
   login (cb) {
+    cb = arguments[arguments.length - 1]
     if  (!this.isLoggedIn())
         authClient.signIn().then(transaction => {
         if (transaction.status === 'SUCCESS') {

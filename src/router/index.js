@@ -21,7 +21,13 @@ const router = createRouter({
 
 function requireAuth () {
     if (!auth.isLoggedIn()) 
-        auth.login();
+        auth.login(isloggedIn => {
+            if (!isloggedIn) {
+              this.error = true
+            } else {
+              this.$router.replace(this.$route.query.redirect || '/')
+            }
+          })
     else next();
 }
 
