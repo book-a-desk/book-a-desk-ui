@@ -8,9 +8,6 @@
         <router-link to="/" v-if="isLoggedIn">
           Login
         </router-link>
-        <router-link to="/login/callback" v-if="isLoggedIn">
-          Login Callback
-        </router-link>
         <a v-if="isLoggedIn" v-on:click="auth.logout()">
           Logout
         </a>
