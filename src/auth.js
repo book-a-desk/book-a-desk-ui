@@ -7,28 +7,20 @@ const authClient = new OktaAuth({
 })
 
 export default {
-  login (email, pass, cb) {
-    cb = arguments[arguments.length - 1]
-    if (localStorage.token) {
-      if (cb) cb(true)
-      this.onChange(true)
-      return
-    }
-    return authClient.signInWithCredentials({
-      username: email,
-      password: pass
-    }).then(transaction => {
-      if (transaction.status === 'SUCCESS') {
-        return authClient.token.getWithoutPrompt({
-          responseType: ['id_token', 'token'],
-          sessionToken: transaction.sessionToken,
-        }).then(response => {
-          localStorage.token = response.tokens.accessToken
-          localStorage.idToken = response.tokens.idToken
-          if (cb) cb(true)
-          this.onChange(true)
-        })
-      }
+  login (cb) {
+    if  (!this.isLoggedIn())
+        authClient.signIn().then(transaction => {
+        if (transaction.status === 'SUCCESS') {
+            return authClient.token.getWithoutPrompt({
+            responseType: ['id_token', 'token'],
+            sessionToken: transaction.sessionToken,
+            }).then(response => {
+            localStorage.token = response.tokens.accessToken
+            localStorage.idToken = response.tokens.idToken
+            if (cb) cb(true)
+            this.onChange(true)
+            })
+        }
     }).catch(err => {
       console.error(err.message)
       if (cb) cb(false)
@@ -60,7 +52,7 @@ export default {
     return authClient.signOut()
   },
 
-  loggedIn () {
+  isLoggedIn () {
     return authClient.isAuthenticated();
   },
 

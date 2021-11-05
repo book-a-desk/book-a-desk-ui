@@ -5,13 +5,13 @@
     </v-main>
     <nav>
       <div>
-        <router-link to="/" v-if="loggedIn">
+        <router-link to="/" v-if="isLoggedIn">
           Login
         </router-link>
-        <router-link to="/login/callback" v-if="loggedIn">
+        <router-link to="/login/callback" v-if="isLoggedIn">
           Login Callback
         </router-link>
-        <a v-if="loggedIn" v-on:click="auth.logout()">
+        <a v-if="isLoggedIn" v-on:click="auth.logout()">
           Logout
         </a>
       </div>
@@ -31,14 +31,14 @@ export default {
   created() {
     axios.defaults.baseURL = process.env.VUE_APP_BASE_API_URL;
     this.configLoaded = true;
-    auth.onChange = loggedIn => {
-      this.loggedIn = loggedIn
+    auth.onChange = isLoggedIn => {
+      this.isLoggedIn = isLoggedIn
     }
   },
   data() {
     return {
       configLoaded: false,
-      loggedIn: auth.loggedIn(),
+      isLoggedIn: auth.isLoggedIn(),
     };
   }
 };

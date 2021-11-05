@@ -9,8 +9,20 @@ const router = createRouter({
       beforeEnter () {
         auth.logout()
       }
+    },
+    {path: '*', redirect: '/',
+     beforeEnter () {
+         requireAuth
+     }
+    
     }
   ]
 })
+
+function requireAuth () {
+    if (!auth.isLoggedIn()) 
+        auth.login();
+    else next();
+}
 
 export default router;
