@@ -4,9 +4,9 @@
       outlined
       dismissible
       light
-      :title="title"
       :value="enabled"
       :type="messageType">
+    <h3>{{title}}</h3>
     {{message}}
   </v-alert>  
 </template>
