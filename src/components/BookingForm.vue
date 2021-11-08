@@ -73,6 +73,7 @@
 import moment from 'moment'
 import { getAsync } from "@/services/apiFacade";
 import Availabilities from "@/components/Availabilities.vue"
+import axios from "axios";
 
 export default {
   name: "BookingForm",
@@ -133,31 +134,30 @@ export default {
     officeChange(){
       this.fetchAvailabilities();
     },
-    displayConfirmationMessage(){
+    displayConfirmationMessage(response){
       this.messageType = "success";
       this.bookingResultMessage = "Please check your emails for your booking confirmation";
     },
-    displayWarningMessage(e){
-      this.problemDetails = JSON.parse(e);
-      this.messageType = "warning";
-      this.bookingResultTitle = problemDetails.Title;
-      this.bookingResultMessage = `Something went wrong with the booking: ${problemDetails.Details}`;
+    displayErrorMessage(error){
+      this.messageType = "error";
+      this.bookingResultTitle = error.response.data.title;
+      this.bookingResultMessage = `Something went wrong with the booking: ${error.response.data.details}`;
     },
     async submitBooking() {
-      this.isWarningShownOnBooking = true;  
-      this.isMessageShownOnBooking = true;
-      try{
-        await this.$store.dispatch("book", {
-          office: { id: this.selectedOffice.id },
-          date: this.bookingDate,
-          user: { email: this.emailAddress }
-        });
-        this.displayConfirmationMessage()
-      }
-      catch(e){
-        this.displayWarningMessage(e)
-      }
-      this.fetchAvailabilities();
+      await axios.post("/bookings",{
+        office: { id: this.selectedOffice.id },
+        date: this.bookingDate,
+        user: { email: this.emailAddress }
+      })
+      .then((response) => {
+        this.isWarningShownOnBooking = true;
+        this.displayConfirmationMessage(response)
+        this.fetchAvailabilities()
+      })
+      .catch((error) => {
+        this.isMessageShownOnBooking = true;
+        this.displayErrorMessage(error)
+      });
     },    
     tomorrow() {
         return moment().add(1, 'days').format('YYYY-MM-DD')
