@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@testing-library/vue": "^5.1.0",
-    "axios": "^0.21.0",
+    "axios": "^0.21.4",
     "core-js": "^3.6.5",
     "flush-promises": "^1.0.2",
     "jest-junit": "^12.2.0",
