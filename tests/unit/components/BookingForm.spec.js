@@ -114,12 +114,17 @@ describe("Component BookingForm.vue", () => {
     })
 
     it("should show a result message on booking", async () => {
-        MockAxios.post.mockRejectedValue({ response: {data: {title: "User Had Booked Before", details: "The office is already booked out at 11/11/2021 for user EmailAddress \"dummy@broadsign.com\""}}});
+        const bookingResultTitle = "User Had Booked Before";
+        const bookingResultMessage = "The office is already booked out at 11/11/2021 for user EmailAddress \"dummy@broadsign.com\"";
+
+        MockAxios.post.mockRejectedValue({ response: {data: {title: bookingResultTitle, details: bookingResultMessage}}});
 
         await flushPromises();
 
         await wrapper.findComponent(BadContainedButton).props().click();
 
         expect(wrapper.vm.isMessageShownOnBooking).toBe(true);
+        expect(wrapper.vm.bookingResultTitle).toBe(bookingResultTitle);
+        expect(wrapper.vm.bookingResultMessage).toBe(`Something went wrong with the booking: ${bookingResultMessage}`);
     })
 });
