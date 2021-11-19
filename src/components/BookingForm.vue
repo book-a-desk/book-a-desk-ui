@@ -134,7 +134,7 @@ export default {
     officeChange(){
       this.fetchAvailabilities();
     },
-    displayConfirmationMessage(response){
+    displayConfirmationMessage(){
       this.messageType = "success";
       this.bookingResultMessage = "Please check your emails for your booking confirmation";
     },
