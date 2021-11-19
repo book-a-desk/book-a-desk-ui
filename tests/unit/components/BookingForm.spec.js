@@ -6,6 +6,7 @@ import BadContainedButton from "@/components/BadContainedButton.vue";
 import BadDatePicker from "@/components/BadDatePicker.vue";
 import BadComboBox from "@/components/BadComboBox.vue"
 import Availabilities from "@/components/Availabilities.vue"
+import BadMessage from "@/components/BadMessage.vue"
 import flushPromises from "flush-promises"
 import MockAxios from 'axios' 
 import Vuex from "vuex";
@@ -16,6 +17,7 @@ Vue.component('BadContainedButton', BadContainedButton)
 Vue.component('BadDatePicker', BadDatePicker)
 Vue.component('BadComboBox', BadComboBox)
 Vue.component('Availabilities', Availabilities)
+Vue.component('BadMessage', BadMessage)
 
 
 const localVue = createLocalVue();
@@ -29,12 +31,13 @@ describe("Component BookingForm.vue", () => {
 
   beforeEach(() => {
     MockAxios.get.mockResolvedValue({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
+    MockAxios.post.mockResolvedValue();
 
     mockStore = { dispatch: jest.fn() }
 
     wrapper = shallowMount(BookingForm, {
     mocks: {
-      $store: mockStore 
+      $store: mockStore
     }
   });
   });
@@ -88,8 +91,8 @@ describe("Component BookingForm.vue", () => {
      await wrapper.findComponent(BadContainedButton).props().click();
 
      expect(MockAxios.get).toHaveBeenCalledWith("offices");
-     expect(mockStore.dispatch).toHaveBeenCalledWith(
-       "book" , 
+     expect(MockAxios.post).toHaveBeenCalledWith(
+       "/bookings" ,
        { 
          office: { 
              id: "1" 
@@ -111,6 +114,7 @@ describe("Component BookingForm.vue", () => {
     })
 
     it("should show a result message on booking", async () => {
+        MockAxios.post.mockRejectedValue({ response: {data: {title: "User Had Booked Before", details: "The office is already booked out at 11/11/2021 for user EmailAddress \"dummy@broadsign.com\""}}});
 
         await flushPromises();
 

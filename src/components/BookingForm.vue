@@ -114,7 +114,7 @@ export default {
       return moment(this.bookingDate).format("dddd, MMMM Do");
     },
     officeOpeningHours(){
-      return "Opening hours: " + this.selectedOffice?.openingHours.text;
+      return "Opening hours: " + this.selectedOffice?.openingHours;
     }
   },
   methods: {
