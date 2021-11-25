@@ -7,7 +7,8 @@ import store from "../store";
 
 export async function postAsync(url, body) {
   try {
-    return await axios.post(url, body);
+    let bearerToken = localStorage.idToken
+    return await axios.post(url, body, { headers: {'Authorization' : 'Bearer ' + bearerToken} });
   } catch (error) {
     handleError(error);
   }
@@ -15,7 +16,8 @@ export async function postAsync(url, body) {
 
 export async function getAsync(url) {
   try {
-    return await axios.get(url);
+    let bearerToken = localStorage.idToken
+    return await axios.get(url, { headers: {'Authorization' : 'Bearer ' + bearerToken} });
   } catch (error) {
     { handleError(error); }
   }
