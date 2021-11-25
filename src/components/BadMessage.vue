@@ -6,6 +6,7 @@
       light
       :value="enabled"
       :type="messageType">
+    <h3>{{title}}</h3>
     {{message}}
   </v-alert>  
 </template>
@@ -13,6 +14,9 @@
 export default {
   name: "BadMessage",
   props: {
+    title: {
+      type: String
+    },
     message: {
       type: String
     },
