@@ -90,17 +90,17 @@ describe("Component BookingForm.vue", () => {
 
      await wrapper.findComponent(BadContainedButton).props().click();
 
-     expect(MockAxios.get).toHaveBeenCalledWith("offices");
+     expect(MockAxios.get).toHaveBeenCalledWith("offices", {headers : {'Authorization' : 'Bearer ' + localStorage.id_token}});
      expect(MockAxios.post).toHaveBeenCalledWith(
        "/bookings" ,
        { 
          office: { 
-             id: "1" 
+             id: "1"
            },
          date: "2020-12-31",
-         user: { 
-             email: "me@me.com" 
-         } 
+         user: {
+             email: "me@me.com"
+         }
        });
    })
 

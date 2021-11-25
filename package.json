@@ -13,6 +13,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@okta/okta-auth-js": "^5.8.0",
+    "@okta/okta-signin-widget": "^5.13.0",
+    "@okta/okta-vue": "^5.0.1",
     "@testing-library/vue": "^5.1.0",
     "axios": "^0.21.4",
     "core-js": "^3.6.5",

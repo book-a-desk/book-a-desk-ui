@@ -115,6 +115,8 @@ jobs:
     parameters:
       api-url:
         type: string
+      base-url:
+        type: string
     steps:
       - checkout
       - run:
@@ -131,6 +133,8 @@ jobs:
           name: Build
           command: |
             export VUE_APP_BASE_API_URL=<< parameters.api-url >>
+            export VUE_APP_BASE_URL=<< parameters.base-url >>
+            export VUE_APP_CLIENTID=${OKTA_CLIENTID}
             export VUE_APP_DOMAIN_NAME=$BOOK_A_DESK_DOMAIN_NAME
             npm run build
       - store_test_results:
@@ -199,6 +203,9 @@ workflows:
     jobs:
       - build-and-unit-test:
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
+          base-url: ${OKTADOMAIN_DEV}
+          context:
+            - book-a-desk-authentication
   release:
     when:
       equal: ['trunk', << pipeline.git.branch >>]
@@ -206,6 +213,9 @@ workflows:
       - build-and-unit-test:
           name: build-dev
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
+          base-url: ${OKTADOMAIN_DEV}
+          context:
+            - book-a-desk-authentication
       - deploy-cloudformation:
           name: deploy-cloudformation-dev
           authenticate-aws:
@@ -246,6 +256,9 @@ workflows:
       - build-and-unit-test:
           name: build-test
           api-url: ${BOOK_A_DESK_BASE_API_URL_TEST}
+          base-url: ${OKTADOMAIN_TEST}
+          context:
+            - book-a-desk-authentication
           requires:
             - update-cloudfront-dev
       - deploy-cloudformation:
@@ -293,6 +306,9 @@ workflows:
       - build-and-unit-test:
           name: build-prod
           api-url: ${BOOK_A_DESK_BASE_API_URL_PROD}
+          base-url: ${OKTADOMAIN_PROD}
+          context:
+            - book-a-desk-authentication
           requires:
             - production-gate
       - deploy-cloudformation:
