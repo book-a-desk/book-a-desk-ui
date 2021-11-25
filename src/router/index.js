@@ -4,7 +4,7 @@ import auth from '../auth'
 const router = createRouter({
   history: createWebHistory(__dirname),
   routes: [
-    { path: '/auth/callback', component: auth.handleCallback()},
+    { path: '/login/callback', component: auth.login(handleLoginResult)},
     { path: '/logout',
       beforeEnter () {
         auth.logout()
@@ -19,15 +19,17 @@ const router = createRouter({
   ]
 })
 
+function handleLoginResult(isloggedIn) {
+  if (!isloggedIn) {
+    this.error = true
+  } else {
+    this.$router.replace(this.$route.query.redirect || '/')
+  }
+}
+
 function requireAuth () {
     if (!auth.isLoggedIn()) 
-        auth.login(isloggedIn => {
-            if (!isloggedIn) {
-              this.error = true
-            } else {
-              this.$router.replace(this.$route.query.redirect || '/')
-            }
-          })
+        auth.login(handleLoginResult)
     else next();
 }
 

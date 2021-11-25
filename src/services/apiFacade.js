@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "../store";
+import auth from "../auth"
 
 // Set default headers here
 // Set error handling here
@@ -7,7 +8,7 @@ import store from "../store";
 
 export async function postAsync(url, body) {
   try {
-    let bearerToken = localStorage.idToken
+    let bearerToken = auth.getToken()
     return await axios.post(url, body, { headers: {'Authorization' : 'Bearer ' + bearerToken} });
   } catch (error) {
     handleError(error);
@@ -16,7 +17,7 @@ export async function postAsync(url, body) {
 
 export async function getAsync(url) {
   try {
-    let bearerToken = localStorage.idToken
+    let bearerToken = auth.getToken()
     return await axios.get(url, { headers: {'Authorization' : 'Bearer ' + bearerToken} });
   } catch (error) {
     { handleError(error); }
