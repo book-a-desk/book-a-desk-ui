@@ -25,8 +25,9 @@ import axios from "axios";
 
 export default {
   name: "App",
-  created() {
+  async created() {
     axios.defaults.baseURL = process.env.VUE_APP_BASE_API_URL;
+    await this.getFlags();
     this.configLoaded = true;
     auth.onChange = isLoggedIn => {
       this.isLoggedIn = isLoggedIn
@@ -37,6 +38,11 @@ export default {
       configLoaded: false,
       isLoggedIn: auth.isLoggedIn(),
     };
+  },
+  methods: {
+    async getFlags() {
+      await this.$store.dispatch("getFlags");
+    }
   }
 };
 </script>
