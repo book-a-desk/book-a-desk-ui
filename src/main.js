@@ -3,14 +3,8 @@ import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import store from "./store";
 import VueRouter from "vue-router";
-import BookingForm from "./components/BookingForm";
 import "@/plugins/register-components";
-
-const routes = [{ path: "/", component: BookingForm }];
-
-const router = new VueRouter({
-  routes
-});
+import router from "./router";
 
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
