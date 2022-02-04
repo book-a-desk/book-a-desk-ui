@@ -29,7 +29,7 @@ function handleLoginResult(isloggedIn) {
   if (!isloggedIn) {
     this.error = true
   } else {
-    this.$router.replace(this.$route.query.redirect || '/').then(_ => {})
+    this.$router.replace(this.$route.query.redirect || '/')
   }
 }
 
