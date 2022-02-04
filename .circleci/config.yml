@@ -198,7 +198,7 @@ jobs:
 
 workflows:
   pull-request:
-    unless:
+    when:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
@@ -207,7 +207,7 @@ workflows:
           context:
             - book-a-desk-authentication
   release:
-    when:
+    unless:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
