@@ -5,8 +5,9 @@ const router = createRouter({
   history: createWebHistory(__dirname),
   routes: [
     { path: '/login/callback', 
-      beforeEnter () {
+      beforeEnter (to, from, next) {
         auth.login(handleLoginResult)
+        next()
       }
     },
     { path: '/logout',
@@ -15,8 +16,8 @@ const router = createRouter({
       }
     },
     {path: '*', redirect: '/',
-     beforeEnter () {
-         requireAuth()
+     beforeEnter (to, from, next) {
+         requireAuth(next)
      }
     
     }
@@ -31,7 +32,7 @@ function handleLoginResult(isloggedIn) {
   }
 }
 
-function requireAuth () {
+function requireAuth (next) {
     auth.isLoggedIn().then(async isLoggedIn => {
         if (!isLoggedIn)
             await auth.login(handleLoginResult)
