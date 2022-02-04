@@ -198,16 +198,54 @@ jobs:
 
 workflows:
   pull-request:
-    when:
+    unless:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
-          api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
-          base-url: ${OKTADOMAIN_DEV}
+          name: build-test
+          api-url: ${BOOK_A_DESK_BASE_API_URL_TEST}
+          base-url: ${OKTADOMAIN_TEST}
           context:
             - book-a-desk-authentication
+      - deploy-cloudformation:
+          name: deploy-cloudformation-test
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
+          alias: << pipeline.parameters.domain-name-alias-test >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
+          context:
+            - aws-credentials
+          requires:
+            - build-test
+      - publish-to-s3:
+          name: publish-to-test
+          destination-path: ${CIRCLE_SHA1}
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          context:
+            - aws-credentials
+          requires:
+            - build-test
+            - deploy-cloudformation-test
+      - deploy-cloudformation:
+          name: update-cloudfront-test
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-test
+          update-cdn: true
+          s3-bucket-name: << pipeline.parameters.s3-bucket-test >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-test >>
+          alias: << pipeline.parameters.domain-name-alias-test >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-test >>
+          context:
+            - aws-credentials
+          requires:
+            - publish-to-test
   release:
-    unless:
+    when:
       equal: ['trunk', << pipeline.git.branch >>]
     jobs:
       - build-and-unit-test:
