@@ -5,9 +5,7 @@
     </v-main>
     <nav>
       <div>
-        <router-link to="/" v-if="isLoggedIn">
-          Login
-        </router-link>
+        <router-link to="/" v-if="isLoggedIn"/>
         <a v-if="isLoggedIn" v-on:click="auth.logout()">
           Logout
         </a>
@@ -36,7 +34,7 @@ export default {
   data() {
     return {
       configLoaded: false,
-      isLoggedIn: auth.isLoggedIn(),
+      isLoggedIn: false,
     };
   },
   methods: {
