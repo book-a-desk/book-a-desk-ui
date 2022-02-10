@@ -1,28 +1,28 @@
+import { createRouter, createWebHistory } from 'vue-router'
 import auth from '../auth'
 import BookingForm from "@/components/BookingForm";
 
-const routes = [
-  { path: '/', component: BookingForm,
-    beforeEnter (to, from, next) {
-      requireAuth(next)
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/', component: BookingForm,
+      beforeEnter (to, from, next) {
+        requireAuth(next)
+      }
+    },
+    { path: '/login/callback', 
+      beforeEnter (to, from, next) {
+        auth.login(handleLoginResult)
+        next()
+      }
+    },
+    { path: '/logout',
+      beforeEnter () {
+        auth.logout()
+      }
     }
-  },
-  { path: '/login/callback',
-    beforeEnter (to, from, next) {
-      auth.login(handleLoginResult)
-      next()
-    }
-  },
-  { path: '/logout',
-    beforeEnter () {
-      auth.logout()
-    }
-  }
-];
-
-const router = new VueRouter({
-  routes
-});
+  ]
+})
 
 function handleLoginResult(isloggedIn) {
   if (!isloggedIn) {
