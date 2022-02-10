@@ -1,9 +1,8 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter } from 'vue-router'
 import auth from '../auth'
 import BookingForm from "@/components/BookingForm";
 
 const router = createRouter({
-  history: createWebHashHistory(),
   routes: [
     { path: '/', component: BookingForm,
       beforeEnter (to, from, next) {
