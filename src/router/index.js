@@ -20,8 +20,7 @@ const router = createRouter({
       beforeEnter () {
         auth.logout()
       }
-    },
-    {path: '*', redirect: '/'}
+    }
   ]
 })
 
