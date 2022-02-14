@@ -71,7 +71,7 @@
 <script>
 
 import moment from 'moment'
-import { getAsync } from "@/services/apiFacade";
+import { getAsyncWithToken } from "@/services/apiFacade";
 import Availabilities from "@/components/Availabilities.vue"
 import axios from "axios";
 
@@ -120,12 +120,12 @@ export default {
   methods: {
     async fetchOffices() {
       const url = `offices`;
-      const offices = await getAsync(url);
+      const offices = await getAsyncWithToken(url);
       this.offices = offices.data.items;
     },
     async fetchAvailabilities() {
         let url = `/offices/${this.selectedOffice.id}/availabilities?date=${this.bookingDate}`;
-        const availabilities = await getAsync(url);
+        const availabilities = await getAsyncWithToken(url);
         this.availabilities = availabilities.data;
       },
     bookingDateChanged(){
