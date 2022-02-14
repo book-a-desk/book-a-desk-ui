@@ -1,8 +1,9 @@
-import { createRouter } from 'vue-router'
+import Router from "vue-router";
 import auth from '../auth'
 import BookingForm from "@/components/BookingForm";
 
-const router = createRouter({
+const router = new Router({
+  mode: 'hash',
   routes: [
     { path: '/', component: BookingForm,
       beforeEnter (to, from, next) {
