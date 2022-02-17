@@ -12,6 +12,7 @@ const router = new Router({
     },
     { path: '/login/callback', 
       beforeEnter (to, from, next) {
+        console.log("login callback");
         auth.login(handleLoginResult)
         next()
       }

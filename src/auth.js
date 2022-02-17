@@ -8,6 +8,7 @@ const authClient = new OktaAuth({
 
 export default {
   login (cb) {
+    console.log("login");
     cb = arguments[arguments.length - 1]
     this.isLoggedIn().then(async isLoggedIn => {
       if (!isLoggedIn)

@@ -27,6 +27,7 @@ export default {
     axios.defaults.baseURL = process.env.VUE_APP_BASE_API_URL;
     await this.getFlags();
     this.configLoaded = true;
+    console.log(this.configLoaded);
     auth.onChange = isLoggedIn => {
       this.isLoggedIn = isLoggedIn
     }
