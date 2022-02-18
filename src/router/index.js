@@ -1,6 +1,9 @@
+import Vue from "vue";
 import Router from "vue-router";
 import auth from '../auth'
 import BookingForm from "@/components/BookingForm";
+
+Vue.use(Router);
 
 let router = new Router({
   mode: 'hash',
