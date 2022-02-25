@@ -49,8 +49,8 @@
         <bad-contained-button 
             id="btnBook" 
             :click="submitBooking"
-            :block="true">
-          Book a desk
+            :block="true"
+            label="Book a desk">
         </bad-contained-button>
         <v-snackbar
             color="orange"
@@ -114,7 +114,7 @@ export default {
       return moment(this.bookingDate).format("dddd, MMMM Do");
     },
     officeOpeningHours(){
-      return "Opening hours: " + this.selectedOffice?.openingHours.text;
+      return "Opening hours: " + this.selectedOffice?.openingHours?.text;
     }
   },
   methods: {

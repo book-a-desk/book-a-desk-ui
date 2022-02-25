@@ -5,7 +5,7 @@
         :disabled="disabled"
         class="rounded-lg"
         :block="block">
-    <slot></slot>
+    {{label}}
   </v-btn>
 </template>
 <script>
@@ -15,6 +15,10 @@ export default {
     return {};
   },
   props: {
+    label:{
+      type: String,
+      required: true
+    },
     click: {
       type: Function,
       required: true
