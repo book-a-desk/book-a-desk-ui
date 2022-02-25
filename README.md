@@ -33,5 +33,10 @@ VUE_APP_DOMAIN_NAME=domain.com
 npm run lint
 ```
 
+### Run Storybook locally
+```
+npm run storybook
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
