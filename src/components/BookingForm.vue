@@ -49,8 +49,8 @@
         <bad-contained-button 
             id="btnBook" 
             :click="submitBooking"
-            :block="true">
-          Book a desk
+            :block="true"
+            label="Book a desk">
         </bad-contained-button>
         <v-snackbar
             color="orange"
