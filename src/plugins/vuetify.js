@@ -11,7 +11,7 @@ export const options = {
   theme: {
     themes: {
       light: {
-        primary: '#ff0000',//'#4596FF',
+        primary: '#4596FF',
         secondary: '#b0bec5',
         accent: '#FB48CD',
         error: '#b71c1c'
