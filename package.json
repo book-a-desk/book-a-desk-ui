@@ -12,7 +12,8 @@
     "test:unit:c": "vue-cli-service test:unit --coverage",
     "lint": "vue-cli-service lint",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "chromatic": "chromatic --exit-zero-on-changes"
   },
   "dependencies": {
     "@okta/okta-auth-js": "^5.8.0",
@@ -45,6 +46,7 @@
     "@vue/test-utils": "^1.1.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.3",
+    "chromatic": "^6.5.2",
     "eslint": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-vue": "^6.2.2",
