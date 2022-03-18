@@ -13,7 +13,7 @@
       rules.hasEmailFormat
     ]"
     :value="value"
-    solo
+    rounded
     class="rounded-lg"
   >
   </v-text-field>
