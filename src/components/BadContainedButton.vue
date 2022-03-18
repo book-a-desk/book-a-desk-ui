@@ -1,7 +1,7 @@
 <template>
   <v-btn @click="click" 
         elevation="1" 
-        color="secondary" 
+        color="primary" 
         :disabled="disabled"
         class="rounded-lg"
         :block="block">
