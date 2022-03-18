@@ -143,6 +143,19 @@ jobs:
           root: ./dist
           paths:
             - ./*
+              
+  chromatic-deployment:
+    docker:
+      - image: circleci/node:12
+    parameters:
+      project-token:
+        type: string
+    steps:
+      - checkout
+      - run:
+          name: Install npm packages
+          command: npm install
+      - run: npm run chromatic --project-token=<< parameters.project-token >>
 
   deploy-cloudformation:
     executor: aws-cli/default
@@ -206,6 +219,10 @@ workflows:
           base-url: ${OKTADOMAIN_DEV}
           context:
             - book-a-desk-authentication
+      - chromatic-deployment:
+          project-token: ${CHROMATIC_PROJECT_TOKEN}
+          requires:
+            - build-and-unit-test
   release:
     when:
       equal: ['trunk', << pipeline.git.branch >>]
