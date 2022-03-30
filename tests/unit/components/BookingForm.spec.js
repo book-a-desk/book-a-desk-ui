@@ -73,7 +73,7 @@ describe("Component BookingForm.vue", () => {
     expect(button.exists()).toBe(true);
 
     expect(button.attributes("id")).toBe("btnBook");
-    expect(button.text()).toBe("Book a desk");
+    expect(button.attributes("label")).toBe("Book a desk");
   });
 
   it("should submit values from the inputs", async () => {
@@ -90,7 +90,7 @@ describe("Component BookingForm.vue", () => {
 
      await wrapper.findComponent(BadContainedButton).props().click();
 
-     expect(MockAxios.get).toHaveBeenCalledWith("offices", {headers : {'Authorization' : 'Bearer ' + localStorage.id_token}});
+     expect(MockAxios.get).toHaveBeenCalledWith("offices");
      expect(MockAxios.post).toHaveBeenCalledWith(
        "/bookings" ,
        { 
