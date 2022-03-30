@@ -90,7 +90,7 @@ describe("Component BookingForm.vue", () => {
 
      await wrapper.findComponent(BadContainedButton).props().click();
 
-     expect(MockAxios.get).toHaveBeenCalledWith("offices");
+     expect(MockAxios.get).toHaveBeenCalledWith("offices", {headers: {Authorization: "Bearer undefined"}});
      expect(MockAxios.post).toHaveBeenCalledWith(
        "/bookings" ,
        { 
