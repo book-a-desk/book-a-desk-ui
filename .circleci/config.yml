@@ -153,7 +153,7 @@ jobs:
               
   chromatic-deployment:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:16.15.0
     resource_class: small
     parameters:
       project-token:
