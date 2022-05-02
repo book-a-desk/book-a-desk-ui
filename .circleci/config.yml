@@ -111,7 +111,7 @@ commands:
 jobs:
   build-and-unit-test:
     docker:
-      - image: cimg/node:15.8.0
+      - image: cimg/node:16.15.0
     resource_class: small
     parameters:
       api-url:
