@@ -1,7 +1,5 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-
 import BadComboBox from "@/components/BadComboBox.vue";
-
 import Vuex from "vuex";
 
 const localVue = createLocalVue();

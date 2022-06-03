@@ -1,7 +1,5 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-
 import BadTextInput from "@/components/BadTextInput.vue";
-
 import Vuex from "vuex";
 
 const localVue = createLocalVue();
