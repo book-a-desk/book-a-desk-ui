@@ -2,8 +2,6 @@ import Vue from "vue";
 import { shallowMount, createLocalVue } from "@vue/test-utils";
 import Availabilities from "@/components/Availabilities.vue";
 import BadCardAvailability from "@/components/BadCardAvailability.vue";
-
-
 import Vuex from "vuex";
 
 Vue.component('BadCardAvailability', BadCardAvailability);
@@ -44,6 +42,4 @@ describe("Component Availabilities.vue", () => {
     const card = wrapper.findAllComponents(BadCardAvailability).at(2);
     expect(card.props().value).toEqual(3);  
   });
-
-
 });

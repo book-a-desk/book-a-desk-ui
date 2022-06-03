@@ -1,7 +1,5 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-
 import BadDatePicker from "@/components/BadDatePicker.vue";
-
 import Vuex from "vuex";
 
 const localVue = createLocalVue();
