@@ -1,6 +1,5 @@
 <template>
-  
-  <v-list width="350">
+  <v-list>
     <v-subheader class="font-weight-black">UPCOMING BOOKINGS</v-subheader>
     <v-list-item v-for="booking in bookings">
       <bad-booking-details class="mb-5"  :day="booking.day" :month="booking.month">
