@@ -25,7 +25,7 @@ const router = new Router({
       component: LoginCallback
     }
   ]
-});
-router.beforeEach(navigationGuard);
-export default router;
+})
+router.beforeEach(navigationGuard)
+export default router
 
