@@ -1,5 +1,7 @@
 <template>
   <v-container>
+    <div v-if="authState.isAuthenticated">
+      <p>Welcome, {{claims && claims.name}}!</p>
      <v-row>
       <v-col>
           <div class="text-h6">Book a desk</div>
@@ -65,6 +67,7 @@
         :messageType="messageType"
         :enabled="isMessageShownOnBooking">
     </bad-message>
+    </div>
   </v-container>
 </template>
 
@@ -92,9 +95,11 @@ export default {
       availabilities: null,
       isWarningShownOnBooking: false,
       isMessageShownOnBooking: false,
-      problemDetails: {}
+      problemDetails: {},
+      claims:''
     };
   },
+  created () { this.setup() },
   async mounted() {
     await this.fetchOffices();
     this.selectedOffice = this.offices[0];
@@ -118,6 +123,15 @@ export default {
     }
   },
   methods: {
+    async setup () {
+        console.log("this.authState.isAuthenticated: ", this.authState.isAuthenticated);
+      if (this.authState.isAuthenticated) {
+        this.claims = await this.$auth.getUser()
+      }
+    },
+    login () {
+      this.$auth.signInWithRedirect('/')
+    },
     async fetchOffices() {
       const url = `offices`;
       const offices = await getAsync(url);

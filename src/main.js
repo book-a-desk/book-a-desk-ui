@@ -2,22 +2,15 @@ import Vue from "vue";
 import App from "./App.vue";
 import vuetify from "@/plugins/vuetify";
 import store from "./store";
-import VueRouter from "vue-router";
-import BookingForm from "./components/BookingForm";
 import "@/plugins/register-components";
+import router from "./router"
 
-const routes = [{ path: "/", component: BookingForm }];
-
-const router = new VueRouter({
-  routes
-});
-
-Vue.config.productionTip = false;
-Vue.use(VueRouter);
+Vue.config.productionTip = false
 
 new Vue({
-  vuetify,
-  store,
   router,
+  store,
+  vuetify,
   render: h => h(App)
 }).$mount("#app");
+
