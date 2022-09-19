@@ -16,11 +16,7 @@ export default {
   components: {BadBookingDetails},
   computed: {
     bookings() {
-      return [
-        { day: '22', month: 'September' },
-        { day: '30', month: 'October' },
-        { day: '1', month: 'December' },
-      ];
+      return this.$store.getters.bookings;
     }
   }
 }

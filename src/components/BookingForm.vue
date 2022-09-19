@@ -128,6 +128,9 @@ export default {
         const availabilities = await getAsync(url);
         this.availabilities = availabilities.data;
       },
+    async fetchBookings() {
+      await this.$store.dispatch("getBookings", { emailAddress: this.emailAddress});
+    },
     bookingDateChanged(){
       this.fetchAvailabilities();
     },
