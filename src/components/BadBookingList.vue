@@ -14,10 +14,8 @@ import BadBookingDetails from "@/components/BadBookingDetails";
 export default {
   name: "BadBookingList",
   components: {BadBookingDetails},
-  computed: {
-    bookings() {
-      return this.$store.getters.bookings;
-    }
+  props: {
+    bookings: []
   }
 }
 </script>
