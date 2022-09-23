@@ -6,8 +6,9 @@ const actions = {
     commit("SAVE_BOOKING", Booking.data);
   },
   async getBookings({ commit }, payload) {
-    const Booking = await getAsync(`bookings`, payload);
-    commit("GET_BOOKINGS", Booking.data);
+    const url = `/bookings?email=${payload.email}&date=${payload.date}`;
+    const bookings = await getAsync(url);
+    commit("GET_BOOKINGS", bookings);
   }
 };
 
@@ -22,11 +23,7 @@ const mutations = {
 
 const state = {
   booking: {},
-  bookings: [
-    { day: '22', month: 'September' },
-    { day: '30', month: 'October' },
-    { day: '1', month: 'December' }
-  ]
+  bookings: []
 };
 
 const getters = {
