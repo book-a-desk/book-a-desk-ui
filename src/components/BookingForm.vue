@@ -155,9 +155,9 @@ export default {
       })
       .then((response) => {
         this.isWarningShownOnBooking = true;
-        this.displayConfirmationMessage(response)
-        this.fetchAvailabilities()
-        this.fetchBookings()
+        this.displayConfirmationMessage(response);
+        this.fetchAvailabilities();
+        this.fetchBookings();
       })
       .catch((error) => {
         this.isMessageShownOnBooking = true;
