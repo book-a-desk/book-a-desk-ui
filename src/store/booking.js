@@ -7,8 +7,8 @@ const actions = {
   },
   async getBookings({ commit }, payload) {
     const url = `/bookings?email=${payload.email}&date=${payload.date}`;
-    const bookings = await getAsync(url);
-    commit("GET_BOOKINGS", bookings);
+    const response = await getAsync(url);
+    commit("GET_BOOKINGS", response.data.items);
   }
 };
 
