@@ -28,7 +28,6 @@ describe("Component BookingForm.vue", () => {
 
   let wrapper;
   let mockStore;
-  this.authState = {isAuthenticated: true}
 
   beforeEach(() => {
     MockAxios.get.mockResolvedValue({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
@@ -37,9 +36,12 @@ describe("Component BookingForm.vue", () => {
     mockStore = { dispatch: jest.fn() }
 
     wrapper = shallowMount(BookingForm, {
-    mocks: {
-      $store: mockStore
-    }
+      propsData: {
+          authState: { isAuthenticated: true }
+      },
+      mocks: {
+        $store: mockStore
+      }
   });
   });
 
