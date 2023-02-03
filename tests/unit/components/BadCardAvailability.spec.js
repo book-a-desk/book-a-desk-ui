@@ -1,8 +1,5 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-
 import BadCardAvailability from "@/components/BadCardAvailability.vue";
-
-
 import Vuex from "vuex";
 
 const localVue = createLocalVue();
