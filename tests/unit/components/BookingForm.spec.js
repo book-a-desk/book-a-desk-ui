@@ -39,6 +39,12 @@ describe("Component BookingForm.vue", () => {
         isAuthenticated: true
     }
 
+    Vue.prototype.$auth = {
+        getUser() {
+            return "Sergio Herrero";
+        }
+    }    
+
     wrapper = shallowMount(BookingForm, {
       propsData: {
           authState: { isAuthenticated: true }
