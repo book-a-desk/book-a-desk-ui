@@ -6,6 +6,7 @@ import BadContainedButton from "@/components/BadContainedButton.vue";
 import BadDatePicker from "@/components/BadDatePicker.vue";
 import BadComboBox from "@/components/BadComboBox.vue"
 import Availabilities from "@/components/Availabilities.vue"
+import BadMessage from "@/components/BadMessage.vue"
 import flushPromises from "flush-promises"
 import MockAxios from 'axios' 
 import Vuex from "vuex";
@@ -16,6 +17,7 @@ Vue.component('BadContainedButton', BadContainedButton)
 Vue.component('BadDatePicker', BadDatePicker)
 Vue.component('BadComboBox', BadComboBox)
 Vue.component('Availabilities', Availabilities)
+Vue.component('BadMessage', BadMessage)
 
 
 const localVue = createLocalVue();
@@ -29,12 +31,13 @@ describe("Component BookingForm.vue", () => {
 
   beforeEach(() => {
     MockAxios.get.mockResolvedValue({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
+    MockAxios.post.mockResolvedValue();
 
     mockStore = { dispatch: jest.fn() }
 
     wrapper = shallowMount(BookingForm, {
     mocks: {
-      $store: mockStore 
+      $store: mockStore
     }
   });
   });
@@ -70,7 +73,7 @@ describe("Component BookingForm.vue", () => {
     expect(button.exists()).toBe(true);
 
     expect(button.attributes("id")).toBe("btnBook");
-    expect(button.text()).toBe("Book a desk");
+    expect(button.attributes("label")).toBe("Book a desk");
   });
 
   it("should submit values from the inputs", async () => {
@@ -88,16 +91,16 @@ describe("Component BookingForm.vue", () => {
      await wrapper.findComponent(BadContainedButton).props().click();
 
      expect(MockAxios.get).toHaveBeenCalledWith("offices");
-     expect(mockStore.dispatch).toHaveBeenCalledWith(
-       "book" , 
+     expect(MockAxios.post).toHaveBeenCalledWith(
+       "/bookings" ,
        { 
          office: { 
-             id: "1" 
+             id: "1"
            },
          date: "2020-12-31",
-         user: { 
-             email: "me@me.com" 
-         } 
+         user: {
+             email: "me@me.com"
+         }
        });
    })
 
@@ -108,5 +111,20 @@ describe("Component BookingForm.vue", () => {
         await wrapper.findComponent(BadContainedButton).props().click();
 
         expect(wrapper.vm.isWarningShownOnBooking).toBe(true);
+    })
+
+    it("should show a result message on booking", async () => {
+        const bookingResultTitle = "User Had Booked Before";
+        const bookingResultMessage = "The office is already booked out at 11/11/2021 for user EmailAddress \"dummy@broadsign.com\"";
+
+        MockAxios.post.mockRejectedValue({ response: {data: {title: bookingResultTitle, details: bookingResultMessage}}});
+
+        await flushPromises();
+
+        await wrapper.findComponent(BadContainedButton).props().click();
+
+        expect(wrapper.vm.isMessageShownOnBooking).toBe(true);
+        expect(wrapper.vm.bookingResultTitle).toBe(bookingResultTitle);
+        expect(wrapper.vm.bookingResultMessage).toBe(`Something went wrong with the booking: ${bookingResultMessage}`);
     })
 });

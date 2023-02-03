@@ -51,7 +51,7 @@ parameters:
   hosted-zone-id-prod:
     type: string
     default: ${HOSTED_ZONE_ID_PROD}
-      
+
 commands:
   log-aws-identity:
     parameters:
@@ -126,6 +126,8 @@ jobs:
     parameters:
       api-url:
         type: string
+      base-url:
+        type: string
     steps:
       - checkout
       - run:
@@ -142,6 +144,8 @@ jobs:
           name: Build
           command: |
             export VUE_APP_BASE_API_URL=<< parameters.api-url >>
+            export VUE_APP_BASE_URL=<< parameters.base-url >>
+            export VUE_APP_CLIENTID=${OKTA_CLIENTID}
             export VUE_APP_DOMAIN_NAME=$BOOK_A_DESK_DOMAIN_NAME
             npm run build
       - store_test_results:
@@ -150,6 +154,19 @@ jobs:
           root: ./dist
           paths:
             - ./*
+
+  chromatic-deployment:
+    docker:
+      - image: circleci/node:12
+    parameters:
+      project-token:
+        type: string
+    steps:
+      - checkout
+      - run:
+          name: Install npm packages
+          command: npm install
+      - run: npm run chromatic --project-token=<< parameters.project-token >>
 
   deploy-cloudformation:
     executor: aws-cli/default
@@ -214,6 +231,13 @@ workflows:
       - build-and-unit-test:
           name: build-dev
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
+          base-url: ${OKTADOMAIN_DEV}
+          context:
+            - book-a-desk-authentication
+      - chromatic-deployment:
+          project-token: ${CHROMATIC_PROJECT_TOKEN}
+          requires:
+            - build-and-unit-test
       - deploy-cloudformation:
           name: deploy-cloudformation-dev
           authenticate-aws:
@@ -260,6 +284,9 @@ workflows:
       - build-and-unit-test:
           name: build-dev
           api-url: ${BOOK_A_DESK_BASE_API_URL_DEV}
+          base-url: ${OKTADOMAIN_DEV}
+          context:
+            - book-a-desk-authentication
       - deploy-cloudformation:
           name: deploy-cloudformation-dev
           authenticate-aws:
@@ -302,6 +329,9 @@ workflows:
       - build-and-unit-test:
           name: build-test
           api-url: ${BOOK_A_DESK_BASE_API_URL_TEST}
+          base-url: ${OKTADOMAIN_TEST}
+          context:
+            - book-a-desk-authentication
           requires:
             - update-cloudfront-dev
       - deploy-cloudformation:
@@ -343,11 +373,19 @@ workflows:
             - aws-credentials
           requires:
             - publish-to-test
+      - production-gate:
+          type:
+            approval
+          requires:
+            - update-cloudfront-test
       - build-and-unit-test:
           name: build-prod
           api-url: ${BOOK_A_DESK_BASE_API_URL_PROD}
+          base-url: ${OKTADOMAIN_PROD}
+          context:
+            - book-a-desk-authentication
           requires:
-            - update-cloudfront-test
+            - production-gate
       - deploy-cloudformation:
           name: deploy-cloudformation-prod
           authenticate-aws:

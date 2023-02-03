@@ -1,12 +1,12 @@
 import Vue from "vue";
 import App from "./App.vue";
-import vuetify from "./plugins/vuetify";
+import vuetify from "@/plugins/vuetify";
 import store from "./store";
 import VueRouter from "vue-router";
-import BookingForm from "./components/BookingForm";
 import "@/plugins/register-components";
+import Dashboard from "@/components/Dashboard";
 
-const routes = [{ path: "/", component: BookingForm }];
+const routes = [{ path: "/", component: Dashboard }];
 
 const router = new VueRouter({
   routes

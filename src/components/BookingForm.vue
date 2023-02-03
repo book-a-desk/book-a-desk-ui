@@ -13,6 +13,7 @@
           label="Email"
           placeholder="Enter your email"
           v-model.trim="emailAddress"
+          @input="handleEmailInput"
         ></bad-text-input>
         <bad-combo-box
           id = "offices"
@@ -22,6 +23,8 @@
           v-model = "selectedOffice"
           prependInnerIcon="mdi-office-building"
           @change="officeChange"
+          :hint="officeOpeningHours"
+          :persistentHint="true"
         ></bad-combo-box>
       </v-col>
     </v-row>
@@ -47,8 +50,8 @@
         <bad-contained-button 
             id="btnBook" 
             :click="submitBooking"
-            :block="true">
-          Book a desk
+            :block="true"
+            label="Book a desk">
         </bad-contained-button>
         <v-snackbar
             color="orange"
@@ -57,7 +60,12 @@
         </v-snackbar>
       </v-col>
     </v-row>
-    <bad-message :message="feedback"></bad-message>
+    <bad-message
+        :title="bookingResultTitle"
+        :message="bookingResultMessage"
+        :messageType="messageType"
+        :enabled="isMessageShownOnBooking">
+    </bad-message>
   </v-container>
 </template>
 
@@ -66,6 +74,7 @@
 import moment from 'moment'
 import { getAsync } from "@/services/apiFacade";
 import Availabilities from "@/components/Availabilities.vue"
+import axios from "axios";
 
 export default {
   name: "BookingForm",
@@ -76,11 +85,15 @@ export default {
     return {
       bookingDate: this.tomorrow(),
       emailAddress: "",
-      feedback: "",
+      bookingResultTitle: "",
+      bookingResultMessage: "",
+      messageType: "",
       offices: [],
       selectedOffice: null,
       availabilities: null,
-      isWarningShownOnBooking: false
+      isWarningShownOnBooking: false,
+      isMessageShownOnBooking: false,
+      problemDetails: {}
     };
   },
   async mounted() {
@@ -100,6 +113,9 @@ export default {
     },
     bookingDateFormatted() {
       return moment(this.bookingDate).format("dddd, MMMM Do");
+    },
+    officeOpeningHours(){
+      return "Opening hours: " + this.selectedOffice?.openingHours?.text;
     }
   },
   methods: {
@@ -113,27 +129,44 @@ export default {
         const availabilities = await getAsync(url);
         this.availabilities = availabilities.data;
       },
+    async fetchBookings() {
+      await this.$store.dispatch("getBookings", { email: this.emailAddress, date: this.bookingDate});
+    },
     bookingDateChanged(){
       this.fetchAvailabilities();
     },
     officeChange(){
       this.fetchAvailabilities();
     },
+    displayConfirmationMessage(){
+      this.messageType = "success";
+      this.bookingResultMessage = "Please check your emails for your booking confirmation";
+    },
+    displayErrorMessage(error){
+      this.messageType = "error";
+      this.bookingResultTitle = error.response.data.title;
+      this.bookingResultMessage = `Something went wrong with the booking: ${error.response.data.details}`;
+    },
     async submitBooking() {
-      this.isWarningShownOnBooking = true;
-      try{
-        await this.$store.dispatch("book", {
-          office: { id: this.selectedOffice.id },
-          date: this.bookingDate,
-          user: { email: this.emailAddress }
-        });
-        this.feedback = "Please check your emails for your booking confirmation";
-      }
-      catch(e){
-        this.feedback = `Something went wrong with the booking: ${e.message}`      
-      }
-      this.fetchAvailabilities();
-    },    
+      await axios.post("/bookings",{
+        office: { id: this.selectedOffice.id },
+        date: this.bookingDate,
+        user: { email: this.emailAddress }
+      })
+      .then((response) => {
+        this.isWarningShownOnBooking = true;
+        this.displayConfirmationMessage(response);
+        this.fetchAvailabilities();
+        this.fetchBookings();
+      })
+      .catch((error) => {
+        this.isMessageShownOnBooking = true;
+        this.displayErrorMessage(error)
+      });
+    },
+    handleEmailInput() {
+      this.fetchBookings();
+    },
     tomorrow() {
         return moment().add(1, 'days').format('YYYY-MM-DD')
     }

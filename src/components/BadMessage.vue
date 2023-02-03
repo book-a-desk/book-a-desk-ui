@@ -1,22 +1,32 @@
 <template>
-  <span> {{message}} </span>
+  <v-alert
+      dense
+      outlined
+      dismissible
+      light
+      :value="enabled"
+      :type="messageType">
+    <h3>{{title}}</h3>
+    {{message}}
+  </v-alert>  
 </template>
 <script>
 export default {
   name: "BadMessage",
   props: {
+    title: {
+      type: String
+    },
     message: {
       type: String
+    },
+    messageType: {
+      type: String
+    },
+    enabled: {
+      type: Boolean
     }
-  }
-};
+  },
+}
 </script>
-<style scoped lang="scss">
-    span{
-        font-size: larger;
-        padding: 5px;
-        background-color: white;
-        border: 1px solid orange;
-        border-radius: 5px;
-    }
-</style>
+<style scoped></style>

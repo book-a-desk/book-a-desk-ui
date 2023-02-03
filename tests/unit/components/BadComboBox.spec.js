@@ -1,7 +1,5 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-
 import BadComboBox from "@/components/BadComboBox.vue";
-
 import Vuex from "vuex";
 
 const localVue = createLocalVue();
@@ -15,15 +13,19 @@ describe("Component BadComboBox.vue", () => {
   const propItems = [{"id": 1}, {"id": 2}];
   const propItemText = "Item Text";
   const propItemValue = "Item value";
+  const propHint = "Hint Text";
+  const propPersistentHint = true;
 
   beforeEach(() => {
     wrapper = shallowMount(BadComboBox, {
       propsData: {
         value: propValue,
         id: propId,
-	    items: propItems,
-	    itemText: propItemText,
-	    itemValue: propItemValue
+        items: propItems,
+        itemText: propItemText,
+        itemValue: propItemValue,
+        hint: propHint,
+        persistentHint: propPersistentHint
       }
     });
   });
@@ -56,5 +58,15 @@ describe("Component BadComboBox.vue", () => {
   it("should pass [itemValue] prop", () => {
     const comboBox = wrapper.findComponent({ name: "v-combobox" });
     expect(comboBox.props().itemValue).toEqual(propItemValue);
+  });  
+
+  it("should pass [hint] prop", () => {
+    const comboBox = wrapper.findComponent({ name: "v-combobox" });
+    expect(comboBox.props().hint).toEqual(propHint);
+  });  
+
+  it("should pass [persistentHint] prop", () => {
+    const comboBox = wrapper.findComponent({ name: "v-combobox" });
+    expect(comboBox.props().persistentHint).toEqual(propPersistentHint);
   });  
 });
