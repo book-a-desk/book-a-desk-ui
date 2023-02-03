@@ -237,7 +237,7 @@ workflows:
       - chromatic-deployment:
           project-token: ${CHROMATIC_PROJECT_TOKEN}
           requires:
-            - build-and-unit-test
+            - build-dev
       - deploy-cloudformation:
           name: deploy-cloudformation-dev
           authenticate-aws:
