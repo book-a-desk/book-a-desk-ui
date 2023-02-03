@@ -111,7 +111,8 @@ commands:
 jobs:
   build-and-unit-test:
     docker:
-      - image: cimg/node:15.8.0
+      - image: cimg/node:16.15.0
+    resource_class: medium
     parameters:
       api-url:
         type: string
@@ -119,9 +120,15 @@ jobs:
         type: string
     steps:
       - checkout
+      - restore_cache:
+          key: v1-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Install npm packages
           command: npm install
+      - save_cache:
+          key: v1-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
       - run:
           name: Unit test
           command: |
@@ -146,15 +153,22 @@ jobs:
               
   chromatic-deployment:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:16.15.0
+    resource_class: small
     parameters:
       project-token:
         type: string
     steps:
       - checkout
+      - restore_cache:
+          key: v1-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Install npm packages
           command: npm install
+      - save_cache:
+          key: v1-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
       - run: npm run chromatic --project-token=<< parameters.project-token >>
 
   deploy-cloudformation:
