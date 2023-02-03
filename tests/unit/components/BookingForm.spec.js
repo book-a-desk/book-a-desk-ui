@@ -28,6 +28,7 @@ describe("Component BookingForm.vue", () => {
 
   let wrapper;
   let mockStore;
+  this.authState = {isAuthenticated: true}
 
   beforeEach(() => {
     MockAxios.get.mockResolvedValue({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
