@@ -1,36 +1,31 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import auth from '../auth'
+import Vue from 'vue'
+import Router from 'vue-router'
+import { OktaAuth } from '@okta/okta-auth-js'
+import OktaVue, { LoginCallback, navigationGuard } from '@okta/okta-vue'
+import BookingForm from '@/components/BookingForm'
+import oktaConfig from '../okta.config'
 
-const router = createRouter({
-  history: createWebHistory(__dirname),
+const oktaAuth = new OktaAuth(oktaConfig.oidc)
+
+Vue.use(Router)
+Vue.use(OktaVue, { oktaAuth })
+
+const router = new Router({
+  mode: 'history',
   routes: [
-    { path: '/login/callback', component: auth.login(handleLoginResult)},
-    { path: '/logout',
-      beforeEnter () {
-        auth.logout()
+    {
+      path: '/',
+      component: BookingForm,
+      meta: {
+        requiresAuth: true
       }
     },
-    {path: '*', redirect: '/',
-     beforeEnter () {
-         requireAuth
-     }
-    
+    {
+      path: '/login/callback',
+      component: LoginCallback
     }
   ]
 })
+router.beforeEach(navigationGuard)
+export default router
 
-function handleLoginResult(isloggedIn) {
-  if (!isloggedIn) {
-    this.error = true
-  } else {
-    this.$router.replace(this.$route.query.redirect || '/')
-  }
-}
-
-function requireAuth () {
-    if (!auth.isLoggedIn()) 
-        auth.login(handleLoginResult)
-    else next();
-}
-
-export default router;
