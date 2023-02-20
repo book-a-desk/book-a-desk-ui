@@ -223,6 +223,43 @@ workflows:
           project-token: ${CHROMATIC_PROJECT_TOKEN}
           requires:
             - build-and-unit-test
+      - deploy-cloudformation:
+          name: deploy-cloudformation-dev
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          update-cdn: false
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
+          alias: << pipeline.parameters.domain-name-alias-dev >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
+          context:
+            - aws-credentials
+          requires:
+            - build-and-unit-test
+      - publish-to-s3:
+          name: publish-to-dev
+          destination-path: ${CIRCLE_SHA1}
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          context:
+            - aws-credentials
+          requires:
+            - build-and-unit-test
+            - deploy-cloudformation-dev
+      - deploy-cloudformation:
+          name: update-cloudfront-dev
+          authenticate-aws:
+            - authenticate-aws-book-a-desk-dev
+          update-cdn: true
+          s3-bucket-name: << pipeline.parameters.s3-bucket-dev >>
+          certificate-id: << pipeline.parameters.acm-certificate-id-dev >>
+          alias: << pipeline.parameters.domain-name-alias-dev >>
+          cloudformation-role: << pipeline.parameters.cloudformation-role-dev >>
+          context:
+            - aws-credentials
+          requires:
+            - publish-to-dev
   release:
     when:
       equal: ['trunk', << pipeline.git.branch >>]
