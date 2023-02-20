@@ -42,8 +42,7 @@ Resources:
             Effect: Allow
             Resource: !Sub "arn:aws:s3:::${S3Bucket}/*"
             Principal:
-              AWS:
-                - "cloudfront.amazonaws.com"
+              Service: "cloudfront.amazonaws.com"
             Condition:
               StringEquals:
                 'AWS:SourceArn': !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CDN.Id}"
