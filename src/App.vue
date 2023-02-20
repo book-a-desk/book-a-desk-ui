@@ -1,9 +1,18 @@
 <template>
   <v-app v-if="configLoaded">
-    <div> 
-       <bad-contained-button v-if="authState && authState.isAuthenticated" :click="logout" label="Sign out"></bad-contained-button>
-       <bad-contained-button v-else :click="login" label="Sign in"></bad-contained-button>
+    <div>
+      <bad-contained-button
+        v-if="authState && authState.isAuthenticated"
+        :click="logout"
+        label="Sign out"
+      ></bad-contained-button>
+      <bad-contained-button
+        v-else
+        :click="login"
+        label="Sign in"
+      ></bad-contained-button>
     </div>
+    <div v-for="(item, index) in myJson" v-bind:key="index">{{ item }}</div>
     <v-main>
       <router-view> </router-view>
     </v-main>
@@ -12,7 +21,8 @@
 
 <script>
 import axios from "axios";
-import BadContainedButton from './components/BadContainedButton.vue';
+import BadContainedButton from "./components/BadContainedButton.vue";
+import json from "../env/config.json";
 
 export default {
   components: { BadContainedButton },
@@ -25,17 +35,18 @@ export default {
   data() {
     return {
       configLoaded: false,
+      myJson: json
     };
   },
   methods: {
     async getFlags() {
       await this.$store.dispatch("getFlags");
     },
-     login () {
-      this.$auth.signInWithRedirect('/')//{ originalUri: '/' }
+    login() {
+      this.$auth.signInWithRedirect("/"); //{ originalUri: '/' }
     },
-    async logout () {
-      await this.$auth.signOut()
+    async logout() {
+      await this.$auth.signOut();
     }
   }
 };
