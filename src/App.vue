@@ -12,7 +12,6 @@
         label="Sign in"
       ></bad-contained-button>
     </div>
-    <div v-for="(item, index) in myJson" v-bind:key="index">{{ item }}</div>
     <v-main>
       <router-view> </router-view>
     </v-main>
@@ -22,7 +21,6 @@
 <script>
 import axios from "axios";
 import BadContainedButton from "./components/BadContainedButton.vue";
-import json from "../env/config.json";
 
 export default {
   components: { BadContainedButton },
@@ -34,8 +32,7 @@ export default {
   },
   data() {
     return {
-      configLoaded: false,
-      myJson: json
+      configLoaded: false
     };
   },
   methods: {
