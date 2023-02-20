@@ -61,8 +61,8 @@ Resources:
         Enabled: true
         DefaultRootObject: index.html
         Origins:
-          - CustomOriginConfig:
-              OriginProtocolPolicy: https-only
+          - S3OriginConfig:
+              OriginAccessIdentity: ''
             DomainName: !Sub "${S3Bucket}.s3.${AWS::Region}.amazonaws.com"
             Id: book-a-desk-ui-s3
             OriginPath: !Sub "/${SHA1}"
