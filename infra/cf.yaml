@@ -50,10 +50,11 @@ Resources:
   OriginAccessControl:
     Type: AWS::CloudFront::OriginAccessControl
     Properties:
-      Name: originAccessControl
-      OriginAccessControlOriginType: s3
-      SigningBehavior: always
-      SigningProtocol: sigv4
+      OriginAccessControlConfig:
+        Name: originAccessControl
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
   CDN:
     Type: AWS::CloudFront::Distribution
     Properties:
