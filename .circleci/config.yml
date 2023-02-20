@@ -203,7 +203,7 @@ jobs:
       - log-aws-identity
       - run: ls -R
       - aws-s3/sync:
-          arguments: --acl public-read
+          arguments: --acl private
           from: ./
           overwrite: false
           to: s3://<< parameters.s3-bucket-name >>/<< parameters.destination-path >>
