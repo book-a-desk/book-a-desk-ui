@@ -1,4 +1,3 @@
-const { debug } = require("console");
 const CopyPlugin = require("copy-webpack-plugin");
 
 const path = require("path");
@@ -17,10 +16,14 @@ module.exports = {
     plugins: [
       new CopyPlugin([
         {
-          from: path.resolve(__dirname, "env/config.json"),
-          to: path.resolve(__dirname, "dist/env")
+          patterns: [
+            {
+              from: path.resolve(__dirname, "env/config.json"),
+              to: path.resolve(__dirname, "dist/env")
+            }
+          ]
         }
-      ]),
-    ],
+      ])
+    ]
   }
-};
+}
