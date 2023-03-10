@@ -25,9 +25,12 @@ export async function postAsync(url, body) {
   }
 }
 
-export async function getAsync(url, token = null) {
+export async function getAsync(url) {
   try {
-    var config = {}
+    var config = {
+      headers:{}
+    }
+    const token = await this.$auth.getAccessToken();
     if(token)
     {
       config =
