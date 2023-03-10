@@ -16,9 +16,9 @@
 
 <script>
 
-import BookingForm from "@/components/BookingForm";
-import BadBookingList from "@/components/BadBookingList";
-import BadMenu from "@/components/BadMenu";
+import BookingForm from "@/components/BookingForm.vue";
+import BadBookingList from "@/components/BadBookingList.vue";
+import BadMenu from "@/components/BadMenu.vue";
 export default {
   name: "Dashboard",
   components: {BadMenu, BadBookingList, BookingForm},

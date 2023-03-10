@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import BadBookingDetails from "@/components/BadBookingDetails";
+import BadBookingDetails from "@/components/BadBookingDetails.vue";
 import moment from "moment";
 
 export default {

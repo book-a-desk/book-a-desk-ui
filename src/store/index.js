@@ -1,10 +1,12 @@
 import Vuex from "vuex";
-import Vue from "vue";
+import { createApp } from "vue";
+import App from "../App.vue";
 import booking from "./booking";
 import config from "./config";
 import error from "./error";
 
-Vue.use(Vuex);
+const app = createApp(App);
+app.use(Vuex);
 
 export default new Vuex.Store({
   state: {

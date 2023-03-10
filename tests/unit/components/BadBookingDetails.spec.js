@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
-import BadBookingDetails from "@/components/BadBookingDetails";
+import BadBookingDetails from "@/components/BadBookingDetails.vue";
 
 const localVue = createLocalVue();
 

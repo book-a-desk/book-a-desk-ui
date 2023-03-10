@@ -22,7 +22,7 @@
 export default {
   name: "BadTextInput",
   data() {
-    let domainName = process.env.VUE_APP_DOMAIN_NAME;
+    let domainName = import.meta.env.VUE_APP_DOMAIN_NAME;
     return {
       rules: {
         isNotEmpty: value => !!value || value !== "" || "Email cannot be empty",

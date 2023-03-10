@@ -1,8 +1,10 @@
-import Vue from 'vue'
+import { createApp } from "vue";
+import App from "../App.vue";
 export function globallyRegisterAllComponents() {
     const files = require.context("@", true, /\.vue$/i);
+    const app = createApp(App);
     files.keys().map(key => {
-        Vue.component(
+        app.component(
             files(key).default.name ??
             key
                 .split("/")

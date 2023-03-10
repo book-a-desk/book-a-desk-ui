@@ -11,7 +11,7 @@ module.exports = {
     }
   },
   transpileDependencies: ["vuetify"],
-  publicPath: `/${process.env.VUE_APP_SHA1 || ''}`,
+  publicPath: `/${import.meta.env.VUE_APP_SHA1 || ''}`,
   configureWebpack: {
     plugins: [
       new CopyPlugin([

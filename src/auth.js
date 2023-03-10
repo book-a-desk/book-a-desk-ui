@@ -1,6 +1,6 @@
 const OktaAuth = require('@okta/okta-auth-js').OktaAuth
 const authClient = new OktaAuth({
-  issuer: 'https://${process.env.VUE_APP_BASE_URL}',
+  issuer: 'https://${import.meta.env.VUE_APP_BASE_URL}',
   clientId: '${proces.env.VUE_APP_CLIENTID}',
   scopes: ['openid', 'email', 'profile'],
   redirectUri: window.location.origin + '/login/callback'

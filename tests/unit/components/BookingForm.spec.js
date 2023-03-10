@@ -4,13 +4,13 @@ import BookingForm from "@/components/BookingForm.vue";
 import BadTextInput from "@/components/BadTextInput.vue";
 import BadContainedButton from "@/components/BadContainedButton.vue";
 import BadDatePicker from "@/components/BadDatePicker.vue";
-import BadComboBox from "@/components/BadComboBox.vue"
-import Availabilities from "@/components/Availabilities.vue"
-import BadMessage from "@/components/BadMessage.vue"
-import flushPromises from "flush-promises"
-import MockAxios from 'axios' 
+import BadComboBox from "@/components/BadComboBox.vue";
+import Availabilities from "@/components/Availabilities.vue";
+import BadMessage from "@/components/BadMessage.vue";
+import flushPromises from "flush-promises";
+import MockAxios from "axios";
 import Vuex from "vuex";
-import moment from 'moment'
+import moment from "moment";
 
 Vue.component('BadTextInput', BadTextInput)
 Vue.component('BadContainedButton', BadContainedButton)
