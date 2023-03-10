@@ -76,6 +76,7 @@
 import moment from 'moment'
 import { getAsync } from "@/services/apiFacade";
 import Availabilities from "@/components/Availabilities.vue"
+import { getToken } from "@/auth";
 import axios from "axios";
 
 export default {
@@ -134,12 +135,12 @@ export default {
     },
     async fetchOffices() {
       const url = `offices`;
-      const offices = await getAsync(url);
+      const offices = await getAsync(url, getToken());
       this.offices = offices.data.items;
     },
     async fetchAvailabilities() {
         let url = `/offices/${this.selectedOffice.id}/availabilities?date=${this.bookingDate}`;
-        const availabilities = await getAsync(url);
+        const availabilities = await getAsync(url, getToken());
         this.availabilities = availabilities.data;
       },
     bookingDateChanged(){
@@ -162,7 +163,7 @@ export default {
         office: { id: this.selectedOffice.id },
         date: this.bookingDate,
         user: { email: this.emailAddress }
-      })
+      }, getToken())
       .then((response) => {
         this.isWarningShownOnBooking = true;
         this.displayConfirmationMessage(response)

@@ -5,17 +5,39 @@ import store from "../store";
 // Set error handling here
 // We could make a similar API to HttpClient here
 
-export async function postAsync(url, body) {
+export async function postAsync(url, body, token = null) {
   try {
-    return await axios.post(url, body);
+    var config = {}
+    if(token)
+    {
+      config =
+      {
+        headers:{
+          Authorization: "Bearer " + token
+        }
+      }
+    }
+
+    return await axios.post(url, body, config);
   } catch (error) {
     handleError(error);
   }
 }
 
-export async function getAsync(url) {
+export async function getAsync(url, token = null) {
   try {
-    return await axios.get(url);
+    var config = {}
+    if(token)
+    {
+      config =
+      {
+        headers:{
+          Authorization: "Bearer " + token
+        }
+      }
+    }
+
+    return await axios.get(url, token, config);
   } catch (error) {
     { handleError(error); }
   }
