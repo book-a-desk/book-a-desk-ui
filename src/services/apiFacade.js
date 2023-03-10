@@ -8,6 +8,7 @@ import store from "../store";
 export async function postAsync(url, body, token = null) {
   try {
     var config = {}
+    const token = await this.$auth.getAccessToken();
     if(token)
     {
       config =
