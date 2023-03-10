@@ -1,9 +1,9 @@
 import { postAsync } from "../services/apiFacade";
-import { getToken } from "../auth"
+
 
 const actions = {
   async book({ commit }, body) {
-    const Booking = await postAsync(`bookings`, body, getToken());
+    const Booking = await postAsync(`bookings`, body);
     commit("SAVE_BOOKING", Booking.data);
   }
 };

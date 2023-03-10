@@ -5,7 +5,7 @@ import store from "../store";
 // Set error handling here
 // We could make a similar API to HttpClient here
 
-export async function postAsync(url, body, token = null) {
+export async function postAsync(url, body) {
   try {
     var config = {}
     const token = await this.$auth.getAccessToken();
