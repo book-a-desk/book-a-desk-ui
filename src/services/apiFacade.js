@@ -1,54 +1,36 @@
 import axios from "axios";
 import store from "../store";
 
-// Set default headers here
-// Set error handling here
-// We could make a similar API to HttpClient here
-
 export async function postAsync(url, body) {
   try {
-    var config = {}
-    const token = await this.$auth.getAccessToken();
-    if(token)
-    {
-      config =
-      {
-        headers:{
-          Authorization: "Bearer " + token
-        }
-      }
-    }
+    const headers = getHeaders();
 
-    return await axios.post(url, body, config);
+    return await axios.post(url, body, headers);
   } catch (error) {
     handleError(error);
   }
 }
 
 export async function getAsync(url) {
-  try {
-    var idtoken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken.value
-    var config = {
-      headers:
-        {
-          Authorization: "Bearer " + idtoken
-        }
-    }
-//    const token = await this.$auth.getAccessToken();
-//    if(token)
-    // {
-    //   config =
-    //   {
-    //     headers:{
-    //       Authorization: "Bearer " + token
-    //     }
-    //   }
-    // }
 
-    return await axios.get(url, config);
+  try {
+    const headers = getHeaders();
+
+    return await axios.get(url, headers);
   } catch (error) {
     { handleError(error); }
   }
+}
+
+function getHeaders() {
+  const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken.value
+  const headers =
+      {
+        headers: {
+          Authorization: "Bearer " + idToken
+        }
+      }
+  return headers;
 }
 
 function handleError(error) {
