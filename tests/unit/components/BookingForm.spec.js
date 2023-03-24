@@ -23,7 +23,13 @@ Vue.component('BadMessage', BadMessage)
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
-
+let idToken = JSON.stringify(
+    {
+        idToken: {
+            value: ""
+        }
+    })
+localStorage.setItem("okta-token-storage", idToken)
 describe("Component BookingForm.vue", () => {
 
   let wrapper;
@@ -53,13 +59,7 @@ describe("Component BookingForm.vue", () => {
         $store: mockStore
       }
     });
-    let idToken = JSON.stringify(
-      {
-          idToken: {
-              value: ""
-          }
-      })
-    localStorage.setItem("okta-token-storage", idToken)
+    
   });
 
   afterEach(() => {
