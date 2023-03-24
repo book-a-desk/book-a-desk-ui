@@ -15,6 +15,7 @@
           label="Email"
           placeholder="Enter your email"
           v-model.trim="emailAddress"
+          @input="handleEmailInput"
         ></bad-text-input>
         <bad-combo-box
           id = "offices"
@@ -142,6 +143,9 @@ export default {
         const availabilities = await getAsync(url);
         this.availabilities = availabilities.data;
       },
+    async fetchBookings() {
+      await this.$store.dispatch("getBookings", { email: this.emailAddress, date: this.bookingDate});
+    },
     bookingDateChanged(){
       this.fetchAvailabilities();
     },
@@ -165,14 +169,18 @@ export default {
       })
       .then((response) => {
         this.isWarningShownOnBooking = true;
-        this.displayConfirmationMessage(response)
-        this.fetchAvailabilities()
+        this.displayConfirmationMessage(response);
+        this.fetchAvailabilities();
+        this.fetchBookings();
       })
       .catch((error) => {
         this.isMessageShownOnBooking = true;
         this.displayErrorMessage(error)
       });
-    },    
+    },
+    handleEmailInput() {
+      this.fetchBookings();
+    },
     tomorrow() {
         return moment().add(1, 'days').format('YYYY-MM-DD')
     }

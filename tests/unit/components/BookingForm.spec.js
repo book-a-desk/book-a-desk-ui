@@ -58,8 +58,7 @@ describe("Component BookingForm.vue", () => {
       mocks: {
         $store: mockStore
       }
-    });
-    
+    });  
   });
 
   afterEach(() => {
