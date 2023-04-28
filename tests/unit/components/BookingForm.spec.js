@@ -23,7 +23,13 @@ Vue.component('BadMessage', BadMessage)
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
-
+let idToken = JSON.stringify(
+    {
+        idToken: {
+            value: ""
+        }
+    })
+localStorage.setItem("okta-token-storage", idToken)
 describe("Component BookingForm.vue", () => {
 
   let wrapper;
@@ -52,7 +58,7 @@ describe("Component BookingForm.vue", () => {
       mocks: {
         $store: mockStore
       }
-  });
+    });  
   });
 
   afterEach(() => {
@@ -99,13 +105,17 @@ describe("Component BookingForm.vue", () => {
      .findComponent(BadDatePicker)
      .vm.$emit("input", "2020-12-31");
 
-     await flushPromises();
+    await flushPromises();
 
-     await wrapper.findComponent(BadContainedButton).props().click();
-
-     expect(MockAxios.get).toHaveBeenCalledWith("offices");
-     expect(MockAxios.post).toHaveBeenCalledWith(
-       "/bookings" ,
+    await wrapper.findComponent(BadContainedButton).props().click();
+    let headers = {
+      headers: {
+         Authorization: "Bearer "
+      }
+    }
+    expect(MockAxios.get).toHaveBeenCalledWith("offices", headers);
+    expect(MockAxios.post).toHaveBeenCalledWith(
+       "/bookings",
        { 
          office: { 
              id: "1"
@@ -114,8 +124,9 @@ describe("Component BookingForm.vue", () => {
          user: {
              email: "me@me.com"
          }
-       });
-   })
+       }
+    );
+    })
 
     it("should show a warning message on booking", async () => {
 

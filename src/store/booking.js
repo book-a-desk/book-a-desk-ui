@@ -1,5 +1,6 @@
 import {getAsync, postAsync} from "../services/apiFacade";
 
+
 const actions = {
   async book({ commit }, body) {
     const Booking = await postAsync(`bookings`, body);
