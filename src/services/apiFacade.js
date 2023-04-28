@@ -15,7 +15,7 @@ export async function getAsync(url) {
 
   try {
     const headers = getHeaders();
-
+    console.log(url)
     return await axios.get(url, headers);
   } catch (error) {
     { handleError(error); }
@@ -23,14 +23,19 @@ export async function getAsync(url) {
 }
 
 function getHeaders() {
-  const idToken = JSON.parse(localStorage.getItem("okta-token-storage")).idToken.value
-  const headers =
-      {
-        headers: {
-          Authorization: "Bearer " + idToken
+  const storage = JSON.parse(localStorage.getItem("okta-token-storage"))
+  if(storage && storage.idToken)
+  {
+    const idToken = storage.idToken.value
+    const headers =
+        {
+          headers: {
+            Authorization: "Bearer " + idToken
+          }
         }
-      }
-  return headers;
+    return headers;
+  }
+  return { headers : {} }
 }
 
 function handleError(error) {
