@@ -1,15 +1,15 @@
 # book-a-desk-ui
 
 ## Project setup
-_( Note: you have to use node v16 or the `openssl legacy provider` option in node, newer versions provide:  
-`export NODE_OPTIONS=--openssl-legacy-provider` )_
+_( Note: you have to use Node v16 or the `openssl legacy provider` option newer versions provide:  
+`export NODE_OPTIONS=--openssl-legacy-provider`. )_
 
 ```
 npm install
 ```
 
 ### Compilation for development
-_( Provides the functionality of hot reloading )_
+_( Provides the functionality of hot reloading. )_
 ```
 npm run serve
 ```
@@ -20,7 +20,7 @@ npm run build
 ```
 
 ### Inject values to configure backend api url
-_( `.env.local` is by default ignored by git )_
+_( By default, Git ignores the `.env.local` file. )_
 ```
 touch .env.local
 echo "PORT=<front-end port>"            >> .env.local
@@ -41,4 +41,4 @@ npm run storybook
 ```
 
 ### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- See the [Configuration Reference](https://cli.vuejs.org/config/).
