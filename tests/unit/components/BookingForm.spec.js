@@ -124,7 +124,8 @@ describe("Component BookingForm.vue", () => {
          user: {
              email: "me@me.com"
          }
-       }
+       },
+       headers
     );
     })
 

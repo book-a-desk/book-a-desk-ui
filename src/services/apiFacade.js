@@ -1,14 +1,10 @@
 import axios from "axios";
 import store from "../store";
 
-export async function postAsync(url, body) {
-  try {
-    const headers = getHeaders();
+export function postAsync(url, body) {
+  const headers = getHeaders();
 
-    return await axios.post(url, body, headers);
-  } catch (error) {
-    handleError(error);
-  }
+  return axios.post(url, body, headers);
 }
 
 export async function getAsync(url) {
