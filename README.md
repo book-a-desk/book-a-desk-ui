@@ -5,30 +5,28 @@
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compililation for development
+__( provides the functionality of hot reloading )__
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compililation and minification for production
 ```
 npm run build
 ```
 
-### Inject environment variable to configure backend api url
+### Inject values to configure backend api url
+__( .env.local is by default ignored by git )__
 ```
 touch .env.local
+echo "PORT=<front-end port>"            >> .env.local
+echo "VUE_APP_BASE_API_URL=<api-url>"   >> .env.local
+echo "VUE_APP_DOMAIN_NAME=domain.com"   >> .env.local
 npm run serve
 ```
-### Content of .env.local file (ignored by git)
-```
-PORT=<front-end port>
-VUE_APP_BASE_API_URL=<api-url>
-VUE_APP_DOMAIN_NAME=domain.com
-```
 
-
-### Lints and fixes files
+### Linting
 ```
 npm run lint
 ```
