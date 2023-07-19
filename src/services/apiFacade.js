@@ -11,7 +11,6 @@ export async function getAsync(url) {
 
   try {
     const headers = getHeaders();
-    console.log(url)
     return await axios.get(url, headers);
   } catch (error) {
     { handleError(error); }
