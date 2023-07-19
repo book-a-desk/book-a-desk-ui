@@ -101,6 +101,8 @@ describe("Component BookingForm.vue", () => {
      .findComponent(BadTextInput)
      .vm.$emit("input", "me@me.com");  
 
+    await flushPromises();
+
     wrapper
      .findComponent(BadDatePicker)
      .vm.$emit("input", "2020-12-31");

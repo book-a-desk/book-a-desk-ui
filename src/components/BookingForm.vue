@@ -36,7 +36,7 @@
             v-model="bookingDate"
             :min="tomorrow()"
             :fullWidth="true"
-        @handle-change="bookingDateChanged">
+            @input="bookingDateChanged">
           </bad-date-picker>
         </v-col>
       </v-row>
