@@ -69,6 +69,8 @@
         :messageType="messageType"
         :enabled="isMessageShownOnBooking">
       </bad-message>
+      <bad-user-list :date="bookingDateFormatted">
+      </bad-user-list>
     </div>
   </v-container>
 </template>
@@ -77,11 +79,12 @@
 import moment from "moment";
 import { getAsync, postAsync } from "@/services/apiFacade";
 import Availabilities from "@/components/Availabilities.vue";
+import BadUserList from "@/components/BadUserList.vue"
 
 export default {
   name: "BookingForm",
   components: {
-    Availabilities
+    Availabilities, BadUserList
   },
   data() {
     return {
