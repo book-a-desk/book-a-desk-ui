@@ -63,6 +63,7 @@
         </v-col>
       </v-row>
       <bad-message
+        @message-hidden="isMessageShownOnBooking=false"
         :title="bookingResultTitle"
         :message="bookingResultMessage"
         :messageType="messageType"
@@ -158,6 +159,7 @@ export default {
       this.messageType = "error";
       this.bookingResultTitle = error.response.data.title;
       this.bookingResultMessage = `Something went wrong with the booking: ${error.response.data.details}`;
+      this.isMessageShownOnBooking = true;
     },
     async submitBooking() {
       await postAsync("/bookings", {
@@ -172,7 +174,6 @@ export default {
           this.fetchBookings();
         })
         .catch(error => {
-          this.isMessageShownOnBooking = true;
           this.displayErrorMessage(error);
         });
     },
