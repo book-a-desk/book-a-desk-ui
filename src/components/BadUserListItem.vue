@@ -1,11 +1,10 @@
 <template>
     <v-container style="text-align: center">
         <v-avatar
-            style="border: 1px solid"
             size="size"
             v-html="identicon"> 
         </v-avatar>
-        <div style="word-wrap: break-word;">
+        <div style="word-wrap: break-word; padding-top: 12px;">
             {{text}}
         </div>
     </v-container>
