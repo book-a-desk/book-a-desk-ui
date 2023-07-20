@@ -34,7 +34,7 @@
         <v-col>
           <bad-date-picker
             v-model="bookingDate"
-            :min="tomorrow()"
+            :min="today()"
             :fullWidth="true"
             @input="bookingDateChanged">
           </bad-date-picker>
@@ -58,7 +58,7 @@
         <v-snackbar
             color="orange"
             v-model="isWarningShownOnBooking">
-          Please verify the office schedule to make sure that the office is open on that day
+            Please verify the office schedule to make sure that the office is open on that day
           </v-snackbar>
         </v-col>
       </v-row>
@@ -88,7 +88,7 @@ export default {
   },
   data() {
     return {
-      bookingDate: this.tomorrow(),
+      bookingDate: this.today(),
       emailAddress: "",
       bookingResultTitle: "",
       bookingResultMessage: "",
@@ -191,8 +191,8 @@ export default {
     handleEmailInput() {
       this.fetchBookings();
     },
-    tomorrow() {
-        return moment().add(1, 'days').format('YYYY-MM-DD')
+    today() {
+        return moment().format('YYYY-MM-DD')
     }
   }
 };
