@@ -35,8 +35,7 @@ export default {
   },
   methods: {
     hideAlert() {
-      this.enabled = false;
-      this.$emit("message-hidden")
+      this.$emit("hide-message")
     }
   }
 }

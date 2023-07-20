@@ -63,7 +63,7 @@
         </v-col>
       </v-row>
       <bad-message
-        @message-hidden="isMessageShownOnBooking=false"
+        @hide-message="isMessageShownOnBooking=false"
         :title="bookingResultTitle"
         :message="bookingResultMessage"
         :messageType="messageType"
