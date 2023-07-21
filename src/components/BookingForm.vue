@@ -34,7 +34,7 @@
         <v-col>
           <bad-date-picker
             v-model="bookingDate"
-            :min="today()"
+            :min="tomorrow()"
             :fullWidth="true"
             @input="bookingDateChanged">
           </bad-date-picker>
@@ -90,7 +90,7 @@ export default {
   },
   data() {
     return {
-      bookingDate: this.today(),
+      bookingDate: this.tomorrow(),
       bookings: ["User"],
       emailAddress: "",
       bookingResultTitle: "",
@@ -213,8 +213,8 @@ export default {
     handleEmailInput() {
       this.fetchBookings();
     },
-    today() {
-        return moment().format('YYYY-MM-DD')
+    tomorrow() {
+        return moment().add(1, 'days').format('YYYY-MM-DD')
     }
   }
 };

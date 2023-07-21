@@ -22,6 +22,22 @@ Vue.component('BadMessage', BadMessage)
 
 const localVue = createLocalVue();
 
+function checkCalledEndpoint(url){
+    const regexOfficesEndpoint = "^offices$";
+    const regexAvailability = "^.\/?offices\/+[0-9]\/availabilities";
+    const regexBookings = "^.\/?bookings";
+
+    if (url.match(regexOfficesEndpoint)) {
+        return "offices";
+    }
+    if (url.match(regexAvailability)) {
+        return "availabilities";
+    }
+    if (url.match(regexBookings)) {
+        return "bookings";
+    }
+}
+
 localVue.use(Vuex);
 let idToken = JSON.stringify(
     {
@@ -36,7 +52,18 @@ describe("Component BookingForm.vue", () => {
   let mockStore;
 
   beforeEach(() => {
-    MockAxios.get.mockResolvedValue({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
+      MockAxios.get.mockImplementation((url) => {
+          switch (checkCalledEndpoint(url)) {
+              case 'offices':
+                  return Promise.resolve({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
+              case 'availabilities':
+                  return Promise.resolve({data: { id: "4b774d13-645b-4378-a925-1da565a35fd7", totalDesks: 34, reservedDesks: 6, availableDesks: 28}});
+              case 'bookings':
+                  return Promise.resolve({data: {items: [{ office: { id: "1" }, date: "2020-12-31", user: { email: "me@me.com" }}]}});
+              default:
+                  return Promise.reject(new Error('not found'))
+          }
+      })
     MockAxios.post.mockResolvedValue();
 
     mockStore = { dispatch: jest.fn() }
@@ -143,8 +170,20 @@ describe("Component BookingForm.vue", () => {
     it("should show a result message on booking", async () => {
         const bookingResultTitle = "User Had Booked Before";
         const bookingResultMessage = "The office is already booked out at 11/11/2021 for user EmailAddress \"dummy@broadsign.com\"";
-
-        MockAxios.post.mockRejectedValue({ response: {data: {title: bookingResultTitle, details: bookingResultMessage}}});
+        
+        MockAxios.get.mockImplementation((url) => {
+            switch (checkCalledEndpoint(url)) {
+                case 'offices':
+                    return Promise.resolve({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
+                case 'availabilities':
+                    return Promise.resolve({data: { id: "4b774d13-645b-4378-a925-1da565a35fd7", totalDesks: 34, reservedDesks: 6, availableDesks: 28}});
+                case 'bookings':
+                    return Promise.resolve({data: {items:[]}});
+                default:
+                    return Promise.reject(new Error('not found'))
+            }
+        })        
+        MockAxios.post.mockRejectedValue({ response: {data: {title: bookingResultTitle, details: bookingResultMessage}}});        
 
         await flushPromises();
 
