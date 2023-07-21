@@ -18,7 +18,7 @@ export default {
   name: "BadDatePicker",
   data() {
     return {
-      selectedBookingDate: moment().format('YYYY-MM-DD')
+      selectedBookingDate: moment().add(1, "day").format('YYYY-MM-DD')
     };
   },
   methods: {

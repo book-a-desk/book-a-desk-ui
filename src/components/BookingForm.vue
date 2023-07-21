@@ -172,6 +172,7 @@ export default {
       this.fetchBookingsList();
     },
     displayConfirmationMessage(){
+      this.bookingResultTitle = "Booked successfully"
       this.bookingResultMessage = "Please check your emails for your booking confirmation";
       this.messageType = "success";
       this.isMessageShownOnBooking = true;
