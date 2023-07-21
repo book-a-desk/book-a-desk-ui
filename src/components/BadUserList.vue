@@ -1,11 +1,11 @@
 <template>
-    <v-card>
+    <v-card v-if="bookings.length > 0">
         <div class="text-h5 font-weight-bold" style="padding: 12px;">
             Who's in on {{date}}
         </div>
         <v-row style="justify-content: center;">
             <bad-user-list-item 
-                v-for="(item, index) in stringArray"
+                v-for="(item, index) in bookings"
                 style="max-width: 100px; margin: 0;"
                 :key="index"
                 :text="item"/>
@@ -17,14 +17,14 @@
 export default {
     name: "BadUserList",
     data() {
-        return {
-            stringArray: ["Lasnikr", "Robert", "test", "Broadsign", "Lasnik", "Lasnikr", "Tester", "Intern",
-                        "🪵", "&", "user", "dummy", "Test", "I am a really long name", "test", "test"],
-            };
+        return {}
     },
     props: {
         date: {
             type: String
+        },
+        bookings: {
+            type: Array
         }
     }
 }

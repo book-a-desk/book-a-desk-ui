@@ -51,7 +51,7 @@
         <v-col>
           <bad-contained-button
             id="btnBook"
-            :click="submitBooking"
+            :click="handleButtonClick"
             :block="true"
             label="Book a desk">
           </bad-contained-button>
@@ -69,7 +69,9 @@
         :messageType="messageType"
         :enabled="isMessageShownOnBooking">
       </bad-message>
-      <bad-user-list :date="bookingDateFormatted">
+      <bad-user-list 
+        :date="bookingDateFormatted"
+        :bookings="bookings">
       </bad-user-list>
     </div>
   </v-container>
@@ -89,6 +91,7 @@ export default {
   data() {
     return {
       bookingDate: this.today(),
+      bookings: ["User"],
       emailAddress: "",
       bookingResultTitle: "",
       bookingResultMessage: "",
@@ -145,14 +148,28 @@ export default {
       const availabilities = await getAsync(url);
       this.availabilities = availabilities.data;
     },
+    async fetchBookingsList() {
+      const bookings = await getAsync(`/date-bookings?date=${this.bookingDate}&office=${this.selectedOffice.id}`)
+
+      // The Email is temporarily used as a username
+      // In the future real usernames and profile pictures will be supported
+      const extractUsername = (email) => {
+        const [username] = email.split("@");
+        return username;
+      };
+
+      this.bookings = bookings.data.map(extractUsername)
+    },
     async fetchBookings() {
       await this.$store.dispatch("getBookings", { email: this.emailAddress, date: this.bookingDate});
     },
     bookingDateChanged(){
       this.fetchAvailabilities();
+      this.fetchBookingsList();
     },
     officeChange(){
       this.fetchAvailabilities();
+      this.fetchBookingsList();
     },
     displayConfirmationMessage(){
       this.bookingResultMessage = "Please check your emails for your booking confirmation";
@@ -171,6 +188,10 @@ export default {
 
       this.messageType = "error";
       this.isMessageShownOnBooking = true;
+    },
+    handleButtonClick() {
+      this.submitBooking();
+      this.fetchBookingsList();
     },
     async submitBooking() {
       await postAsync("/bookings", {
