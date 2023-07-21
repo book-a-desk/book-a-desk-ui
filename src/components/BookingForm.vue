@@ -36,7 +36,7 @@
             v-model="bookingDate"
             :min="tomorrow()"
             :fullWidth="true"
-        @handle-change="bookingDateChanged">
+            @input="bookingDateChanged">
           </bad-date-picker>
         </v-col>
       </v-row>
@@ -63,6 +63,7 @@
         </v-col>
       </v-row>
       <bad-message
+        @hide-message="isMessageShownOnBooking=false"
         :title="bookingResultTitle"
         :message="bookingResultMessage"
         :messageType="messageType"
@@ -151,13 +152,22 @@ export default {
       this.fetchAvailabilities();
     },
     displayConfirmationMessage(){
-      this.messageType = "success";
       this.bookingResultMessage = "Please check your emails for your booking confirmation";
+      this.messageType = "success";
+      this.isMessageShownOnBooking = true;
     },
     displayErrorMessage(error){
+      if (error.response) {
+        this.bookingResultTitle = error.response.data.title;
+        this.bookingResultMessage = `Something went wrong with the booking: ${error.response.data.details}`;
+      }
+      else if (error.message) {
+        this.bookingResultTitle = error.message
+        this.bookingResultMessage = `Unknown Error`
+      }
+
       this.messageType = "error";
-      this.bookingResultTitle = error.response.data.title;
-      this.bookingResultMessage = `Something went wrong with the booking: ${error.response.data.details}`;
+      this.isMessageShownOnBooking = true;
     },
     async submitBooking() {
       await postAsync("/bookings", {
@@ -172,7 +182,6 @@ export default {
           this.fetchBookings();
         })
         .catch(error => {
-          this.isMessageShownOnBooking = true;
           this.displayErrorMessage(error);
         });
     },
