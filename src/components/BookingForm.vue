@@ -189,8 +189,8 @@ export default {
       this.messageType = "error";
       this.isMessageShownOnBooking = true;
     },
-    handleButtonClick() {
-      this.submitBooking();
+    async handleButtonClick() {
+      await this.submitBooking();
       this.fetchBookingsList();
     },
     async submitBooking() {
