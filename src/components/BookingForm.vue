@@ -51,7 +51,7 @@
         <v-col>
           <bad-contained-button
             id="btnBook"
-            :click="handleButtonClick"
+            :click="bookADesk"
             :block="true"
             label="Book a desk">
           </bad-contained-button>
