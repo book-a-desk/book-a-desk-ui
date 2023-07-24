@@ -33,11 +33,7 @@
       username: function() {
         // The Email is temporarily used as a username
         // In the future real usernames and profile pictures will be supported
-        const extractUsername = (booking) => {
-          const [username] = booking.user.email.split("@");
-          return username;
-        };
-        return extractUsername(this.booking)
+        return this.booking.user.email.split("@")[0]
       }
     }
   }

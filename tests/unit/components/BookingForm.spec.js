@@ -22,7 +22,7 @@ Vue.component('BadMessage', BadMessage)
 
 const localVue = createLocalVue();
 
-function checkCalledEndpoint(url){
+function getCalledEndpoint(url){
     const regexOfficesEndpoint = "^offices$";
     const regexAvailability = "^.\/?offices\/+[0-9]\/availabilities";
     const regexBookings = "^.\/?bookings";
@@ -53,7 +53,7 @@ describe("Component BookingForm.vue", () => {
 
   beforeEach(() => {
       MockAxios.get.mockImplementation((url) => {
-          switch (checkCalledEndpoint(url)) {
+          switch (getCalledEndpoint(url)) {
               case 'offices':
                   return Promise.resolve({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
               case 'availabilities':
@@ -172,7 +172,7 @@ describe("Component BookingForm.vue", () => {
         const bookingResultMessage = "The office is already booked out at 11/11/2021 for user EmailAddress \"dummy@broadsign.com\"";
         
         MockAxios.get.mockImplementation((url) => {
-            switch (checkCalledEndpoint(url)) {
+            switch (getCalledEndpoint(url)) {
                 case 'offices':
                     return Promise.resolve({ data: {items:[{id: "1", name: "office1"}, {id: "2", name: "office2"}] } });
                 case 'availabilities':
