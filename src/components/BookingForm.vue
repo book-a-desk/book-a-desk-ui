@@ -14,9 +14,8 @@
             id="email"
             label="Email"
             placeholder="Enter your email"
-            v-model.trim="emailAddress"
-            @input="handleEmailInput"
-          ></bad-text-input>
+            v-model.trim="emailAddress">
+          </bad-text-input>
           <bad-combo-box
           id = "offices"
           :items = "offices"
@@ -148,20 +147,17 @@ export default {
       const availabilities = await getAsync(url);
       this.availabilities = availabilities.data;
     },
-    async fetchBookingsList() {
+    async fetchBookings() {
       const bookings = await getAsync(`/bookings?date=${this.bookingDate}&office=${this.selectedOffice.id}`)
       this.bookings = bookings.data.items
     },
-    async fetchBookings() {
-      await this.$store.dispatch("getBookings", { email: this.emailAddress, date: this.bookingDate});
-    },
     bookingDateChanged(){
       this.fetchAvailabilities();
-      this.fetchBookingsList();
+      this.fetchBookings();
     },
     officeChange(){
       this.fetchAvailabilities();
-      this.fetchBookingsList();
+      this.fetchBookings();
     },
     displayConfirmationMessage(){
       this.bookingResultTitle = "Booked successfully"
@@ -184,8 +180,7 @@ export default {
     },
     async bookADesk() {
       await this.submitBooking();
-      this.fetchAvailabilities();
-      this.fetchBookingsList();
+      this.fetchBookings();
     },
     async submitBooking() {
       await postAsync("/bookings", {
@@ -197,14 +192,10 @@ export default {
           this.isWarningShownOnBooking = true;
           this.displayConfirmationMessage(response);
           this.fetchAvailabilities();
-          this.fetchBookings();
         })
         .catch(error => {
           this.displayErrorMessage(error);
         });
-    },
-    handleEmailInput() {
-      this.fetchBookings();
     },
     tomorrow() {
         return moment().add(1, 'days').format('YYYY-MM-DD')
