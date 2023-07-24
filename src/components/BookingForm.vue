@@ -91,7 +91,7 @@ export default {
   data() {
     return {
       bookingDate: this.tomorrow(),
-      bookings: ["User"],
+      bookings: [],
       emailAddress: "",
       bookingResultTitle: "",
       bookingResultMessage: "",
@@ -150,15 +150,7 @@ export default {
     },
     async fetchBookingsList() {
       const bookings = await getAsync(`/bookings?date=${this.bookingDate}&office=${this.selectedOffice.id}`)
-
-      // The Email is temporarily used as a username
-      // In the future real usernames and profile pictures will be supported
-      const extractUsername = (booking) => {
-        const [username] = booking.user.email.split("@");
-        return username;
-      };
-
-      this.bookings = bookings.data.items.map(extractUsername)
+      this.bookings = bookings.data.items
     },
     async fetchBookings() {
       await this.$store.dispatch("getBookings", { email: this.emailAddress, date: this.bookingDate});
@@ -190,7 +182,7 @@ export default {
       this.messageType = "error";
       this.isMessageShownOnBooking = true;
     },
-    async handleButtonClick() {
+    async bookADesk() {
       await this.submitBooking();
       this.fetchAvailabilities();
       this.fetchBookingsList();

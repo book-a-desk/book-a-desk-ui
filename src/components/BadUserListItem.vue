@@ -5,7 +5,7 @@
             v-html="identicon"> 
         </v-avatar>
         <div style="word-wrap: break-word; padding-top: 12px;">
-            {{text}}
+            {{username}}
         </div>
     </v-container>
 </template>
@@ -16,7 +16,7 @@
   export default {
     name: "BadUserListItem",
     props: {
-        text: {
+        booking: {
             type: String,
             required: true,
         }
@@ -28,7 +28,16 @@
     },
     computed: {
       identicon: function() {
-        return jdenticon.toSvg(this.text, this.size);
+        return jdenticon.toSvg(this.username, this.size);
+      },
+      username: function() {
+        // The Email is temporarily used as a username
+        // In the future real usernames and profile pictures will be supported
+        const extractUsername = (booking) => {
+          const [username] = booking.user.email.split("@");
+          return username;
+        };
+        return extractUsername(this.booking)
       }
     }
   }

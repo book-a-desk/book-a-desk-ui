@@ -8,7 +8,7 @@
                 v-for="(item, index) in bookings"
                 style="max-width: 100px; margin: 0;"
                 :key="index"
-                :text="item"/>
+                :booking="item"/>
             </v-row>
     </v-card>
 </template>
