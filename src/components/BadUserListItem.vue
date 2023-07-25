@@ -17,7 +17,6 @@
     name: "BadUserListItem",
     props: {
         booking: {
-            type: String,
             required: true,
         }
     },

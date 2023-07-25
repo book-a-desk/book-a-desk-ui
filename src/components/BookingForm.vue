@@ -129,7 +129,6 @@ export default {
   },
   methods: {
     async setup () {
-        console.log("this.authState.isAuthenticated: ", this.authState.isAuthenticated);
       if (this.authState.isAuthenticated) {
         this.claims = await this.$auth.getUser()
       }
