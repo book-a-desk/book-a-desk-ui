@@ -30,17 +30,17 @@ describe("Component BadUserListItem.vue", () => {
     })
     
     it("should render an username when a booking is not empty", () => {
-        const container = wrapper.find("div")
-        expect(container.exists()).toBe(true)
-    })
-
-    it("should render an avatar when a booking is not empty", () => {
-        const container = wrapper.findComponent({ name: "v-avatar"})
+        const container = wrapper.find("#username")
         expect(container.exists()).toBe(true)
     })
 
     it("should show the correct username for the email of an user", () => {
-        const container = wrapper.find("div")
+        const container = wrapper.find("#username")
         expect(container.text()).toEqual("lasnikr")
+    })
+
+    it("should render an avatar when a booking is not empty", () => {
+        const container = wrapper.findComponent({ name: "v-avatar" })
+        expect(container.exists()).toBe(true)
     })
 });

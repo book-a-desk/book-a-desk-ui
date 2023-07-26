@@ -4,7 +4,9 @@
             size="size"
             v-html="identicon"> 
         </v-avatar>
-        <div style="word-wrap: break-word; padding-top: 12px;">
+        <div 
+            style="word-wrap: break-word; padding-top: 12px;"
+            id="username">
             {{username}}
         </div>
     </v-container>
