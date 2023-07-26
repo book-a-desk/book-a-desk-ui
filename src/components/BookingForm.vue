@@ -14,9 +14,8 @@
             id="email"
             label="Email"
             placeholder="Enter your email"
-            v-model.trim="emailAddress"
-            @input="handleEmailInput"
-          ></bad-text-input>
+            v-model.trim="emailAddress">
+          </bad-text-input>
           <bad-combo-box
           id = "offices"
           :items = "offices"
@@ -51,14 +50,14 @@
         <v-col>
           <bad-contained-button
             id="btnBook"
-            :click="submitBooking"
+            :click="bookADesk"
             :block="true"
             label="Book a desk">
           </bad-contained-button>
         <v-snackbar
             color="orange"
             v-model="isWarningShownOnBooking">
-          Please verify the office schedule to make sure that the office is open on that day
+            Please verify the office schedule to make sure that the office is open on that day
           </v-snackbar>
         </v-col>
       </v-row>
@@ -69,6 +68,10 @@
         :messageType="messageType"
         :enabled="isMessageShownOnBooking">
       </bad-message>
+      <bad-user-list 
+        :date="bookingDateFormatted"
+        :bookings="bookings">
+      </bad-user-list>
     </div>
   </v-container>
 </template>
@@ -77,15 +80,17 @@
 import moment from "moment";
 import { getAsync, postAsync } from "@/services/apiFacade";
 import Availabilities from "@/components/Availabilities.vue";
+import BadUserList from "@/components/BadUserList.vue"
 
 export default {
   name: "BookingForm",
   components: {
-    Availabilities
+    Availabilities, BadUserList
   },
   data() {
     return {
       bookingDate: this.tomorrow(),
+      bookings: [],
       emailAddress: "",
       bookingResultTitle: "",
       bookingResultMessage: "",
@@ -124,7 +129,6 @@ export default {
   },
   methods: {
     async setup () {
-        console.log("this.authState.isAuthenticated: ", this.authState.isAuthenticated);
       if (this.authState.isAuthenticated) {
         this.claims = await this.$auth.getUser()
       }
@@ -143,15 +147,19 @@ export default {
       this.availabilities = availabilities.data;
     },
     async fetchBookings() {
-      await this.$store.dispatch("getBookings", { email: this.emailAddress, date: this.bookingDate});
+      const bookings = await getAsync(`/bookings?date=${this.bookingDate}&office=${this.selectedOffice.id}`)
+      this.bookings = bookings.data.items
     },
     bookingDateChanged(){
       this.fetchAvailabilities();
+      this.fetchBookings();
     },
     officeChange(){
       this.fetchAvailabilities();
+      this.fetchBookings();
     },
     displayConfirmationMessage(){
+      this.bookingResultTitle = "Booked successfully"
       this.bookingResultMessage = "Please check your emails for your booking confirmation";
       this.messageType = "success";
       this.isMessageShownOnBooking = true;
@@ -169,6 +177,10 @@ export default {
       this.messageType = "error";
       this.isMessageShownOnBooking = true;
     },
+    async bookADesk() {
+      await this.submitBooking();
+      this.fetchBookings();
+    },
     async submitBooking() {
       await postAsync("/bookings", {
           office: { id: this.selectedOffice.id },
@@ -179,14 +191,10 @@ export default {
           this.isWarningShownOnBooking = true;
           this.displayConfirmationMessage(response);
           this.fetchAvailabilities();
-          this.fetchBookings();
         })
         .catch(error => {
           this.displayErrorMessage(error);
         });
-    },
-    handleEmailInput() {
-      this.fetchBookings();
     },
     tomorrow() {
         return moment().add(1, 'days').format('YYYY-MM-DD')

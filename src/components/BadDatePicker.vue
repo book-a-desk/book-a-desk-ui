@@ -12,11 +12,13 @@
   ></v-date-picker>
 </template>
 <script>
+import moment from 'moment';
+
 export default {
   name: "BadDatePicker",
   data() {
     return {
-      selectedBookingDate: this.value
+      selectedBookingDate: moment().add(1, "day").format('YYYY-MM-DD')
     };
   },
   methods: {
