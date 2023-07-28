@@ -1,17 +1,14 @@
 <template>
-  <v-container id="offices">
-    <bad-combo-box
-        id = "offices"
-        :items = "offices"
-        itemText = "name"
-        itemValue = "id"
-        v-model = "selectedOffice"
-        prependInnerIcon="mdi-office-building"
-        @change="officeChanged"
-        :hint="officeOpeningHours"
-        :persistentHint="true"
-    ></bad-combo-box>
-  </v-container>
+  <bad-combo-box
+      id = "offices"
+      :items = "offices"
+      itemText = "name"
+      itemValue = "id"
+      v-model = "selectedOffice"
+      prependInnerIcon="mdi-office-building"
+      @change="selectedOfficeChanged"
+      :hint="officeOpeningHours"
+      :persistentHint="true"/>
 </template>
 <script>
 
@@ -22,6 +19,10 @@ export default {
       selectedOffice: null
     }
   },
+  async mounted() {
+    await this.fetchOffices();
+    this.selectedOffice = this.offices[0]
+  },
   computed:{
     offices() {
       return this.$store.getters.offices;
@@ -30,7 +31,14 @@ export default {
       return "Opening hours: " + this.selectedOffice?.openingHours?.text;
     }
   },  
-  methods: {},
+  methods: {
+    selectedOfficeChanged() {
+      this.officeChanged(this.selectedOffice.id)
+    },
+    async fetchOffices() {
+      await this.$store.dispatch("getOffices")
+    }
+  },
   props: {
     officeChanged: {
       type: Function,

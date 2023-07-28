@@ -94,7 +94,6 @@ export default {
   },
   created () { this.setup() },
   async mounted() {
-    await this.fetchOffices();
     await this.fetchAvailabilities();
   },
   computed:{
@@ -120,9 +119,6 @@ export default {
     login () {
       this.$auth.signInWithRedirect('/')
     },
-    async fetchOffices() {
-      await this.$store.dispatch("getOffices")
-    },
     async fetchAvailabilities() {
       let url = `/offices/${this.selectedOfficeId}/availabilities?date=${this.bookingDate}`;
       const availabilities = await getAsync(url);
@@ -131,22 +127,22 @@ export default {
     async fetchBookings() {
       await this.$store.dispatch("getBookings", {date: this.bookingDate, officeId: this.selectedOfficeId})
     },
-    bookingDateChanged(){
+    bookingDateChanged() {
       this.fetchAvailabilities();
       this.fetchBookings();
     },
-    officeChanged(office){
-      selectedOfficeId = office.id
+    officeChanged(officeId) {
+      this.selectedOfficeId = officeId
       this.fetchAvailabilities();
       this.fetchBookings();
     },
-    displayConfirmationMessage(){
+    displayConfirmationMessage() {
       this.bookingResultTitle = "Booked successfully"
       this.bookingResultMessage = "Please check your emails for your booking confirmation";
       this.messageType = "success";
       this.isMessageShownOnBooking = true;
     },
-    displayErrorMessage(error){
+    displayErrorMessage(error) {
       if (error.response) {
         this.bookingResultTitle = error.response.data.title;
         this.bookingResultMessage = `Something went wrong with the booking: ${error.response.data.details}`;
