@@ -14,7 +14,6 @@
   </v-container>
 </template>
 <script>
-import moment from "moment/moment";
 
 export default {
   name: "Offices",

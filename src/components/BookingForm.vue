@@ -16,17 +16,7 @@
             placeholder="Enter your email"
             v-model.trim="emailAddress">
           </bad-text-input>
-          <bad-combo-box
-          id = "offices"
-          :items = "offices"
-          itemText = "name"
-          itemValue = "id"
-          v-model = "selectedOffice"
-            prependInnerIcon="mdi-office-building"
-            @change="officeChange"
-            :hint="officeOpeningHours"
-            :persistentHint="true"
-          ></bad-combo-box>
+          <bad-offices :officeChanged="officeChanged"/>
         </v-col>
       </v-row>
       <v-row>
@@ -80,11 +70,12 @@ import moment from "moment";
 import { getAsync, postAsync } from "@/services/apiFacade";
 import Availabilities from "@/components/Availabilities.vue";
 import BadUserList from "@/components/BadUserList.vue"
+import BadOffices from "@/components/BadOffices.vue"
 
 export default {
   name: "BookingForm",
   components: {
-    Availabilities, BadUserList
+    Availabilities, BadUserList, BadOffices
   },
   data() {
     return {
@@ -93,6 +84,7 @@ export default {
       bookingResultTitle: "",
       bookingResultMessage: "",
       messageType: "",
+      selectedOfficeId: "",
       availabilities: null,
       isWarningShownOnBooking: false,
       isMessageShownOnBooking: false,
@@ -103,7 +95,6 @@ export default {
   created () { this.setup() },
   async mounted() {
     await this.fetchOffices();
-    this.selectedOffice = this.offices[0];
     await this.fetchAvailabilities();
   },
   computed:{
@@ -118,9 +109,6 @@ export default {
     },
     bookingDateFormatted() {
       return moment(this.bookingDate).format("dddd, MMMM Do");
-    },
-    officeOpeningHours(){
-      return "Opening hours: " + this.selectedOffice?.openingHours?.text;
     }
   },
   methods: {
@@ -136,18 +124,19 @@ export default {
       await this.$store.dispatch("getOffices")
     },
     async fetchAvailabilities() {
-      let url = `/offices/${this.selectedOffice.id}/availabilities?date=${this.bookingDate}`;
+      let url = `/offices/${this.selectedOfficeId}/availabilities?date=${this.bookingDate}`;
       const availabilities = await getAsync(url);
       this.availabilities = availabilities.data;
     },
     async fetchBookings() {
-      await this.$store.dispatch("getBookings", {date: this.bookingDate, officeId: this.selectedOffice.id})
+      await this.$store.dispatch("getBookings", {date: this.bookingDate, officeId: this.selectedOfficeId})
     },
     bookingDateChanged(){
       this.fetchAvailabilities();
       this.fetchBookings();
     },
-    officeChange(){
+    officeChanged(office){
+      selectedOfficeId = office.id
       this.fetchAvailabilities();
       this.fetchBookings();
     },
@@ -176,7 +165,7 @@ export default {
     },
     async submitBooking() {
       await postAsync("/bookings", {
-          office: { id: this.selectedOffice.id },
+          office: { id: this.selectedOfficeId },
           date: this.bookingDate,
           user: { email: this.emailAddress }
         })
