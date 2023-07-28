@@ -93,8 +93,6 @@ export default {
       bookingResultTitle: "",
       bookingResultMessage: "",
       messageType: "",
-      offices: [],
-      selectedOffice: null,
       availabilities: null,
       isWarningShownOnBooking: false,
       isMessageShownOnBooking: false,

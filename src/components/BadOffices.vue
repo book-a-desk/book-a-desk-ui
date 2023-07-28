@@ -7,7 +7,7 @@
         itemValue = "id"
         v-model = "selectedOffice"
         prependInnerIcon="mdi-office-building"
-        @change="officeChange"
+        @change="officeChanged"
         :hint="officeOpeningHours"
         :persistentHint="true"
     ></bad-combo-box>
@@ -18,15 +18,25 @@ import moment from "moment/moment";
 
 export default {
   name: "Offices",
+  data() { 
+    return {
+      selectedOffice: null
+    }
+  },
   computed:{
-    officeOpeningHours(){
-      return "Opening hours: " + this.selectedOffice?.openingHours?.text;
+    offices() {
+      return this.$store.getters.offices;
     },
-    officeOpeningHours(){
+    officeOpeningHours() {
       return "Opening hours: " + this.selectedOffice?.openingHours?.text;
     }
   },  
-  methods: {
+  methods: {},
+  props: {
+    officeChanged: {
+      type: Function,
+      required: true
+    },
   }
 };
 </script>
