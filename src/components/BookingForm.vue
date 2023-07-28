@@ -68,7 +68,7 @@
         :messageType="messageType"
         :enabled="isMessageShownOnBooking">
       </bad-message>
-      <bad-user-list 
+      <bad-user-list
         :date="bookingDateFormatted">
       </bad-user-list>
     </div>
