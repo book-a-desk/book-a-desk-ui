@@ -35,11 +35,16 @@ describe("Component BadUserList.vue", () => {
     }
     ]
 
+    let mockStore;
+    mockStore = { getters: { dateAndOfficeBookings: bookings}  }
+    
     beforeEach(() => {
         wrapper = shallowMount(BadUserList, {
             propsData: {
                 date: date,
-                bookings: bookings
+            }, 
+            mocks: {
+                $store: mockStore
             }
         });
     })

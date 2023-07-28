@@ -7,7 +7,7 @@ const actions = {
     commit("SAVE_BOOKING", Booking.data);
   },
   async getBookings({ commit }, payload) {
-    const url = `/bookings?email=${payload.email}&date=${payload.date}`;
+    const url = `/bookings?date=${payload.date}&office=${payload.officeId}`;
     const response = await getAsync(url);
     commit("GET_BOOKINGS", response.data.items);
   }
@@ -18,18 +18,18 @@ const mutations = {
     state.booking = data;
   },
   GET_BOOKINGS(state, data) {
-    state.bookings = data;
+    state.dateAndOfficeBookings = data;
   },
 };
 
 const state = {
   booking: {},
-  bookings: []
+  dateAndOfficeBookings: []
 };
 
 const getters = {
-  bookings(state) {
-    return state.bookings;
+  dateAndOfficeBookings(state) {
+    return state.dateAndOfficeBookings;
   }
 }
 
