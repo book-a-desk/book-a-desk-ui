@@ -3,6 +3,7 @@ import Vue from "vue";
 import booking from "./booking";
 import config from "./config";
 import error from "./error";
+import offices from "./offices";
 
 Vue.use(Vuex);
 
@@ -11,8 +12,9 @@ export default new Vuex.Store({
     totalTvCount: 10 // The TV inventory
   },
   modules: {
-    error,
     booking,
-    config
+    config,
+    error,
+    offices    
   }
 });
