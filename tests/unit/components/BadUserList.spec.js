@@ -35,11 +35,16 @@ describe("Component BadUserList.vue", () => {
     }
     ]
 
+    let mockStore;
+    mockStore = { dispatch: jest.fn() }
+    
     beforeEach(() => {
         wrapper = shallowMount(BadUserList, {
             propsData: {
                 date: date,
-                bookings: bookings
+            }, 
+            mocks: {
+                $store: mockStore
             }
         });
     })
