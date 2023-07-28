@@ -68,9 +68,8 @@
         :messageType="messageType"
         :enabled="isMessageShownOnBooking">
       </bad-message>
-      <bad-user-list 
-        :date="bookingDateFormatted"
-        :bookings="bookings">
+      <bad-user-list
+        :date="bookingDateFormatted">
       </bad-user-list>
     </div>
   </v-container>
@@ -90,7 +89,6 @@ export default {
   data() {
     return {
       bookingDate: this.tomorrow(),
-      bookings: [],
       emailAddress: "",
       bookingResultTitle: "",
       bookingResultMessage: "",
@@ -147,8 +145,7 @@ export default {
       this.availabilities = availabilities.data;
     },
     async fetchBookings() {
-      const bookings = await getAsync(`/bookings?date=${this.bookingDate}&office=${this.selectedOffice.id}`)
-      this.bookings = bookings.data.items
+      await this.$store.dispatch("getBookings", {date: this.bookingDate, officeId: this.selectedOffice.id})
     },
     bookingDateChanged(){
       this.fetchAvailabilities();

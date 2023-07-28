@@ -22,9 +22,11 @@ export default {
     props: {
         date: {
             type: String
-        },
-        bookings: {
-            type: Array
+        }
+    },
+    computed:{
+        bookings() {
+            return this.$store.getters.dateAndOfficeBookings;
         }
     }
 }
