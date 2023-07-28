@@ -137,9 +137,7 @@ export default {
       this.$auth.signInWithRedirect('/')
     },
     async fetchOffices() {
-      const url = `offices`;
-      const offices = await getAsync(url);
-      this.offices = offices.data.items;
+      await this.$store.dispatch("getOffices")
     },
     async fetchAvailabilities() {
       let url = `/offices/${this.selectedOffice.id}/availabilities?date=${this.bookingDate}`;
